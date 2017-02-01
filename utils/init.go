@@ -24,3 +24,13 @@ func AppExit(message string) {
 	logger.Write("ERROR", "Exiting with error code 1")
 	os.Exit(1)
 }
+
+func ContainsStr(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+
+	return false
+}

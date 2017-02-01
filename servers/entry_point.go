@@ -29,6 +29,7 @@ func Server(serverTypePassed string) {
 
 		logger.Write("ERROR", "Server Starting Fail - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
 		utils.AppExit("Exiting app, configured port not available")
+
 	} else {
 
 		logger.Write("INFO", "Server Running - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
