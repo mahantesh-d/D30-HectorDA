@@ -1,9 +1,12 @@
 package main
 import(
-	"github.com/dminGod/D30-HectorDA/utils"
+//	"github.com/dminGod/D30-HectorDA/utils"
+	"github.com/dminGod/D30-HectorDA/servers"
 )
 
-// Start the Hector server
+
 func main() {
-	utils.Server()
+
+	// Start the Hector Server
+	servers.Server();
 }
