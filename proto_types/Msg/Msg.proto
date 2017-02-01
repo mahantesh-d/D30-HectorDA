@@ -1,0 +1,6 @@
+message Msg {
+	required string endpoint = 1;
+	required string module = 2;
+	required string method = 3;
+	required string payload = 4;
+}

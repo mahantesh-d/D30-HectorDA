@@ -1,0 +1,22 @@
+# This is the configuration of Hector Server
+# Location : /etc/hector/config.toml
+# DO NOT DELETE THIS FILE
+
+
+# Hector Server Config
+[hector]
+	connectiontype = "tcp"
+	version = "0.0.1"
+	host = "127.0.0.1"
+	port = "9001"
+	log = "INFO"
+
+# Cassandra Config
+[cassandra]
+	host = "127.0.0.1"
+	port = "9042"
+
+# Presto
+[presto]
+	host = "127.0.0.1"
+	port = "8080"
