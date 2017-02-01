@@ -1,31 +1,69 @@
 package servers
 
-
-import(
-	"net"
+import (
+	"encoding/json"
+	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/proto_types/Msg"
+	"github.com/golang/protobuf/proto"
+	"net"
 )
 
-// Used to start a TCP server
-func Server () {
+var Message *Msg.Msg
 
-	// listen to the TCP port
-	logger.Write("INFO","Starting Server on " + Conf.Hector.Host + ":" + Conf.Hector.Port, Conf.Hector.Log)
-	listener, _ := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host + ":" + Conf.Hector.Port)
-	logger.Write("INFO", "==== Server Running on "+ Conf.Hector.Host + ":" + Conf.Hector.Port + " =======", Conf.Hector.Log)
+func init() {
 
-	for{
-		if conn, err := listener.Accept(); err == nil{
-			// if err is nil then that means that data is available for us so we move ahead
-			go handleConnection(&conn)
-		} else{
-			continue
-		}
-	}
+	Message = new(Msg.Msg)
 }
 
-func handleConnection(conn *net.Conn) {
+func ProtoParseMsg(conn *net.Conn) {
 
-	ProtoParseMsg(conn)
+	// close the connection once the function exits
+	defer (*conn).Close()
 
+	// make a byte array of capacity 4096
+	data := make([]byte, 4096)
+
+	//Read the data waiting on the connection and put it in the data buffer
+	n, err := (*conn).Read(data)
+
+	if err != nil {
+		logger.Write("ERROR", err.Error(), Conf.Hector.Log)
+	}
+
+	//Convert all the data retrieved into the ProtobufTest.TestMessage struct type
+	err = proto.Unmarshal(data[0:n], Message)
+
+	logger.Write("INFO", "Decoding Protobuf Message", Conf.Hector.Log)
+
+	// decode payload
+	ProtoDecodeMsg(conn, Message)
+
+	endpoint.Process(conn, &Conf, &HectorSession)
+
+}
+
+func ProtoDecodePayload(input interface{}) map[string]interface{} {
+
+	var payload interface{}
+
+	err := json.Unmarshal([]byte(input.(string)), &payload)
+
+	if err != nil {
+		logger.Write("ERROR", err.Error(), Conf.Hector.Log)
+	}
+
+	return payload.(map[string]interface{})
+
+}
+
+func ProtoDecodeMsg(conn *net.Conn, msg *Msg.Msg) {
+
+	HectorSession.Method = msg.GetMethod()
+	HectorSession.Module = msg.GetModule()
+	HectorSession.Endpoint = msg.GetEndpoint()
+	HectorSession.Payload = ProtoDecodePayload(msg.GetPayload())
+	HectorSession.Connection = *conn
+
+	logger.Write("DEBUG", HectorSession.Module, Conf.Hector.Log)
 }

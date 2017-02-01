@@ -1,13 +1,13 @@
 package model
 
-import(
+import (
 	"net"
 )
-type HectorSession struct {
 
+type HectorSession struct {
 	Connection net.Conn
-	Method string
-	Module string
-	Endpoint string
-	Payload map[string]interface{}
+	Method     string
+	Module     string
+	Endpoint   string
+	Payload    map[string]interface{}
 }

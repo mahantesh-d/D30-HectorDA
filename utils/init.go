@@ -1,23 +1,20 @@
 package utils
 
 import (
+	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/logger"
-	"github.com/dminGod/D30-HectorDA/model"
-	"github.com/BurntSushi/toml"
-	"os"
 )
 
-var Conf model.Config
-var HectorSession model.HectorSession
+var Conf config.Config
 
-func init() {
+//var HectorSession model.HectorSession
 
-	// Parse Config	
-	 _,err := toml.DecodeFile("/etc/hector/config.toml",&Conf)
- 	if err != nil {
-        	logger.Write("ERROR", err.Error(), "ERROR")
-         	os.Exit(1)
- 	}
+func Init() {
 
-	logger.Write("INFO", "Hector " + Conf.Hector.Version, Conf.Hector.Log)
+	// Initialise the configuration
+	config.Init()
+
+	Conf = config.Get()
+
+	logger.Write("INFO", "Hector "+Conf.Hector.Version, Conf.Hector.Log)
 }

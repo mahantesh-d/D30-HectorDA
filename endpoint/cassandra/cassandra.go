@@ -1,6 +1,7 @@
 package cassandra
+
 import (
-	//"github.com/gocql/gocql"
+//"github.com/gocql/gocql"
 )
 
 //var cassandraChan chan *gocql.Session

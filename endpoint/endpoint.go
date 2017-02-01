@@ -1,12 +1,13 @@
 package endpoint
 
-import(
-	"net"
-	"github.com/dminGod/D30-HectorDA/model"
+import (
+	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
+	"github.com/dminGod/D30-HectorDA/model"
+	"net"
 )
 
-func Process(Conn *net.Conn, Conf *model.Config, HectorSession *model.HectorSession) {
+func Process(Conn *net.Conn, Conf *config.Config, HectorSession *model.HectorSession) {
 
 	//logger.Write("INFO", "Processing Message", *Conf.Hector.Log)
 	//logger.Write("INFO", "Target Endpoint is " + *HectorSession.GetEndpoint(), *Conf.Hector.Log)
@@ -16,6 +17,6 @@ func Process(Conn *net.Conn, Conf *model.Config, HectorSession *model.HectorSess
 		//cassandra.Handle(Conn, Conf, HectorSession)
 		cassandra.Handle()
 	} else {
-	
+
 	}
 }
