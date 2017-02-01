@@ -5,7 +5,7 @@ import(
 	"github.com/dminGod/D30-HectorDA/logger"
 )
 
-// used to start a TCP server
+// Used to start a TCP server
 func Server () {
         
         // listen to the TCP port
