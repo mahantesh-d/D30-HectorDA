@@ -6,5 +6,5 @@ import (
 
 func ServerTest(t *testing.T) {
 
-	Server()
+	Server("protobuf")
 }
