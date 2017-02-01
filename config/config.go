@@ -36,6 +36,9 @@ func Init() {
 
 	if err != nil {
 		fmt.Println("Config not found...")
+
+		viper.AddConfigPath("/ect/hector/")
+		viper.ReadInConfig()
 	}
 
 	viper.Unmarshal(&Conf)
