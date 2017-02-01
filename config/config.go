@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"github.com/oleiade/reflections"
 )
 
 type cassandra struct {
@@ -43,7 +44,6 @@ func Init() {
 
 	viper.Unmarshal(&Conf)
 	Conf.loaded = true
-
 }
 
 func Get() Config {
@@ -54,4 +54,16 @@ func Get() Config {
 	}
 
 	return Conf
+}
+
+func GetHectorConfig(setting string) string {
+
+	if Conf.loaded != true {
+
+		Init()
+	}
+
+	retval, _ := reflections.GetField(Conf.Hector, setting)
+
+	return retval.(string)
 }

@@ -4,8 +4,8 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/model"
-	"github.com/spf13/viper"
 	"net"
+	"github.com/dminGod/D30-HectorDA/utils"
 )
 
 var serverType string
@@ -19,15 +19,22 @@ func Server(serverTypePassed string) {
 	// Set the server Type
 	serverType = serverTypePassed
 
-	Conf.Hector.Host = viper.GetString("hector.host")
-	Conf.Hector.Log = viper.GetString("hector.log")
-	Conf.Hector.Port = viper.GetString("hector.port")
-	Conf.Hector.ConnectionType = viper.GetString("hector.connectiontype")
+	Conf = config.Get();
 
 	// listen to the TCP port
-	logger.Write("INFO", "Starting Server on "+Conf.Hector.Host+":"+Conf.Hector.Port, Conf.Hector.Log)
-	listener, _ := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host+":"+Conf.Hector.Port)
-	logger.Write("INFO", "==== Server Running on "+Conf.Hector.Host+":"+Conf.Hector.Port+" =======", Conf.Hector.Log)
+	logger.Write("INFO", "Server Starting - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port)
+ 	listener, err := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host + ":" + Conf.Hector.Port)
+
+	if err != nil {
+
+		logger.Write("ERROR", "Server Starting Fail - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
+		utils.AppExit("Exiting app, configured port not available")
+	} else {
+
+		logger.Write("INFO", "Server Running - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
+	}
+
+
 
 	for {
 		if conn, err := listener.Accept(); err == nil {

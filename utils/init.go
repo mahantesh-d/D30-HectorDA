@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"os"
 )
 
 var Conf config.Config
@@ -14,7 +15,12 @@ func Init() {
 	// Initialise the configuration
 	config.Init()
 
-	Conf = config.Get()
+	logger.Write("INFO", "Hector initialize called, Version : " + Conf.Hector.Version)
+}
 
-	logger.Write("INFO", "Hector "+Conf.Hector.Version, Conf.Hector.Log)
+func AppExit(message string) {
+
+	logger.Write("ERROR", "AppExit called with message --> '" + message + "' ")
+	logger.Write("ERROR", "Exiting with error code 1")
+	os.Exit(1)
 }

@@ -28,13 +28,13 @@ func ProtoParseMsg(conn *net.Conn) {
 	n, err := (*conn).Read(data)
 
 	if err != nil {
-		logger.Write("ERROR", err.Error(), Conf.Hector.Log)
+		logger.Write("ERROR", err.Error())
 	}
 
 	//Convert all the data retrieved into the ProtobufTest.TestMessage struct type
 	err = proto.Unmarshal(data[0:n], Message)
 
-	logger.Write("INFO", "Decoding Protobuf Message", Conf.Hector.Log)
+	logger.Write("INFO", "Decoding Protobuf Message")
 
 	// decode payload
 	ProtoDecodeMsg(conn, Message)
@@ -50,7 +50,7 @@ func ProtoDecodePayload(input interface{}) map[string]interface{} {
 	err := json.Unmarshal([]byte(input.(string)), &payload)
 
 	if err != nil {
-		logger.Write("ERROR", err.Error(), Conf.Hector.Log)
+		logger.Write("ERROR", err.Error())
 	}
 
 	return payload.(map[string]interface{})
@@ -65,5 +65,5 @@ func ProtoDecodeMsg(conn *net.Conn, msg *Msg.Msg) {
 	HectorSession.Payload = ProtoDecodePayload(msg.GetPayload())
 	HectorSession.Connection = *conn
 
-	logger.Write("DEBUG", HectorSession.Module, Conf.Hector.Log)
+	logger.Write("DEBUG", HectorSession.Module)
 }
