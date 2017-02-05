@@ -2,8 +2,10 @@ package servers
 
 import (
 	"encoding/json"
+	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/proto_types/Msg"
 	"github.com/golang/protobuf/proto"
 	"net"
@@ -14,6 +16,35 @@ var Message *Msg.Msg
 func init() {
 
 	Message = new(Msg.Msg)
+}
+
+func ProtoStartServer() {
+	Conf = config.Get();
+
+	// listen to the TCP port
+	logger.Write("INFO", "Server Starting - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port)
+	listener, err := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host + ":" + Conf.Hector.Port)
+
+	if err != nil {
+
+        	logger.Write("ERROR", "Server Starting Fail - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
+        	utils.AppExit("Exiting app, configured port not available")
+
+	} else {
+
+        	logger.Write("INFO", "Server Running - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
+	}
+
+
+	for {
+        	if conn, err := listener.Accept(); err == nil {
+
+                	// if err is nil then that means that data is available for us so we move ahead
+                		go ProtoParseMsg(&conn)
+        		} else {
+                		continue
+        		}
+	}
 }
 
 func ProtoParseMsg(conn *net.Conn) {
@@ -65,5 +96,7 @@ func ProtoDecodeMsg(conn *net.Conn, msg *Msg.Msg) {
 	HectorSession.Payload = ProtoDecodePayload(msg.GetPayload())
 	HectorSession.Connection = *conn
 
-	logger.Write("DEBUG", HectorSession.Module)
+	output := endpoint.Process(conn,&Conf,&HectorSession)
+
+	_ = output
 }

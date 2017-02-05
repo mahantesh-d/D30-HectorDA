@@ -9,6 +9,6 @@ func main() {
 
 	utils.Init()
 	// Start the Hector Server
-	servers.Server("protobuf")
+	servers.Server("grpc")
 
 }

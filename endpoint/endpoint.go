@@ -7,16 +7,22 @@ import (
 	"net"
 )
 
-func Process(Conn *net.Conn, Conf *config.Config, HectorSession *model.HectorSession) {
-
-	//logger.Write("INFO", "Processing Message", *Conf.Hector.Log)
-	//logger.Write("INFO", "Target Endpoint is " + *HectorSession.GetEndpoint(), *Conf.Hector.Log)
+func Process(Conn *net.Conn, Conf *config.Config, HectorSession *model.HectorSession) (model.HectorResponse) {
 
 	endpoint := HectorSession.Endpoint
+
+	var output model.HectorResponse
+
 	if endpoint == "cassandra" {
-		//cassandra.Handle(Conn, Conf, HectorSession)
-		cassandra.Handle()
+		output = cassandra.Handle(Conn, Conf, HectorSession)
 	} else {
 
 	}
+
+	return output
+
+}
+
+func Em() {
+
 }

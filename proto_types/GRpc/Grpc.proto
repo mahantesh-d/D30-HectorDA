@@ -1,0 +1,38 @@
+// Author : Akshay Suresh
+/*
+*
+	A very Generic Proto3 Format in order to send and receive messages between
+	client and server
+*
+*/
+
+// proto3 syntax declaration
+syntax = "proto3";
+
+// request possible methods
+enum MsgMethod {
+	UNKNOWN = 0;
+	GET = 1;
+	POST = 2;
+}
+
+// register HectorServer
+service Hector {
+	rpc Execute(MsgRequest) returns (MsgResponse) {}
+	rpc ExecuteStream(MsgRequest) returns (stream MsgResponse) {}
+}
+
+// request msg
+message MsgRequest {
+        string endpoint = 1;
+        string module = 2;
+        MsgMethod msgmethod = 3;
+        string payload = 4;
+}
+
+// request msg response
+message MsgResponse {
+		string status = 1;
+		string message = 2;
+		string data = 3;
+}
