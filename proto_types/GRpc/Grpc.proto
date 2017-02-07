@@ -24,10 +24,9 @@ service Hector {
 
 // request msg
 message MsgRequest {
-        string endpoint = 1;
-        string module = 2;
-        MsgMethod msgmethod = 3;
-        string payload = 4;
+        string module = 1;
+        MsgMethod msgmethod = 2;
+        string payload = 3;
 }
 
 // request msg response

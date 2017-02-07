@@ -17,18 +17,16 @@ type GRPCServer struct {}
 
 func(g *GRPCServer) Execute(ctx context.Context, msgReq *Grpc.MsgRequest) (*Grpc.MsgResponse,error) {
 
-	endpoint := proto.String(msgReq.GetEndpoint())
 	method := msgReq.GetMsgmethod().String()
 	module := proto.String(msgReq.GetModule())
 	payload := proto.String(msgReq.GetPayload())
-	logger.Write("DEBUG", "Endpoint is " + *endpoint)
 	logger.Write("DEBUG", "Method is " + method)
 	logger.Write("DEBUG", "Module is " + *module)
 	logger.Write("DEBUG", "Payload is " + *payload)
 
 	HectorSession.Method = method
 	HectorSession.Module = *module
- 	HectorSession.Endpoint = *endpoint
+ 	HectorSession.Endpoint = "cassandra"
 	HectorSession.Payload = ProtoDecodePayload(*payload)
 
 	output := handleEndPoint(nil,&Conf,&HectorSession)	
