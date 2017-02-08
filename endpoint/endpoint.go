@@ -7,22 +7,14 @@ import (
 	"net"
 )
 
-func Process(Conn *net.Conn, Conf *config.Config, HectorSession *model.HectorSession) (model.HectorResponse) {
+func Process(Conn *net.Conn, Conf *config.Config, DBAbstract *model.DBAbstract) {
 
-	endpoint := HectorSession.Endpoint
-
-	var output model.HectorResponse
+	endpoint := DBAbstract.DBType
 
 	if endpoint == "cassandra" {
-		output = cassandra.Handle(Conn, Conf, HectorSession)
+		cassandra.Handle(Conn, Conf, DBAbstract)
 	} else {
 
 	}
-
-	return output
-
-}
-
-func Em() {
 
 }

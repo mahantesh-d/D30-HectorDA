@@ -7,8 +7,8 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"net"
 	"time"	
-	"strings"
-	"strconv"
+	_"strings"
+	_"strconv"
 )
 
 var cassandraChan chan *gocql.Session
@@ -18,16 +18,11 @@ var cassandraHost string
 func init() {
 	cassandraChan = make(chan *gocql.Session,100)
 }
-func Handle(Conn *net.Conn, Conf *config.Config, HectorSession *model.HectorSession) (model.HectorResponse) {
 
-	var response model.HectorResponse
+func Handle(Conn *net.Conn, Conf *config.Config, dbAbstract *model.DBAbstract) {
+
 	cassandraHost = Conf.Cassandra.Host
-	if HectorSession.Method == "POST" {
-		query := preparePost(HectorSession)
-		response = post(query)
-	}
-
-	return response
+	Insert(dbAbstract)
 
 }
 
@@ -53,68 +48,29 @@ func getSession() (*gocql.Session,error) {
 	}
 }
 
-func preparePost(HectorSession *model.HectorSession) string {
-
-	module := HectorSession.Module
-	query := "INSERT INTO " + module
-
-	name := " ( "
-	value := " ( "
-	for i,v := range HectorSession.Payload {
-	
-		name += (i + ",")
-		switch c := v.(type) {
-		
-			case string:
-				val := "'" + v.(string) + "'"
-				value += val
-			case int32, int64:
-				
-				val := (strconv.Itoa(v.(int)))
-				value += val
-			case float32,float64:
-				val := strconv.FormatFloat(v.(float64),'f',-1,64)
- 				value += val
-			default:
-				_ = c
-		}
-		
-		value += ","
-	}	
-
-	name = strings.Trim(name,",")
-	value = strings.Trim(value,",")
-
-	query += name + " ) VALUES " + value + " ) "
-
-	
-	return query
-}
-
-
-func post(query string) (model.HectorResponse) {
+func Insert(dbAbstract *model.DBAbstract) {
 	
 	session,_ := getSession()
-	logger.Write("DEBUG", "QUERY : " + query)
-	err := session.Query(query).Exec() 
-	var response model.HectorResponse
+	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query)
+	err := session.Query(dbAbstract.Query).Exec() 
 	if err != nil {
 		logger.Write("ERROR", err.Error())
-		response.Status = "fail"
-		response.Message = err.Error()
-		response.Data = "{}"
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
 	} else {
 		logger.Write("INFO","Inserted successfully")
-		response.Status = "success"
-		response.Message = "Inserted successfully"
-		response.Data = "{}"
+		dbAbstract.Status = "success"
+		dbAbstract.Message = "Inserted successfully"
+		dbAbstract.Data = "{}"
 	}
+	dbAbstract.Count = 0
+
 	go queueSession(session)
 
-	return response
 }
 
-func get(query string) {
+func Select(query string) {
 
 }
 

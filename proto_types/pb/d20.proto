@@ -1,0 +1,173 @@
+// Since we're gonna suport gRPC, protoc3 is recommended rather than protoc2.
+
+syntax = "proto3";
+
+package pb;
+
+// The Add service definition.
+service Hector {
+  rpc Do (Request) returns (Response);
+  rpc ResolveAlias (Request) returns (Response);
+  rpc AtomicAdd (Request) returns (Response);
+  rpc TxBegin (TxBeginRequest) returns (TxBeginResponse);
+  rpc TxDo (Request) returns (Response);
+  rpc TxCommit (TxCommitRequest) returns (TxCommitResponse);
+  rpc TxRollback (TxRollbackRequest) returns (TxRollbackResponse);
+  rpc GetStream (Request) returns (stream Response);
+}
+
+message TxBeginRequest {}
+
+message TxBeginResponse {
+    uint64  TID                        = 1;
+    Metadata Metadata                  = 2;
+}
+
+message TxCommitRequest {
+    uint64  TID                        = 1;
+}
+
+message TxCommitResponse {
+    uint64  TID                        = 1;
+    Metadata Metadata                  = 2;
+}
+
+message TxRollbackRequest {
+    uint64  TID                        = 1;
+}
+
+message TxRollbackResponse {
+    uint64  TID                        = 1;
+    Metadata Metadata                  = 2;
+}
+
+// LDAP Search scope
+enum SearchScope {
+    BaseObject  = 0;
+    SingleLevel = 1;
+    Subtree     = 2;
+}
+
+enum RESTMethod {
+    UNKNOWN    = 0;
+    GET        = 1;
+    PUT        = 2;
+    POST       = 3;
+    DELETE     = 4;
+    SYNC       = 5;
+    QGET       = 6;
+}
+
+enum EntryMethod {
+    Unknown   = 0;
+    Add       = 1;
+    Replace   = 2;
+    Delete    = 3;
+    Increase  = 4;
+}
+
+enum TxMethod {
+    TXUNKNOWN  = 0;
+    TXBEGIN    = 1;
+    TXDO       = 2;
+    TXCOMMIT   = 3;
+    TXROLLBACK = 4;
+    TXUNDO     = 5;
+    TXLOCK     = 6;
+    TXSTORE    = 7;
+}
+
+// Request
+message Request {
+    /* option (gogoproto.goproto_getters) = true; */
+    /* option (gogoproto.face)            = false; */
+    uint64 ID                          = 1;
+    int64 Time                         = 2;
+    RESTMethod Method                  = 3;
+    string BaseDn                      = 4;
+    string Filter                      = 5; // GET, SEARCH
+    repeated string Attributes         = 6; // GET, SEARCH
+    SearchScope Scope                  = 7;
+    Entry Entry                        = 8; // PUT, MOD
+    string Dn                          = 9;
+    bool Recursive                     = 10;
+    int32 DerefAliases                 = 11;
+    int32 SizeLimit                    = 12;
+    int32 TimeLimit                    = 13;
+    bool TypesOnly                     = 14;
+    ControlTypeString ControlString    = 15;
+    uint64 GID                         = 16; // Group ID
+    uint64 TID                         = 17; // Transaction ID
+    TxMethod TxMethod                  = 18; // Transcation Method
+    string ApplicationName	       = 19;
+    string ApplicationMethod           = 20;
+    string ApplicationPayload          = 21;
+}
+
+message TxRequest {
+    uint64 ID                      = 1;
+    int64 Time                     = 2;
+    repeated Request Requests      = 3;
+}
+
+message TxResponse {
+    uint64 ID                          = 1;
+    int32 LastSuccessIndex             = 2;
+    Response  Response                 = 3;
+}
+
+message ControlTypeString {
+    string ControlType     = 1;
+    bool Criticality       = 2;
+    string ControlValue    = 3;
+}
+
+// Entry represents on single Dn in LDAP
+message Entry {
+    /* option (gogoproto.goproto_getters) = true; */
+    /* option (gogoproto.face)            = false; */
+    string Dn                          = 1;
+    bool ModDn                         = 2;
+    repeated EntryAttribute Attributes = 3;
+}
+
+// Key value pair
+message EntryAttribute {
+    /* option (gogoproto.goproto_getters) = true; */
+    /* option (gogoproto.face)            = false; */
+    EntryMethod Method     = 1;
+    string Name            = 2;
+    repeated string Values = 3;
+}
+
+// Response
+message Response {
+    /* option (gogoproto.goproto_getters) = true; */
+    /* option (gogoproto.face)            = false; */
+    uint64 ID                          = 1;
+    uint64 GID                         = 2; // Group ID
+    Metadata Metadata                  = 3;
+    uint32 ResultCode                  = 4;
+    string MatchedDn                   = 5;
+    string ResultDescription           = 6;
+    repeated Entry Entries             = 7;
+    repeated string Referrals          = 8;
+    repeated string Controls           = 9;
+    uint64 TID                         = 10; // Tx ID
+    uint32 StreamFlag                  = 11; // 0: Done, 1: StreamEntryResponse
+    uint32 StatusCode		       = 12;
+    string Status		       = 13;
+    string StatusCodeMessage           = 14;
+    string Message                     = 15;
+    string Data			       = 16;
+    uint64 Count		       = 17;
+}
+
+// Meta data is used to return meta data to response
+message Metadata {
+    uint64 NodeID                      = 1;
+    uint64 ClusterID                   = 2;
+    uint64 RaftIndex                   = 3;
+    uint64 RaftTerm                    = 4;
+}
+

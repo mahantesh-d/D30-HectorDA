@@ -3,11 +3,11 @@ package servers
 import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"github.com/dminGod/D30-HectorDA/proto_types/GRpc"
-	"github.com/golang/protobuf/proto"	
+	"github.com/dminGod/D30-HectorDA/proto_types/pb"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/golang/protobuf/proto"
 	"net"
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/model"
@@ -15,30 +15,57 @@ import (
 
 type GRPCServer struct {}
 
-func(g *GRPCServer) Execute(ctx context.Context, msgReq *Grpc.MsgRequest) (*Grpc.MsgResponse,error) {
+func(g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
-	method := msgReq.GetMsgmethod().String()
-	module := proto.String(msgReq.GetModule())
-	payload := proto.String(msgReq.GetPayload())
-	logger.Write("DEBUG", "Method is " + method)
-	logger.Write("DEBUG", "Module is " + *module)
-	logger.Write("DEBUG", "Payload is " + *payload)
+	return new(pb.Response),nil
+}
 
-	HectorSession.Method = method
-	HectorSession.Module = *module
- 	HectorSession.Endpoint = "cassandra"
-	HectorSession.Payload = ProtoDecodePayload(*payload)
+func(g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
-	output := handleEndPoint(nil,&Conf,&HectorSession)	
-	
-	msgResponse := responseTransform(output)
-	return msgResponse,nil
+	// map the data to the abstract request
+	RequestAbstract = mapAbstractRequest(req)
+
+	// routing
+	respAbs,_ := HandleRoutes(RequestAbstract)
+
+
+	// map the result to abstract response
+	resp := mapAbstractResponse(respAbs)
+        
+	return resp,nil
+}
+
+func(g *GRPCServer) GetStream(req *pb.Request, stream_resp pb.Hector_GetStreamServer) error {
+
+        return nil
 }
 
 
-func(g *GRPCServer) ExecuteStream(msgReq *Grpc.MsgRequest, grpcStreamServer Grpc.Hector_ExecuteStreamServer) error {
+func(g *GRPCServer) ResolveAlias(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
-	return nil
+        return new(pb.Response),nil
+}
+
+func(g *GRPCServer) TxBegin(ctx context.Context, req *pb.TxBeginRequest) (*pb.TxBeginResponse,error) {
+
+        return new(pb.TxBeginResponse),nil
+}
+
+func(g *GRPCServer) TxDo(ctx context.Context, req *pb.Request) (*pb.Response,error) {
+
+        return new(pb.Response),nil
+}
+
+
+func(g *GRPCServer) TxCommit(ctx context.Context, req *pb.TxCommitRequest) (*pb.TxCommitResponse,error) {
+
+        return new(pb.TxCommitResponse),nil
+}
+
+
+func(g *GRPCServer) TxRollback(ctx context.Context, req *pb.TxRollbackRequest) (*pb.TxRollbackResponse,error) {
+
+        return new(pb.TxRollbackResponse),nil
 }
 
 func GRPCStartServer() {
@@ -47,6 +74,7 @@ func GRPCStartServer() {
 	// listen to the TCP port
 	logger.Write("INFO", "Server Starting - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port)
  	listener, err := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host + ":" + Conf.Hector.Port)
+	
 	if err != nil {
         	logger.Write("ERROR", "Server Starting Fail - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
         	utils.AppExit("Exiting app, configured port not available")
@@ -55,22 +83,42 @@ func GRPCStartServer() {
  	}
 
 	grpcServer := grpc.NewServer()
-	Grpc.RegisterHectorServer(grpcServer,new(GRPCServer))
+	pb.RegisterHectorServer(grpcServer,new(GRPCServer))
 	grpcServer.Serve(listener)
 }
 
-func handleEndPoint(Conn *net.Conn, Conf *config.Config, HectorSession *model.HectorSession) (model.HectorResponse) {
-	output := endpoint.Process(nil,Conf,HectorSession)
+func handleEndPoint(Conn *net.Conn, Conf *config.Config, RequestAbstract *model.RequestAbstract) {
+	
+	var dbAbstract model.DBAbstract
 
-	return output
+	dbAbstract.DBType = "cassandra"
+	dbAbstract.QueryType = "INSERT"
+	dbAbstract.Query = "INSERT INTO foo(id, name) VALUES(2,'xyz')"
+	
+
+	endpoint.Process(nil,Conf, &dbAbstract)
+
 }
 
-func responseTransform(h model.HectorResponse) (*Grpc.MsgResponse) {
+func mapAbstractRequest(req *pb.Request) (model.RequestAbstract) {
 
-	msgResponse := new(Grpc.MsgResponse)
-	msgResponse.Status = h.Status
-	msgResponse.Message = h.Message
-	msgResponse.Data = h.Data
-
-	return msgResponse
+	var reqAbs model.RequestAbstract
+	reqAbs.Application = req.GetApplicationName()
+	reqAbs.Action = req.GetApplicationMethod()
+	reqAbs.HTTPRequestType = req.GetMethod().String()
+	reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
+	return reqAbs
 }
+
+func mapAbstractResponse(respAbs model.ResponseAbstract) (*pb.Response) {
+
+	resp := new(pb.Response)
+	resp.StatusCode = *(proto.Uint32(uint32(float64(respAbs.StatusCode))))
+	resp.Status = respAbs.Status	
+	resp.StatusCodeMessage = respAbs.StandardStatusMessage
+	resp.Message = respAbs.Text
+	resp.Data = respAbs.Data
+	resp.Count =  *(proto.Uint64(respAbs.Count))
+	return resp
+
+} 
