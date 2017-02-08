@@ -1,5 +1,5 @@
 # D30-HectorDA
-[![Build Status](https://travis-ci.org/dminGod/D30-HectorDA.svg?branch=master)](https://travis-ci.org/dminGod/D30-HectorDA)
+[![Build Status](https://travis-ci.org/dminGod/D30-HectorDA.svg?branch=master)](https://travis-ci.org/dminGod/D30-HectorDA) [![GoDoc](https://godoc.org/github.com/dminGod/D30-HectorDA?status.svg)](https://godoc.org/github.com/dminGod/D30-HectorDA)
 ### Overview
 
 ---
