@@ -1,0 +1,14 @@
+
+help() {
+	echo "Make sure HECTOR_HOME environment variable is set"
+	echo "This can be done temporarily using the command: "
+	echo -e "\t export HECTOR_HOME=<path-to-hector-root>"
+	exit 1
+}
+
+if [ -z $HECTOR_HOME ]
+then
+	help	
+fi
+echo "Proceeding..."
+python -m grpc_tools.protoc -I$HECTOR_HOME/proto_types/pb --python_out=. --grpc_python_out=. $HECTOR_HOME/proto_types/pb/d20.proto

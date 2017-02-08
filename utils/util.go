@@ -22,6 +22,16 @@ func DecodeJSON(input interface{}) map[string]interface{} {
 }
 
 
+func EncodeJSON(input interface{}) string {
+	jsonString, err := json.Marshal(input)
+	
+	if err != nil {
+		logger.Write("ERROR", "Error Parsing JSON")
+	}
+
+	return string(jsonString)
+}
+
 
 func PrepareInsert(tableName string, attr map[string] interface{}) string {
 
@@ -34,10 +44,14 @@ func PrepareInsert(tableName string, attr map[string] interface{}) string {
                 name += (i + ",")
 
 		switch c := v.(type) {
-
          		case string:
-                		val := "'" + v.(string) + "'"
-                 		value += val
+				val := ""
+                		if strings.HasSuffix(i, "_pk") && strings.ToLower(v.(string)) == "now()" {
+					val = v.(string)
+				} else {
+					val = "'" + v.(string) + "'"
+                 		}
+				value += val
          		case int32, int64:
                  		val := (strconv.Itoa(v.(int)))
                  		value += val

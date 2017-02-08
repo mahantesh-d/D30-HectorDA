@@ -9,6 +9,7 @@ import (
 	"time"	
 	_"strings"
 	_"strconv"
+	"github.com/dminGod/D30-HectorDA/utils"
 )
 
 var cassandraChan chan *gocql.Session
@@ -22,8 +23,12 @@ func init() {
 func Handle(Conn *net.Conn, Conf *config.Config, dbAbstract *model.DBAbstract) {
 
 	cassandraHost = Conf.Cassandra.Host
-	Insert(dbAbstract)
-
+	
+	if(dbAbstract.QueryType == "INSERT") {
+		Insert(dbAbstract)
+	} else if(dbAbstract.QueryType == "SELECT") {
+		Select(dbAbstract)
+	}
 }
 
 func getSession() (*gocql.Session,error) {
@@ -70,8 +75,26 @@ func Insert(dbAbstract *model.DBAbstract) {
 
 }
 
-func Select(query string) {
+func Select(dbAbstract *model.DBAbstract) {
 
+	session,_ := getSession()
+	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query)
+	iter := session.Query(dbAbstract.Query).Iter()
+	result,err := iter.SliceMap()
+	
+	_ = err	
+	if err != nil {
+		logger.Write("ERROR", err.Error())
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+	} else {
+		dbAbstract.Status = "success"
+		dbAbstract.Message = "Inserted successfully"
+		dbAbstract.Data = utils.EncodeJSON(result)
+		dbAbstract.Count = uint64(len(result))
+	}
 }
 
 func queueSession(session *gocql.Session) {
