@@ -3,6 +3,7 @@ package queryhelper
 import(
 	"fmt"
 	"strings"
+	"github.com/dminGod/D30-HectorDA/utils"
 )
 func PrepareQuery(metaInput map[string]interface{}) string {
 
@@ -33,16 +34,17 @@ func cassandraQueryBuild(metaInput map[string]interface{}) string {
 			case "set<text>":
 				value += returnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 			case "map<text,text>":
-				fmt.Println("Map<Text,Text> is " + dataType)
+				value += returnMap((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			default:
+				_ = dataType
 		}
-
 		value += ","
 	}
 
 	name = strings.Trim(name,",")
 	value = strings.Trim(value,",")
 
-	fmt.Println("INSERT INTO something ( " + name + " ) VALUES ( " + value + " ) ")
+	fmt.Println("INSERT INTO " + metaInput["table"].(string) + " ( " + name + " ) VALUES ( " + value + " ) ")
 	
 
 	return ""
@@ -69,4 +71,11 @@ func returnSetText(input interface{}) string {
 	value += "}"
 
 	return value
+}
+
+func returnMap(input interface{}) string {
+
+	value := utils.EncodeJSON(input.(map[string]interface{}))
+	
+	return returnString(value)
 }
