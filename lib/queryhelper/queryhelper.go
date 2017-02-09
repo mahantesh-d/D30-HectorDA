@@ -29,12 +29,14 @@ func cassandraQueryBuild(metaInput map[string]interface{}) string {
 		switch dataType := v.(string); v {
 			case "uuid":
 				value += ((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))
-			case "text":
+			case "text","timestamp":
 				value += returnString((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 			case "set<text>":
 				value += returnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 			case "map<text,text>":
 				value += returnMap((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			case "int":
+				value += returnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 			default:
 				_ = dataType
 		}
@@ -56,6 +58,14 @@ func returnString(input interface{}) string{
 	return "'" + strings.Replace(input.(string),"'","\\'",-1) + "'"
 
 }
+
+
+func returnInt(input interface{}) string{
+
+        return strings.Replace(input.(string),"'","\\'",-1)
+
+}
+
 
 func returnSetText(input interface{}) string {
 

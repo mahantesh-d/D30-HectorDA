@@ -31,7 +31,7 @@ CREATE TABLE stock_adjustment(
  product_type_key set<varchar>,
  product_subtype_key set<varchar>,
  serial_key set<varchar>,
- adjust_detail map<varchar, varchar> 
+ adjust_detail map<varchar, varchar>, 
  adjust_detail_s text);
  
 CREATE TABLE obtain_detail (
@@ -55,7 +55,7 @@ CREATE TABLE obtain_detail (
  sales_code_key set<varchar>,
  mat_code_key set<varchar>,
  serial_key set<varchar>,
- obtaindetail map<varchar, varchar> 
+ obtaindetail map<varchar, varchar>, 
  obtaindetail_s text);
  
 CREATE TABLE sub_stock_detail_transfer (
@@ -82,7 +82,7 @@ CREATE TABLE sub_stock_detail_transfer (
  mat_code_key set<varchar>,
  serial_key set<varchar>,
  from_substock_key set<varchar>,
- transfer_substock_detail map<varchar, varchar> 
+ transfer_substock_detail map<varchar, varchar>, 
  transfer_substock_detail_s text);
  
 CREATE TABLE sub_stock_daily_detail	(
@@ -105,7 +105,7 @@ CREATE TABLE sub_stock_daily_detail	(
  create_datetime timestamp,
  update_by varchar,
  update_datetime timestamp,
- substock_daily_detail map<varchar, varchar> 
+ substock_daily_detail map<varchar, varchar>,
  substock_daily_detail_s text);
  
 CREATE TABLE tranfer_out_mismatch (
@@ -119,7 +119,7 @@ CREATE TABLE tranfer_out_mismatch (
  create_datetime timestamp,
  update_by varchar,
  update_datetime timestamp,
- mismatch_detail map<varchar, varchar> 
+ mismatch_detail map<varchar, varchar>, 
  mismatch_detail_s text);
  
 CREATE TABLE request_goods (
@@ -169,7 +169,7 @@ CREATE TABLE request_goods (
  product_type_key set<varchar>,
  product_subtype_key set<varchar>,
  commercial_name_key set<varchar>,
- request_detail map<varchar, varchar> 
+ request_detail map<varchar, varchar>, 
  request_detail_s text);
  
 CREATE TABLE order_transfer	(
@@ -238,7 +238,7 @@ CREATE TABLE sale_out_detail (
  product_subtype_key set<varchar>,
  commercial_name_key set<varchar>,
  serial_key set<varchar>,
- salesoutdetail map<varchar, varchar> 
+ salesoutdetail map<varchar, varchar>, 
  salesoutdetail_s text);
  
 CREATE TABLE check_stock_detail (
@@ -264,5 +264,5 @@ CREATE TABLE check_stock_detail (
  commercial_name_key set<varchar>,
  serial_match_key set<varchar>,
  serial_not_found_key set<varchar>,
- check_stock_detail map<varchar, varchar> 
+ check_stock_detail map<varchar, varchar>, 
  check_stock_detail_s text);

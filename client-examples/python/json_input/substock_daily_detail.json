@@ -1,0 +1,20 @@
+{
+	"transactionId": "00000000007",
+	"transactionType": "SubSotckDaily",
+	"subStockDailyNo": "SS1177160500009",
+	"dateForSales": "2016-09-09 15:37:50+0700",
+	"salesFor": "front",
+	"dailyStatus": "Complete",
+	"locationCode": "1177",
+	"locationName": "AIS Online Store By Online Marketing Team",
+	"locationType": "AIS",
+	"locationSubType": "Back Office",
+	"locationRegion": "CB",
+	"locationProvince": "BKK",
+	"controllerName": "Nunii",
+	"devicePaymentName": "Nadiana",
+	"createBy": "Christ Horwang",
+	"createDateTime": "2016-09-09 15:37:50+0700",
+	"updateBy": "Nana Raibena",
+	"updateDateTime": "2016-09-09 15:37:50+0700"
+}
