@@ -5,6 +5,8 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"strings"
 	"strconv"
+	"fmt"
+	"io/ioutil"
 )
 
 func DecodeJSON(input interface{}) map[string]interface{} {
@@ -88,3 +90,28 @@ func KeyInMap(key string, attributes map[string]interface{}) (bool) {
     return false
 }
 
+func FindMap(key string, value interface{}, input map[string]interface{}) map[string]interface{} {
+
+
+	output := make(map[string]interface{})
+	// iterate over each map
+	for _,v := range input {
+		meta := v.(map[string]interface{})
+		if meta[key] == value {
+			output = meta
+		}
+	}
+
+	return output
+
+}
+
+func ReadFile(path string) string {
+	
+	raw, err := ioutil.ReadFile(path)
+ 	if err != nil {
+        	fmt.Println(err.Error())
+ 	}	
+
+	return string(raw)
+}
