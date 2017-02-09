@@ -1,0 +1,29 @@
+{"alltrade_foobar_v1" : {
+	"databaseType" : "cassandra",
+	"version" : 1,
+	"database" : "alltrade",
+	"table" : "foobar",
+	"fields" :{
+        	"id":
+                	{
+                	"name": "id",
+                	"type" : "uuid"
+                	},
+        	"name" :
+                	{
+                	"name": "name",
+                	"type" : "text"
+                	},
+        	"email":
+                	{
+                	"name": "email_id",
+                	"type" : "set<text>"
+                	},
+        	"dynamic":
+                	{
+                	"name": "dyn",
+                	"type": "map<text,text>"
+                	}
+        	}
+	}	
+}
