@@ -7,4 +7,5 @@ go:
 
 script:
   - sudo mkdir -p /etc/hector; sudo cp config.toml /etc/hector
+  - sudo mkdir -p /etc/hector/metadata/alltrade; sudo cp metadata/example/alltrade.json /etc/hector/metadata/alltrade/
   - go test -v ./...

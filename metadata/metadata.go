@@ -5,7 +5,7 @@ import(
 	"github.com/dminGod/D30-HectorDA/utils"
 )
 
-func Interpret(application string, payload map[string]interface{}) map[string]interface{} {
+func InterpretApplication(application string, payload map[string]interface{}) map[string]interface{} {
 	
 	path := os.Getenv("HECTOR_HOME") + "/" + application + "/meta.json"
 	return interpretfile(path,payload)
@@ -18,6 +18,54 @@ func InterpretFile(path string, payload map[string]interface{}) map[string]inter
 
 }
 
+func Interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
+	
+	return interpret(metadata, payload)
+}
+
+func interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
+
+	outputString := ""
+
+
+	output := make(map[string]interface{})
+	output["databaseType"] = metadata["databaseType"]
+	output["version"] = metadata["version"]
+	output["database"] = metadata["database"]
+	output["table"] = metadata["table"]
+
+	output_key_values := make(map[string]interface{})
+	output_key_meta := make(map[string]interface{})
+	for k,v := range metadata["fields"].(map[string]interface{}) {
+        
+		f := v.(map[string] interface{})
+        	val := make([]string,2)
+        	val[0] = f["name"].(string)
+        	val[1] = f["type"].(string)
+
+        	outputString += k
+
+        	switch t := val[1]; t {
+
+                case "uuid":
+                        output_key_values[k] = "NOW()"
+                        output_key_meta[k] = t
+                case "text":
+                        addData(&output_key_values,&output_key_meta, k , payload, val[0], t)
+                case "set<text>":
+                        addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
+                case "map<text,text>":
+                        addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
+        	}
+
+	}
+
+	output["field_keyvalue"] = output_key_values
+	output["field_keymeta"] = output_key_meta
+
+	return output
+
+}
 
 func interpretfile(path string, payload map[string]interface{}) map[string]interface{} {
 	
@@ -54,49 +102,7 @@ func interpretfile(path string, payload map[string]interface{}) map[string]inter
 	`
 	metadata := utils.DecodeJSON(metadataString)
 		
-	outputString := ""
-
-
-	output := make(map[string]interface{})
-
-	output["databaseType"] = metadata["databaseType"]
-	output["version"] = metadata["version"]
-	output["database"] = metadata["database"]
-	output["table"] = metadata["table"]
-
- 	output_key_values := make(map[string]interface{})
-	output_key_meta := make(map[string]interface{})
-	for k,v := range metadata["fields"].(map[string]interface{}) {
-
-		f := v.(map[string] interface{})
-	
-		val := make([]string,2)
-		val[0] = f["name"].(string)
-		val[1] = f["type"].(string)	
-			
-        	outputString += k
-
-        	
-		switch t := val[1]; t {
-
-       			case "uuid":
-				output_key_values[k] = "NOW()"
-				output_key_meta[k] = t
-                	case "text":
-				addData(&output_key_values,&output_key_meta, k , payload, val[0], t)
-                	case "set<text>":
-				addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
-			case "map<text,text>":
-        			addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
-		}
-
-	}
-
-	output["field_keyvalue"] = output_key_values
-	output["field_keymeta"] = output_key_meta
-
-	return output
-
+	return interpret(metadata, payload)
 }
 
 func addData(output_key_values *map[string]interface{}, output_key_meta *map[string]interface{}, key string, payload map[string]interface{}, value interface{}, dataType string) {

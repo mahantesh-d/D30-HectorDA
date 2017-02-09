@@ -12,9 +12,10 @@ import(
 )
 
 var conf config.Config 
-
+var metaData map[string]interface{}
 func init() {
 	conf = config.Get()
+	metaData = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltrade.json"))
 }
 
 func Foo_Post(req model.RequestAbstract) (model.ResponseAbstract) {
@@ -102,8 +103,8 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
-	metaResult := metadata.Interpret("alltrade",req.Payload)
-	
+	metaInput := utils.FindMap("table","foobar", metaData)
+	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareQuery(metaResult)
 
 	var dbAbs model.DBAbstract
