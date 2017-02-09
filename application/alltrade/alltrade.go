@@ -1,12 +1,14 @@
 package alltrade
 
 import(
+	"fmt"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/metadata"
+	"github.com/dminGod/D30-HectorDA/lib/queryhelper"
 	_"strings"
 )
 
@@ -101,7 +103,10 @@ func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 	metaResult := metadata.Interpret("alltrade",req.Payload)
 	
-	_ = metaResult
+	query := queryhelper.PrepareQuery(metaResult)
+
+	fmt.Println(query)
+
 	var dbAbs model.DBAbstract
 	return prepareResponse(dbAbs)
 }

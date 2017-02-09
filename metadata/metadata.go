@@ -42,12 +42,12 @@ func interpretfile(path string, payload map[string]interface{}) map[string]inter
 		"email":  
 			{
 			"name": "email_id",
-			"type" : "text"
+			"type" : "set<text>"
 			},
 		"dynamic": 
 			{
 			"name": "dyn",
-			"type": "text"
+			"type": "map<text,text>"
 			}
 		}
 	}
@@ -102,7 +102,7 @@ func interpretfile(path string, payload map[string]interface{}) map[string]inter
 func addData(output_key_values *map[string]interface{}, output_key_meta *map[string]interface{}, key string, payload map[string]interface{}, value interface{}, dataType string) {
 	
 	if utils.KeyInMap(value.(string), payload) {
-		(*output_key_values)[key] = payload[value.(string)].(string)
+		(*output_key_values)[key] = payload[value.(string)]
 		(*output_key_meta)[key] = dataType
 	}
 }
