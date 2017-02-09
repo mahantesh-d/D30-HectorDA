@@ -14,3 +14,9 @@ HectorDA uses gRPC in order to perform complex operations on databases.
 API Documentation : [https://godoc.org/github.com/dminGod/D30-HectorDA](https://godoc.org/github.com/dminGod/D30-HectorDA) 
 
 Docker Image : [https://hub.docker.com/r/akshays/hectorda/](https://hub.docker.com/r/akshays/hectorda/)
+
+### Architecture Overview
+
+---
+
+![alt text](https://raw.githubusercontent.com/dminGod/D30-HectorDA/master/references/architecture_diagram.jpg "Architecture Overview")
