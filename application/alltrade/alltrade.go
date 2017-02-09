@@ -1,7 +1,6 @@
 package alltrade
 
 import(
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/endpoint"
@@ -52,6 +51,7 @@ func Foo_Get(req model.RequestAbstract) (model.ResponseAbstract) {
 	
 	logger.Write("DEBUG", "Function Foo_Get Executing...")
 	var dbAbs model.DBAbstract
+
 	dbAbs.DBType = "cassandra"
 	dbAbs.QueryType = "SELECT"
 	dbAbs.Query = "SELECT * from foo"
@@ -94,6 +94,7 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
  	responseAbstract.Text = dbAbs.Message
  	responseAbstract.Data = dbAbs.Data
  	responseAbstract.Count = dbAbs.Count
+
 	
 	return responseAbstract
 }
@@ -105,9 +106,12 @@ func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 	
 	query := queryhelper.PrepareQuery(metaResult)
 
-	fmt.Println(query)
-
 	var dbAbs model.DBAbstract
+	dbAbs.DBType = "cassandra"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(nil,&conf,&dbAbs)
+
 	return prepareResponse(dbAbs)
 }
 

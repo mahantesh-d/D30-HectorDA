@@ -1,20 +1,20 @@
 package queryhelper
 
 import(
-	"fmt"
 	"strings"
 	"github.com/dminGod/D30-HectorDA/utils"
 )
 func PrepareQuery(metaInput map[string]interface{}) string {
 
 	// get the endpoint
-	databaseType := metaInput["databaseType"]
+	databaseType := metaInput["databaseType"].(string)
 	
+	query := ""
 	if databaseType == "cassandra" {
-		cassandraQueryBuild(metaInput)
+		query = cassandraQueryBuild(metaInput)
 	}
 		
-	return ""
+	return query
 }
 
 
@@ -44,10 +44,10 @@ func cassandraQueryBuild(metaInput map[string]interface{}) string {
 	name = strings.Trim(name,",")
 	value = strings.Trim(value,",")
 
-	fmt.Println("INSERT INTO " + metaInput["table"].(string) + " ( " + name + " ) VALUES ( " + value + " ) ")
+	query := "INSERT INTO " + metaInput["table"].(string) + " ( " + name + " ) VALUES ( " + value + " ) "
 	
 
-	return ""
+	return query
 }
 
 
