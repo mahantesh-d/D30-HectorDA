@@ -1,0 +1,7 @@
+{
+	"id" : :  "id|uuid",
+	"name" :  "name|text",
+	"email":  "email_id|set<text>",
+	"dynamic": "dyn|map<text,text>"
+
+}

@@ -73,3 +73,18 @@ func PrepareInsert(tableName string, attr map[string] interface{}) string {
 
         return query
 }
+
+
+func KeyInMap(key string, attributes map[string]interface{}) (bool) {
+
+    // iterate over each route
+    for k,_ := range attributes {
+
+            if key == k {
+                    return true
+            }
+    }
+
+    return false
+}
+
