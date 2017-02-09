@@ -17,7 +17,8 @@ func init() {
 	Routes = map[string] func(model.RequestAbstract) model.ResponseAbstract {
 		"alltrade_foo_post" : alltrade.Foo_Post,
 		"alltrade_foo_get" : alltrade.Foo_Get,
-		"alltrade_stock_adjustment_post" : alltrade.StockAdjustment_Post}
+		"alltrade_stock_adjustment_post" : alltrade.StockAdjustment_Post,
+		"alltrade_foobar_post" : alltrade.Foobar_Post}
 }
 
 

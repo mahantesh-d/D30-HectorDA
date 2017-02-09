@@ -6,6 +6,8 @@ import(
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
+	"github.com/dminGod/D30-HectorDA/metadata"
+	_"strings"
 )
 
 var conf config.Config 
@@ -75,15 +77,8 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
 	dbAbs.QueryType = "INSERT"
-	name := ""
-	value := ""
-	name += "stock_adjustment_pk, adjust_date_time, adjust_status"
-	value += " NOW(), " + req.Payload["adjust_datetime"].(string) + ", " + req.Payload["adjust_status"].(string)
 
-	dbAbs.Query = "INSERT INTO stock_adjustment ( " + name + " ) VALUES ( " + value + ")"
-
-
-	endpoint.Process(nil,&conf,&dbAbs)
+	//endpoint.Process(nil,&conf,&dbAbs)
 
 	var responseAbstract model.ResponseAbstract
 	if dbAbs.Status == "fail" {
@@ -98,5 +93,27 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
  	responseAbstract.Data = dbAbs.Data
  	responseAbstract.Count = dbAbs.Count
 	
+	return responseAbstract
+}
+
+
+func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
+
+	metaResult := metadata.Interpret("alltrade",req.Payload)
+	
+	_ = metaResult
+	var dbAbs model.DBAbstract
+	return prepareResponse(dbAbs)
+}
+
+func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
+	
+	var responseAbstract model.ResponseAbstract
+	responseAbstract.Status = dbAbs.Status
+	responseAbstract.StandardStatusMessage =  dbAbs.StatusCodeMessage
+	responseAbstract.Text = dbAbs.Message
+	responseAbstract.Data = dbAbs.Data
+	responseAbstract.Count = dbAbs.Count
+
 	return responseAbstract
 }
