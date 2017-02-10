@@ -686,11 +686,55 @@
 		"database": "alltrade",
 		"table": "order_transfer",
 		"fields": {
-			"obtain_detail_pk": {
-				"name": "obtain_detail_pk",
+			"order_transfer_pk": {
+				"name": "order_transfer_pk",
 				"type": "uuid"
-			}
-
+			},
+		
+		"brand_key":{"name":"brand_key","type":"set<text>"},
+"cancel_by":{"name":"cancelBy","type":"text"},
+"cancel_datetime":{"name":"cancelDateTime","type":"timestamp"},
+"company":{"name":"company","type":"text"},
+"create_by":{"name":"createBy","type":"text"},
+"create_datetime":{"name":"createDateTime","type":"timestamp"},
+"distribution_channel":{"name":"distributionChannel","type":"text"},
+"do_no":{"name":"doNo","type":"text"},
+"doc_ref":{"name":"docRef","type":"text"},
+"from_location_code":{"name":"fromLocationCode","type":"text"},
+"from_location_name":{"name":"fromLocationName","type":"text"},
+"from_location_province":{"name":"fromLocationProvince","type":"text"},
+"from_location_region":{"name":"fromLocationRegion","type":"text"},
+"from_location_subtype":{"name":"fromLocationSubType","type":"text"},
+"from_location_type":{"name":"fromLocationType","type":"text"},
+"from_substock":{"name":"fromSubStock","type":"text"},
+"mat_code_key":{"name":"matCode_key","type":"set<text>"},
+"mm_doc_no":{"name":"mmDocNo","type":"text"},
+"mm_doc_year":{"name":"mmDocYear","type":"int"},
+"model_key":{"name":"model_key","type":"set<text>"},
+"movement_type":{"name":"movementType","type":"text"},
+"product_subtype_key":{"name":"productSubType_key","type":"set<text>"},
+"product_type_key":{"name":"productType_key","type":"set<text>"},
+"remark":{"name":"remark","type":"text"},
+"ship_to_address":{"name":"shipToAddress","type":"text"},
+"ship_to_code":{"name":"shipToCode","type":"text"},
+"ship_to_name":{"name":"shipToName","type":"text"},
+"ship_to_province":{"name":"shipToProvince","type":"text"},
+"to_location_code":{"name":"toLocationCode","type":"text"},
+"to_location_name":{"name":"toLocationName","type":"text"},
+"to_location_province":{"name":"toLocationProvince","type":"text"},
+"to_location_region":{"name":"toLocationRegion","type":"text"},
+"to_location_subtype":{"name":"toLocationSubType","type":"text"},
+"to_location_type":{"name":"toLocationType","type":"text"},
+"to_substock":{"name":"toSubStock","type":"text"},
+"transaction_id":{"name":"transactionId","type":"text"},
+"transaction_type":{"name":"transactionType","type":"text"},
+"transfer_datetime":{"name":"transferDateTime","type":"timestamp"},
+"transfer_no":{"name":"transferNo","type":"text"},
+"transfer_status":{"name":"transferStatus","type":"text"},
+"update_by":{"name":"updateBy","type":"text"},
+"update_datetime":{"name":"updateDateTime","type":"timestamp"},
+"vendor_code":{"name":"vendorCode","type":"text"},
+"vendor_name":{"name":"vendorName","type":"text"}
 
 		}
 	},
@@ -826,7 +870,44 @@
 
 
 		}
-	}
+	},
+
+"alltrade_checkstockdetail_v1": {
+        "databaseType" : "cassandra",
+        "version" : 1,
+        "database" : "alltrade",
+        "table" : "check_stock_detail",
+        "fields" : {
+                 "check_stock_detail_pk":
+                        {
+                        "name": "check_stock_detail_pk",
+                        "type" : "uuid"
+                        },
+		"brand_key":{"name":"brand_key","type":"set<text>"},
+"commercial_name_key":{"name":"commercialName_key","type":"set<text>"},
+"confirm_datetime":{"name":"confirmDateTime","type":"timestamp"},
+"confirm_no":{"name":"confirmNo","type":"text"},
+"confirm_user":{"name":"confirmUser","type":"text"},
+"create_by":{"name":"createBy","type":"text"},
+"create_datetime":{"name":"createDateTime","type":"timestamp"},
+"location_code":{"name":"locationCode","type":"text"},
+"location_name":{"name":"locationName","type":"text"},
+"mat_code_key":{"name":"matCode_key","type":"set<text>"},
+"model_key":{"name":"model_key","type":"set<text>"},
+"product_subtype_key":{"name":"productSubType_key","type":"set<text>"},
+"product_type_key":{"name":"productType_key","type":"set<text>"},
+"serial_match_key":{"name":"serialMatch_key","type":"set<text>"},
+"serial_not_found_key":{"name":"serialNotFound_key","type":"set<text>"},
+"stock_on_hand_datetime":{"name":"stockOnHandDateTime","type":"timestamp"},
+"stock_on_hand_qty":{"name":"stockOnHandQty","type":"text"},
+"transaction_id":{"name":"transactionId","type":"text"},
+"transaction_type":{"name":"transactionType","type":"text"},
+"update_by":{"name":"updateBy","type":"text"},
+"update_datetime":{"name":"updateDateTime","type":"timestamp"}
+
+
+                }
+        }
 
 }
 

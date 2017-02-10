@@ -232,10 +232,10 @@ func SaleOutDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 
 
-/*
-func SubStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
-        metaInput := utils.FindMap("table","obtain_detail", metaData)
+func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
+
+        metaInput := utils.FindMap("table","check_stock_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareQuery(metaResult)
 
@@ -249,7 +249,6 @@ func SubStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 }
 
-*/
 
 func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 	

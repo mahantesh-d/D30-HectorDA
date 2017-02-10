@@ -1,0 +1,27 @@
+{
+	"transactionId": "",
+	"transactionType": "",
+	"locationCode": "",
+	"locationName": "",
+	"confirmUser": "",
+	"confirmDateTime": "",
+	"confirmNo": "",
+	"stockOnHandQty": "",
+	"stockOnHandDateTime": "",
+	"createBy": "Davika",
+	"createDateTime": "20160909153750",
+	"updateBy": "",
+	"updateDateTime": "",
+	"matCode_key": ["NEWASUZC550-BK01"],
+	"brand_key": ["ASUS"],
+	"model_key": ["ZC550KL"],
+	"productType_key": ["DEVICE"],
+	"productSubType_key": ["HANDSET"],
+	"commercialName_key": ["ASUS 16G"],
+	"serialMatch_key": ["000000000000001", "000000000000002", "000000000000003",
+		"000000000000004", "000000000000005"
+	],
+	"serialNotFound_key": ["000000000000001", "000000000000002", "000000000000003",
+		"000000000000004", "000000000000005"
+	]
+}
