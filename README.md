@@ -42,6 +42,7 @@ This layer can easily be extended to support REST / SOAP / MQTT in the future.
 
 #### Request Response Abstract
 This layer serves 2 purposes.
+
 1) As a standardization layer between the Different servers and the layer below so the servers and the implementation
 don't need to be tightly coupled and the code in the layers below can be reused.
 
