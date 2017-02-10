@@ -20,5 +20,31 @@
 	"totalQty": "20",
 	"matCode_key": ["NEWASUZC550-BK01", "Aunjai30N"],
 	"serial_key": ["000000000000001", "000000000000001"],
-	"fromSubStock_key": ["Sale@Shop", "Demo"]
+	"fromSubStock_key": ["Sale@Shop", "Demo"],
+	 "transferSubStockDetail": [
+ {
+ "matCode": "NEWASUZC550-BK01",
+ "matType": "serial",
+ "brand": "ASUS",
+ "model": "ZC550KL",
+ "color": "BLACK",
+ "commercialName": "ASUS 16G",
+ "matDescription": "NEW 4G ASU MAX 16/2GB,5000mAh-BLACK 01",
+ "productType": "DEVICE",
+ "productSubType": "HANDSET",
+ "outQty": "2",
+ "unit": "set",
+ "serialList": [
+ {
+ "fromSubStock": "Sale@Shop",
+ "serial": "000000000000001",
+ "reason": ""
+ },
+ {
+ "fromSubStock": "Sale@Shop",
+ "serial": "000000000000002",
+ "reason": "text"
+ }
+ ]
+ }]
 }

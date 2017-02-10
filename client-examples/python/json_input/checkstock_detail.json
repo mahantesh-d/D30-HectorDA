@@ -23,5 +23,26 @@
 	],
 	"serialNotFound_key": ["000000000000001", "000000000000002", "000000000000003",
 		"000000000000004", "000000000000005"
-	]
+	],
+	"checkStockDetail": [
+ {
+ "company": "",
+ "matCode": "",
+ "matType": "",
+ "brand": "",
+ "model": "",
+ "color": "",
+ "commercialName": "ASUS16G",
+ "matDescription": "NEW4GASUMAX16/2GB, 5000mAh-BLACK01", 
+ "productType": "DEVICE",
+ "productSubType": "HANDSET",
+ "totalScanQty": "",
+ "diffQty": "0",
+ "matchQty": "5",
+ "serialMatchList": [
+ {
+ "serial": "000000000000001",
+ "substock": "sale@Shop"
+ }]
+}]
 }

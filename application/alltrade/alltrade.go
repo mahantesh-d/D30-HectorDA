@@ -110,7 +110,7 @@ func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 func ObtainDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","obtain_detail", metaData)
-        metaResult := metadata.Interpret(metaInput, req.Payload)
+	metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareQuery(metaResult)
 
         var dbAbs model.DBAbstract

@@ -32,7 +32,7 @@ CREATE TABLE stock_adjustment(
  product_subtype_key set<varchar>,
  serial_key set<varchar>,
  adjust_detail map<varchar, varchar>, 
- adjust_detail_s text);
+ adjust_detail_s set<text>);
  
 CREATE TABLE obtain_detail (
  obtain_detail_pk uuid PRIMARY KEY,
@@ -56,7 +56,7 @@ CREATE TABLE obtain_detail (
  mat_code_key set<varchar>,
  serial_key set<varchar>,
  obtaindetail map<varchar, varchar>, 
- obtaindetail_s text);
+ obtaindetail_s set<text>);
  
 CREATE TABLE sub_stock_detail_transfer (
  substock_detail_transfer_pk uuid PRIMARY KEY,
@@ -83,7 +83,7 @@ CREATE TABLE sub_stock_detail_transfer (
  serial_key set<varchar>,
  from_substock_key set<varchar>,
  transfer_substock_detail map<varchar, varchar>, 
- transfer_substock_detail_s text);
+ transfer_substock_detail_s set<text>);
  
 CREATE TABLE sub_stock_daily_detail	(
  substock_daily_detail_pk uuid PRIMARY KEY,
@@ -106,7 +106,7 @@ CREATE TABLE sub_stock_daily_detail	(
  update_by varchar,
  update_datetime timestamp,
  substock_daily_detail map<varchar, varchar>,
- substock_daily_detail_s text);
+ substock_daily_detail_s set<text>);
  
 CREATE TABLE tranfer_out_mismatch (
  transfer_out_mismatch_pk uuid PRIMARY KEY,
@@ -120,7 +120,7 @@ CREATE TABLE tranfer_out_mismatch (
  update_by varchar,
  update_datetime timestamp,
  mismatch_detail map<varchar, varchar>, 
- mismatch_detail_s text);
+ mismatch_detail_s set<text>);
  
 CREATE TABLE request_goods (
  request_goods_pk uuid PRIMARY KEY,
@@ -170,7 +170,7 @@ CREATE TABLE request_goods (
  product_subtype_key set<varchar>,
  commercial_name_key set<varchar>,
  request_detail map<varchar, varchar>, 
- request_detail_s text);
+ request_detail_s set<text>);
  
 CREATE TABLE sale_out_detail (
     sale_out_detail_pk uuid PRIMARY KEY,
@@ -198,7 +198,7 @@ CREATE TABLE sale_out_detail (
     receipt_ref text,
     sales_code text,
     salesoutdetail map<text, text>,
-    salesoutdetail_s text,
+    salesoutdetail_s set<text>,
     serial_key set<text>,
     shipping_address text,
     sold_status text,
@@ -248,7 +248,7 @@ CREATE TABLE order_transfer (
     transaction_type text,
     transfer_datetime timestamp,
     transfer_detail map<text, text>,
-    transfer_detail_s text,
+    transfer_detail_s set<text>,
     transfer_no text,
     transfer_status text,
     update_by text,
@@ -283,4 +283,4 @@ CREATE TABLE check_stock_detail (
  serial_match_key set<varchar>,
  serial_not_found_key set<varchar>,
  check_stock_detail map<varchar, varchar>, 
- check_stock_detail_s text);
+ check_stock_detail_s set<text>);

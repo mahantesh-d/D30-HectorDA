@@ -17,5 +17,35 @@
 	"updateDateTime": "",
 	"salesCode_key": ["000000000000001"],
 	"matCode_key": ["NEWASUZC550-BK01"],
-	"serial_key": ["000000000000001", "000000000000002"]
+	"serial_key": ["000000000000001", "000000000000002"],
+	"obtainDetail": [
+        {
+        "salesCode": "3660",
+        "salesType": "DirectSales",
+ "salesName": "Suporn Roddon",
+ "matCode": "NEWASUZC550-BK01",
+ "matType": "serial",
+ "brand": "ASUS",
+ "model": "ZC550KL",
+ "color": "BLACK",
+ "commercialName": "ASUS 16G",
+ "matDescription": "NEW 4G ASU MAX 16/2GB,5000mAh-BLACK 01",
+ "company": "AWN",
+ "productType": "DEVICE",
+ "productSubType": "HANDSET",
+ "itemNo": "0002",
+ "qty": "10",
+ "serialList": [
+ {
+ "serial": "000000000000001",
+ "reason": "",
+ "fromSubStock": "Sale@Shop"
+ },
+ {
+ "serial": "000000000000002",
+ "reason": "text",
+ "fromSubStock": "Sale@Shop"
+ }]
+ }]
+
 }

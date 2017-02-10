@@ -42,5 +42,37 @@
 	"brand_key": ["ASUS"],
 	"model_key": ["ZC550KL"],
 	"productType_key": ["DEVICE"],
-	"productSubType_key": ["HANDSET"]
+	"productSubType_key": ["HANDSET"],
+	"transferDetail": [
+ {
+ "matCode": "NEWASUZC550-BK01",
+ "matType":"serial",
+ "brand": "ASUS",
+ "model": "ZC550KL",
+ "color": "BLACK",
+ "commercialName": "ASUS 16G",
+ "matDescription": "NEW 4G ASU MAX 16/2GB,5000mAh-BLACK 01",
+ "productType": "DEVICE",
+ "productSubType": "HANDSET",
+ "transferQty": "10",
+ "unit": "SET",
+ "itemNo": "0001",
+ "fromPlant": "1111",
+ "fromStorage": "2222",
+ "toPlant": "3333",
+ "toStorage": "4444",
+ "serialList": [
+ {
+ "serial": "000000000000001",
+ "toPlant": "",
+ "toStorage": "",
+ "reason": ""
+ },
+ {
+ "serial": "000000000000002",
+ "toPlant": "",
+ "toStorage": "",
+ "reason": "abcdefg"
+ }]
+ }]
 }

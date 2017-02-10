@@ -41,7 +41,7 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 		f := v.(map[string] interface{})
         	val := make([]string,2)
         	val[0] = f["name"].(string)
-        	val[1] = f["type"].(string)
+		val[1] = f["type"].(string)
 
         	outputString += k
 

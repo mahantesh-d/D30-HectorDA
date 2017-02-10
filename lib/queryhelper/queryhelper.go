@@ -74,7 +74,14 @@ func returnSetText(input interface{}) string {
 	inputs := input.([] interface{})
 
 	for _,v := range inputs {
-		value += (returnString(v) + ",")
+		switch vType := v.(type) {
+			case string:
+				value += (returnString(v) + ",")
+			case map[string]interface{}:
+				value +=  (returnString(utils.EncodeJSON(v.(map[string]interface{}))) + ",")
+			default:
+				_ = vType
+		}
 	}
 
 	value = strings.Trim(value,",")	
@@ -89,3 +96,19 @@ func returnMap(input interface{}) string {
 	
 	return returnString(value)
 }
+
+/*func returnSetMap(input interface{}) string {
+
+	value := "{"
+
+	inputs := input.([] interface{})
+	
+	for _,v := range inputs {
+
+		value += (returnString(utils.EncodeJSON(v.(map[string]interface{}))) + ",")
+	}
+
+	value = strings.Trim(value,",")
+	value += "}"
+	return value
+}*/
