@@ -4,10 +4,12 @@
 
 ---
 
-This is a middleware application that can expose
+This is a middleware application that allows you to share Data as a Service (DaaS) to end consuming applications. It acts as a layer of abstraction between the underlying database and the API. Allowing you to merge data across different types of database types in a single call. Do transformations on the received data and write custom logic for each API endpoint.
+It can interface with multiple types of databases and supports versioning of the API such that multiple versions of the same API can be used as the same time where each API of the same API has different request & responses.
 
-This is a middleware interface for Cassandra and Presto.
-HectorDA uses gRPC in order to perform complex operations on databases.
+As this type of an application is by design meant to be extended as more applications and database types integrate with it. The design of the applicaiton is modular by design where
+each layer has separation of concerns. This allows for easy extensibility of each of the layers.
+
 
 ### Documentation and Reference
 
