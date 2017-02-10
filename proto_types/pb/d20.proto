@@ -101,7 +101,8 @@ message Request {
     TxMethod TxMethod                  = 18; // Transcation Method
     string ApplicationName	       = 19;
     string ApplicationMethod           = 20;
-    string ApplicationPayload          = 21;
+    uint32 ApplicationVersion          = 21;
+    string ApplicationPayload          = 22;
 }
 
 message TxRequest {
