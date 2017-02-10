@@ -20,7 +20,14 @@ func init() {
 		"alltrade_foo_post" : alltrade.Foo_Post,
 		"alltrade_foo_get" : alltrade.Foo_Get,
 		"alltrade_stock_adjustment_post" : alltrade.StockAdjustment_Post,
-		"alltrade_foobar_post" : alltrade.Foobar_Post}
+		"alltrade_foobar_post" : alltrade.Foobar_Post,
+		"alltrade_obtain_detail_post" : alltrade.ObtainDetail_Post,
+		"alltrade_substock_detail_transfer_post" : alltrade.SubStockDetailTransfer_Post,
+		"alltrade_substock_daily_detail_post" : alltrade.SubStockDailyDetail_Post,
+		"alltrade_transferout_mismatch_post" : alltrade.TransferOutMismatch_Post,
+		"alltrade_requestgoods_post" : alltrade.RequestGoods_Post,
+		"alltrade_ordertransfer_post" : alltrade.OrderTransfer_Post,
+		"alltrade_saleout_detail_post" : alltrade.SaleOutDetail_Post}
 }
 
 

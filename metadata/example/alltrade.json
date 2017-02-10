@@ -1,29 +1,832 @@
-{"alltrade_foobar_v1" : {
-	"databaseType" : "cassandra",
-	"version" : 1,
-	"database" : "alltrade",
-	"table" : "foobar",
-	"fields" :{
-        	"id":
-                	{
-                	"name": "id",
-                	"type" : "uuid"
-                	},
-        	"name" :
-                	{
-                	"name": "name",
-                	"type" : "text"
-                	},
-        	"email":
-                	{
-                	"name": "email_id",
-                	"type" : "set<text>"
-                	},
-        	"dynamic":
-                	{
-                	"name": "dyn",
-                	"type": "map<text,text>"
-                	}
-        	}
-	}	
+{
+	"alltrade_foobar_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "foobar",
+		"fields": {
+			"id": {
+				"name": "id",
+				"type": "uuid"
+			},
+			"name": {
+				"name": "name",
+				"type": "text"
+			},
+			"email": {
+				"name": "email_id",
+				"type": "set<text>"
+			},
+			"dynamic": {
+				"name": "dyn",
+				"type": "map<text,text>"
+			}
+		}
+	},
+	"alltrade_stockadjustment_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "stock_adjustment",
+		"fields": {
+			"stock_adjustment_pk": {
+				"name": "stock_adjustment_pk",
+				"type": "uuid"
+			},
+			"adjust_date_time": {
+				"name": "adjustDateTime",
+				"type": "timestamp"
+			},
+			"adjust_status": {
+				"name": "adjustStatus",
+				"type": "text"
+			},
+			"adjust_stock_no": {
+				"name": "adjustStockNo",
+				"type": "text"
+			},
+			"brand_key": {
+				"name": "brand_key",
+				"type": "set<text>"
+			},
+			"commercial_name_key": {
+				"name": "commercialName_key",
+				"type": "set<text>"
+			},
+			"company": {
+				"name": "company",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"doc_ref": {
+				"name": "docRef",
+				"type": "text"
+			},
+			"location_code": {
+				"name": "locationCode",
+				"type": "text"
+			},
+			"location_name": {
+				"name": "locationName",
+				"type": "text"
+			},
+			"location_province": {
+				"name": "locationProvince",
+				"type": "text"
+			},
+			"location_region": {
+				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subtype": {
+				"name": "locationSubType",
+				"type": "text"
+			},
+			"location_type": {
+				"name": "locationType",
+				"type": "text"
+			},
+			"mat_code_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"memo_no": {
+				"name": "memoNo",
+				"type": "text"
+			},
+			"mm_doc_no": {
+				"name": "mmDocNo",
+				"type": "text"
+			},
+			"mm_doc_year": {
+				"name": "mmDocYear",
+				"type": "int"
+			},
+			"model_key": {
+				"name": "model_key",
+				"type": "set<text>"
+			},
+			"movement_type": {
+				"name": "moveMentType",
+				"type": "text"
+			},
+			"product_subtype_key": {
+				"name": "productSubType_key",
+				"type": "set<text>"
+			},
+			"product_type_key": {
+				"name": "productType_key",
+				"type": "set<text>"
+			},
+			"remark": {
+				"name": "remark",
+				"type": "text"
+			},
+			"serial_key": {
+				"name": "serial_key",
+				"type": "set<text>"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+
+		}
+	},
+	"alltrade_obtaindetail_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "obtain_detail",
+		"fields": {
+			"obtain_detail_pk": {
+				"name": "obtain_detail_pk",
+				"type": "uuid"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"doc_ref": {
+				"name": "docRef",
+				"type": "text"
+			},
+			"location_code": {
+				"name": "locationCode",
+				"type": "text"
+			},
+			"location_name": {
+				"name": "locationName",
+				"type": "text"
+			},
+			"location_province": {
+				"name": "locationProvince",
+				"type": "text"
+			},
+			"location_region": {
+				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subtype": {
+				"name": "locationSubType",
+				"type": "text"
+			},
+			"location_type": {
+				"name": "locationType",
+				"type": "text"
+			},
+			"mat_code_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"obtain_datetime": {
+				"name": "obtainDateTime",
+				"type": "timestamp"
+			},
+			"obtain_no": {
+				"name": "obtainNo",
+				"type": "text"
+			},
+			"obtain_status": {
+				"name": "obtainStatus",
+				"type": "text"
+			},
+			"obtaindetail_s": {
+				"name": "obtainDetail",
+				"type": "text"
+			},
+			"sales_code_key": {
+				"name": "salesCode_key",
+				"type": "set<text>"
+			},
+			"serial_key": {
+				"name": "serial_key",
+				"type": "set<text>"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+		}
+	},
+
+	"alltrade_substockdetailtransfer_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "sub_stock_detail_transfer",
+		"fields": {
+			"substock_detail_transfer_pk": {
+				"name": "substock_detail_transfer_pk",
+				"type": "uuid"
+			},
+
+			"company": {
+				"name": "company",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"doc_ref": {
+				"name": "docRef",
+				"type": "text"
+			},
+			"from_substock_key": {
+				"name": "fromSubStock_key",
+				"type": "set<text>"
+			},
+			"location_code": {
+				"name": "locationCode",
+				"type": "text"
+			},
+			"location_name": {
+				"name": "locationName",
+				"type": "text"
+			},
+			"location_province": {
+				"name": "locationProvince",
+				"type": "text"
+			},
+			"location_region": {
+				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subtype": {
+				"name": "locationSubType",
+				"type": "text"
+			},
+			"location_type": {
+				"name": "locationType",
+				"type": "text"
+			},
+			"mat_code_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"serial_key": {
+				"name": "serial_key",
+				"type": "set<text>"
+			},
+			"to_substock": {
+				"name": "toSubStock",
+				"type": "text"
+			},
+			"total_qty": {
+				"name": "totalQty",
+				"type": "text"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"transfer_substock_datetime": {
+				"name": "transferSubStockDateTime",
+				"type": "timestamp"
+			},
+			"transfer_substock_no": {
+				"name": "transferSubStockNo",
+				"type": "text"
+			},
+			"transfer_substock_status": {
+				"name": "transferSubStockStatus",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+
+
+		}
+	},
+
+	"alltrade_substockdailydetail_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "sub_stock_daily_detail",
+		"fields": {
+			"substock_daily_detail_pk": {
+				"name": "substock_daily_detail_pk",
+				"type": "uuid"
+			},
+			"controller_name": {
+				"name": "controllerName",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"daily_status": {
+				"name": "dailyStatus",
+				"type": "text"
+			},
+			"date_for_sales": {
+				"name": "dateForSales",
+				"type": "timestamp"
+			},
+			"device_payment_name": {
+				"name": "devicePaymentName",
+				"type": "text"
+			},
+			"location_code": {
+				"name": "locationCode",
+				"type": "text"
+			},
+			"location_name": {
+				"name": "locationName",
+				"type": "text"
+			},
+			"location_province": {
+				"name": "locationProvince",
+				"type": "text"
+			},
+			"location_region": {
+				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subtype": {
+				"name": "locationSubType",
+				"type": "text"
+			},
+			"location_type": {
+				"name": "locationType",
+				"t?ype": "text"
+			},
+			"sales_for": {
+				"name": "salesFor",
+				"type": "text"
+			},
+			"substock_daily_no": {
+				"name": "subStockDetail",
+				"type": "text"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+
+
+		}
+	},
+
+	"alltrade_transferoutmismatch_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "tranfer_out_mismatch",
+		"fields": {
+			"transfer_out_mismatch_pk": {
+				"name": "transfer_out_mismatch_pk",
+				"type": "uuid"
+			},
+			"company": {
+				"name": "company",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"data_error_datetime": {
+				"name": "dataErrorDateTime",
+				"type": "timestamp"
+			},
+			"request_no": {
+				"name": "requestNo",
+				"type": "text"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+
+		}
+	},
+
+	"alltrade_requestgoods_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "request_goods",
+		"fields": {
+			"request_goods_pk": {
+				"name": "request_goods_pk",
+				"type": "uuid"
+			},
+			"brand_key": {
+				"name": "brand_key",
+				"type": "set<text>"
+			},
+			"cancel_by": {
+				"name": "cancelBy",
+				"type": "text"
+			},
+			"cancel_datetime": {
+				"name": "cancelDateTime",
+				"type": "timestamp"
+			},
+			"commercial_name_key": {
+				"name": "commercialName_key",
+				"type": "set<text>"
+			},
+			"company": {
+				"name": "company",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"do_no": {
+				"name": "doNo",
+				"type": "text"
+			},
+			"for_substock": {
+				"name": "forSubStock",
+				"type": "text"
+			},
+			"from_location_code": {
+				"name": "fromLocationCode",
+				"type": "text"
+			},
+			"from_location_name": {
+				"name": "fromLocationName",
+				"type": "text"
+			},
+			"from_location_province": {
+				"name": "fromLocationProvince",
+				"type": "text"
+			},
+			"from_location_region": {
+				"name": "fromLocationRegion",
+				"type": "text"
+			},
+			"from_location_subtype": {
+				"name": "fromLocationSubType",
+				"type": "text"
+			},
+			"from_location_type": {
+				"name": "fromLocationType",
+				"type": "text"
+			},
+			"mat_code_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"mobile_no": {
+				"name": "mobileNo",
+				"type": "text"
+			},
+			"model_key": {
+				"name": "model_key",
+				"type": "set<text>"
+			},
+			"movement_type": {
+				"name": "moveMentType",
+				"type": "text"
+			},
+			"picking_datetime": {
+				"name": "pickingDateTime",
+				"type": "timestamp"
+			},
+			"product_subtype_key": {
+				"name": "productSubType_key",
+				"type": "set<text>"
+			},
+			"product_type_key": {
+				"name": "productType_key",
+				"type": "set<text>"
+			},
+			"reason": {
+				"name": "reason",
+				"type": "text"
+			},
+			"receive_by": {
+				"name": "receiveBy",
+				"type": "text"
+			},
+			"remark": {
+				"name": "remark",
+				"type": "text"
+			},
+			"request_no": {
+				"name": "requestNo",
+				"type": "text"
+			},
+			"request_status": {
+				"name": "requestStatus",
+				"type": "text"
+			},
+			"reserved_no": {
+				"name": "reservedNo",
+				"type": "text"
+			},
+			"route_group": {
+				"name": "routeGroup",
+				"type": "text"
+			},
+			"ship_to_address": {
+				"name": "shipToAddress",
+				"type": "text"
+			},
+			"ship_to_code": {
+				"name": "shipToCode",
+				"type": "text"
+			},
+			"ship_to_distribution_channel": {
+				"name": "shipToDistributionChannel",
+				"type": "text"
+			},
+			"ship_to_name": {
+				"name": "shipToName",
+				"type": "text"
+			},
+			"ship_to_province": {
+				"name": "shipToProvince",
+				"type": "text"
+			},
+			"stamp_delivery": {
+				"name": "stampDelivery",
+				"type": "text"
+			},
+			"to_location_code": {
+				"name": "toLocationCode",
+				"type": "text"
+			},
+			"to_location_name": {
+				"name": "toLocationName",
+				"type": "text"
+			},
+			"to_location_province": {
+				"name": "toLocationProvince",
+				"type": "text"
+			},
+			"to_location_region": {
+				"name": "toLocationRegion",
+				"type": "text"
+			},
+			"to_location_subtype": {
+				"name": "toLocationSubType",
+				"type": "text"
+			},
+			"to_location_type": {
+				"name": "toLocationType",
+				"type": "text"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+
+		}
+	},
+
+	"alltrade_ordertransfer_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "order_transfer",
+		"fields": {
+			"obtain_detail_pk": {
+				"name": "obtain_detail_pk",
+				"type": "uuid"
+			}
+
+
+		}
+	},
+
+	"alltrade_saleoutdetail_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "alltrade",
+		"table": "sale_out_detail",
+		"fields": {
+			"sale_out_detail_pk": {
+				"name": "sale_out_detail_pk",
+				"type": "uuid"
+			},
+
+
+			"brand_key": {
+				"name": "brand_key",
+				"type": "set<text>"
+			},
+			"commercial_name_key": {
+				"name": "commercialName_key",
+				"type": "set<text>"
+			},
+			"company": {
+				"name": "company",
+				"type": "text"
+			},
+			"contact_address": {
+				"name": "contactAddress",
+				"type": "text"
+			},
+			"contact_no": {
+				"name": "contactNo",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"customer_name": {
+				"name": "customerName",
+				"type": "text"
+			},
+			"document_no": {
+				"name": "documentNo",
+				"type": "text"
+			},
+			"from_substock": {
+				"name": "fromSubStock",
+				"type": "text"
+			},
+			"location_code": {
+				"name": "locationCode",
+				"type": "text"
+			},
+			"location_code_t2": {
+				"name": "locationCodeT2",
+				"type": "text"
+			},
+			"location_name": {
+				"name": "locationName",
+				"type": "text"
+			},
+			"location_province": {
+				"name": "locationProvince",
+				"type": "text"
+			},
+			"location_region": {
+				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subtype": {
+				"name": "locationSubType",
+				"type": "text"
+			},
+			"location_type": {
+				"name": "locationType",
+				"type": "text"
+			},
+			"matcode_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"model_key": {
+				"name": "model_key",
+				"type": "set<text>"
+			},
+			"product_subtype_key": {
+				"name": "productSubType_key",
+				"type": "set<text>"
+			},
+			"product_type_key": {
+				"name": "productType_key",
+				"type": "set<text>"
+			},
+			"receipt_ref": {
+				"name": "receiptRef",
+				"type": "text"
+			},
+			"sales_code": {
+				"name": "salesCode",
+				"type": "text"
+			},
+			"serial_key": {
+				"name": "serial_key",
+				"type": "set<text>"
+			},
+			"shipping_address": {
+				"name": "shippingAddress",
+				"type": "text"
+			},
+			"sold_status": {
+				"name": "soldStatus",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+
+
+		}
+	}
+
 }
+

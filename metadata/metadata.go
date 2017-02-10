@@ -56,7 +56,11 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
                         addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
                 case "map<text,text>":
                         addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
-        	}
+        	case "int":
+			addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
+		case "timestamp":
+			addData(&output_key_values,&output_key_meta, k, payload, val[0], t)
+		}
 
 	}
 
