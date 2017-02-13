@@ -117,8 +117,12 @@ func ReadFile(path string) string {
 }
 
 func ParseFilter(input string) map[string]string {
-	
+
 	output := make(map[string]string)
+
+	if len(input) == 0 {
+		return output
+	}
 
 	input = input[1:]
 	input = strings.Trim(input,")")	

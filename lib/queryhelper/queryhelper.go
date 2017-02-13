@@ -71,30 +71,37 @@ func cassandraSelectQueryBuild(metaInput map[string]interface{}) string {
 
 	table := metaInput["table"].(string)
 
-	query := "SELECT * from " + table + " WHERE";
-
+	query := "SELECT * from " + table; 
 	fields := metaInput["fields"].(map[string]interface{})
-	numberOfParams := len(fields)
-	// three type of queries
-	// single condition
-	// multiple conditions in a specific predictable order
-	// multiple conditions in a non-related order
-	if numberOfParams == 1 {
-		for _, v := range fields {
-			fieldMeta := v.(map[string]interface{})
-			query += returnCondition(fieldMeta)
-		}
-	} else {
-		for _, v := range fields {
-        		fieldMeta := v.(map[string]interface{})
-        		query += returnCondition(fieldMeta) + " AND"
-		}
-		query = strings.Trim(query,"AND")
+	if len(fields) > 0 {
+
+		query += " WHERE";
+
+		numberOfParams := len(fields)
+		// three type of queries
+		// single condition
+		// multiple conditions in a specific predictable order
+		// multiple conditions in a non-related order
+		if numberOfParams == 1 {
+			for _, v := range fields {
+				fieldMeta := v.(map[string]interface{})
+				query += returnCondition(fieldMeta)
+			}
+		} else {
+			for _, v := range fields {
+        			fieldMeta := v.(map[string]interface{})
+        			query += returnCondition(fieldMeta) + " AND"
+			}
+			
+			query = strings.Trim(query,"AND")
 	
-		query += "ALLOW FILTERING"
+			query += "ALLOW FILTERING"
+		}
+
 	}
 
-	return query
+		query += " LIMIT 10"
+		return query
 }
 func returnString(input interface{}) string{
 
