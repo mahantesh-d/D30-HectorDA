@@ -13,9 +13,9 @@ func Process(Conn *net.Conn, Conf *config.Config, DBAbstract *model.DBAbstract) 
 	endpoint := DBAbstract.DBType
 
 	if endpoint == "cassandra" {
+
 		cassandra.Handle(Conn, Conf, DBAbstract)
 	} else if endpoint == "presto" {
-
 
 		presto.Handle(DBAbstract)
 	}

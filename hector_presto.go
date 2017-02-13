@@ -1,5 +1,46 @@
 package main
 
+import (
+	"github.com/dminGod/D30-HectorDA/model"
+	"github.com/dminGod/D30-HectorDA/endpoint/presto"
+	"fmt"
+	"time"
+)
+
+var kk model.DBAbstract
+
+func main() {
+
+	fmt.Println("Starting 1st query")
+	kk.DBType = "presto"
+	kk.QueryType = "SELECT"
+	kk.Query = "SELECT * FROM obtain_detail LIMIT 10"
+
+	presto.Handle( &kk )
+	fmt.Println( kk )
+
+
+	time.Sleep(10 * time.Second)
+
+	fmt.Println("Starting 2nd query")
+
+	kk.DBType = "presto"
+	kk.QueryType = "SELECT"
+	kk.Query = "SELECT * FROM request_goods LIMIT 10"
+
+	presto.Handle( &kk )
+	fmt.Println( kk )
+
+}
+
+
+
+
+
+
+
+
+
 //
 //import (
 ////	"database/sql"

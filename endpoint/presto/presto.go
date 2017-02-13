@@ -1,25 +1,17 @@
 package presto
 
 import (
-	"github.com/gocql/gocql"
-//	"github.com/dminGod/D30-HectorDA/config"
+
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/logger"
-	"net"
 	"time"	
-	_"strings"
-	_"strconv"
+	_ "strings"
+	_ "strconv"
 	"github.com/dminGod/D30-HectorDA/utils"
-
-
-
 	"database/sql"
-//	"fmt"
-//	"log"
-
 	_ "github.com/avct/prestgo"
-//	"os"
 )
+
 
 var prestoChan chan *sql.DB
 
@@ -75,7 +67,6 @@ func Select(dbAbstract *model.DBAbstract) {
 
 	cols, err := rows.Columns()
 
-
 	data := make([]interface{}, len(cols))
 	args := make([]interface{}, len(data))
 
@@ -93,7 +84,6 @@ func Select(dbAbstract *model.DBAbstract) {
 		for i := range data {
 
 			prestoResult = append(prestoResult, map[string]interface{}{ cols[i] : data[i] } )
-
 		}
 	}
 
@@ -111,8 +101,6 @@ func Select(dbAbstract *model.DBAbstract) {
 		dbAbstract.Data = utils.EncodeJSON(prestoResult)
 		dbAbstract.Count = uint64(len(prestoResult))
 	}
-
-
 }
 
 func queueSession(session *sql.DB) {

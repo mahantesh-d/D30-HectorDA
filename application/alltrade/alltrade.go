@@ -3,7 +3,7 @@ package alltrade
 import(
 	_"fmt"
 	"github.com/dminGod/D30-HectorDA/model"
-	"github.com/dminGod/D30-HectorDA/logger"
+//	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
@@ -21,61 +21,7 @@ func init() {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
 }
 
-func Foo_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
-	logger.Write("DEBUG", "Function Foo_Post Executing...")
-
-
-	var dbAbs model.DBAbstract
-	dbAbs.DBType = "cassandra"
-	dbAbs.QueryType = "INSERT"
-	dbAbs.Query = utils.PrepareInsert("foo", req.Payload) 
-
-	endpoint.Process(nil,&conf, &dbAbs)
-
-	
-	var responseAbstract model.ResponseAbstract
-	if dbAbs.Status == "fail" {
-		logger.Write("ERROR", dbAbs.Message)
-		responseAbstract.StatusCode = 500
-	} else {
-		responseAbstract.StatusCode = 200
-	}
-	responseAbstract.Status = dbAbs.Status	
-	responseAbstract.StandardStatusMessage =  dbAbs.StatusCodeMessage
-	responseAbstract.Text = dbAbs.Message
-	responseAbstract.Data = dbAbs.Data
-	responseAbstract.Count = dbAbs.Count
-	
-	return responseAbstract
-}
-
-
-func Foo_Get(req model.RequestAbstract) (model.ResponseAbstract) {
-	
-	logger.Write("DEBUG", "Function Foo_Get Executing...")
-	var dbAbs model.DBAbstract
-
-	dbAbs.DBType = "cassandra"
-	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = "SELECT * from foo"
-	endpoint.Process(nil,&conf,&dbAbs)
-
-	var responseAbstract model.ResponseAbstract
-	if dbAbs.Status == "fail" {
-        	logger.Write("ERROR", dbAbs.Message)
-         	responseAbstract.StatusCode = 500
-	} else {
-        	responseAbstract.StatusCode = 200
- 	}
-	responseAbstract.Status = dbAbs.Status
-	responseAbstract.StandardStatusMessage =  dbAbs.StatusCodeMessage
-	responseAbstract.Text = dbAbs.Message
-	responseAbstract.Data = dbAbs.Data
-	responseAbstract.Count = dbAbs.Count
-
-	return responseAbstract
-}
+// This is is an API to adjust Stock, it accepts POST params
 
 func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
@@ -92,6 +38,8 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
  	return prepareResponse(dbAbs)	
 }
 
+
+// This is is an API to adjust Stock, it accepts GET params
 
 func StockAdjustment_Get(req model.RequestAbstract) (model.ResponseAbstract) {
 
@@ -118,23 +66,6 @@ func StockAdjustment_Get(req model.RequestAbstract) (model.ResponseAbstract) {
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-}
-
-
-
-func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
-	metaInput := utils.FindMap("table","foobar", metaData)
-	metaResult := metadata.Interpret(metaInput, req.Payload)
-	query := queryhelper.PrepareInsertQuery(metaResult)
-
-	var dbAbs model.DBAbstract
-	dbAbs.DBType = "cassandra"
-	dbAbs.QueryType = "INSERT"
-	dbAbs.Query = query
-	endpoint.Process(nil,&conf,&dbAbs)
-
-	return prepareResponse(dbAbs)
 }
 
 
@@ -206,7 +137,6 @@ func TransferOutMismatch_Post(req model.RequestAbstract) (model.ResponseAbstract
 
 
 
-
 func RequestGoods_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","request_goods", metaData)
@@ -224,9 +154,6 @@ func RequestGoods_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 }
 
 
-
-
-
 func OrderTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","order_transfer", metaData)
@@ -242,8 +169,6 @@ func OrderTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         return prepareResponse(dbAbs)
 
 }
-
-
 
 
 func SaleOutDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
@@ -280,6 +205,23 @@ func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         return prepareResponse(dbAbs)
 
 }
+//
+//
+//func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
+//
+//	metaInput := utils.FindMap("table","check_stock_detail", metaData)
+//	metaResult := metadata.Interpret(metaInput, req.Payload)
+//	query := queryhelper.PrepareInsertQuery(metaResult)
+//
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "cassandra"
+//	dbAbs.QueryType = "INSERT"
+//	dbAbs.Query = query
+//	endpoint.Process(nil,&conf,&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//
+//}
 
 
 func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
