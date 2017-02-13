@@ -1,0 +1,115 @@
+USE all_trade;
+CREATE CUSTOM INDEX in_check_stock_detail_location_code ON check_stock_detail (location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_confirm_user ON check_stock_detail (confirm_user) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_confirm_datetime ON check_stock_detail (confirm_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_confirm_no ON check_stock_detail (confirm_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_stock_on_hand_qty ON check_stock_detail (stock_on_hand_qty) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_stock_on_hand_datetime ON check_stock_detail (stock_on_hand_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_update_by ON check_stock_detail (update_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_check_stock_detail_update_datetime ON check_stock_detail (update_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE INDEX in_check_stock_detail_product_type_key ON check_stock_detail (mat_code_key) ;
+CREATE INDEX in_check_stock_detail_product_type_key ON check_stock_detail (brand_key) ;
+CREATE INDEX in_check_stock_detail_product_type_key ON check_stock_detail (model_key) ;
+CREATE INDEX in_check_stock_detail_product_type_key ON check_stock_detail (product_type_key) ;
+CREATE INDEX in_check_stock_detail_product_subtype_key ON check_stock_detail (product_subtype_key) ;
+CREATE INDEX in_check_stock_detail_serial_key ON check_stock_detail (serial_match_key);
+CREATE INDEX in_check_stock_detail_serial_key ON check_stock_detail (commercial_name_key);
+CREATE INDEX in_check_stock_detail_serial_key ON check_stock_detail (serial_not_found_key);
+
+CREATE CUSTOM INDEX in_obtain_detail_transaction_type ON obtain_detail (transaction_type) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_obtain_detail_obtain_no ON obtain_detail (obtain_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_obtain_detail_location_code ON obtain_detail (location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_obtain_detail_obtain_datetime ON obtain_detail (obtain_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE INDEX in_obtain_detail_sales_code_key ON obtain_detail (sales_code_key) ;
+CREATE INDEX in_obtain_detail_mat_code_key ON obtain_detail (mat_code_key) USING ;
+CREATE INDEX in_obtain_detail_serial_key ON obtain_detail (serial_key) ;
+
+CREATE CUSTOM INDEX in_order_transfer_transaction_type ON order_transfer (transaction_type) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_transfer_no ON order_transfer (transfer_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_transfer_status ON order_transfer (transfer_status) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_from_location_code ON order_transfer (from_location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_from_location_type ON order_transfer (from_location_type) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_from_location_subtype ON order_transfer (from_location_subtype) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_from_location_region ON order_transfer (from_location_region) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_from_location_province ON order_transfer (from_location_province) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_to_location_code ON order_transfer (to_location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_transfer_datetime ON order_transfer (transfer_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_update_by ON order_transfer (update_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_order_transfer_update_datetime ON order_transfer (update_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE INDEX in_order_transfer_mat_code_key ON order_transfer (mat_code_key) ;
+CREATE INDEX in_order_transfer_brand_key ON order_transfer (brand_key) ;
+CREATE INDEX in_order_transfer_model_key ON order_transfer (model_key) ;
+CREATE INDEX in_order_transfer_product_type_key ON order_transfer (product_type_key) ;
+CREATE INDEX in_order_transfer_product_subtype_key ON order_transfer (product_subtype_key) ;
+
+CREATE CUSTOM INDEX in_request_goods_transaction_type ON request_goods (transaction_type) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_request_no ON request_goods (request_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_request_status ON request_goods (request_status) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_to_location_code ON request_goods (to_location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_to_location_type ON request_goods (to_location_type) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_to_location_region ON request_goods (to_location_region) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_to_location_subtype ON request_goods (to_location_subtype) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_to_location_province ON request_goods (to_location_province) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_create_datetime ON request_goods (create_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_update_by ON request_goods (update_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_update_datetime ON request_goods (update_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_request_goods_route_group ON request_goods (route_group) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE  INDEX in_request_goods_mat_code_key ON request_goods (mat_code_key) ;
+CREATE  INDEX in_request_goods_brand_key ON request_goods (brand_key) ;
+CREATE  INDEX in_request_goods_model_key ON request_goods (model_key) ;
+CREATE  INDEX in_request_goods_product_type_key ON request_goods (product_type_key) ;
+CREATE  INDEX in_request_goods_product_subtype_key ON request_goods (product_subtype_key) ;
+CREATE  INDEX in_request_goods_commercial_name_key ON request_goods (commercial_name_key) ;
+
+CREATE CUSTOM INDEX in_sale_out_detail_document_no ON sale_out_detail (document_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_location_code ON sale_out_detail (location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_location_type ON sale_out_detail (location_type) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_location_subtype ON sale_out_detail (location_subtype) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_location_region ON sale_out_detail (location_region) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_location_province ON sale_out_detail (location_province) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_update_by ON sale_out_detail (update_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sale_out_detail_update_datetime ON sale_out_detail (update_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE INDEX ?in_sale_out_detail_matcode_key ON sale_out_detail (matcode_key) ;
+CREATE INDEX in_sale_out_detail_brand_key ON sale_out_detail (brand_key) ;
+CREATE INDEX in_sale_out_detail_model_key ON sale_out_detail (model_key) ;
+CREATE INDEX in_sale_out_detail_product_type_key ON sale_out_detail (product_type_key) ;
+CREATE INDEX in_sale_out_detail_product_subtype_key ON sale_out_detail (product_subtype_key) ;
+CREATE INDEX in_sale_out_detail_commercial_name_key ON sale_out_detail (commercial_name_key) ;
+CREATE INDEX in_sale_out_detail_serial_key ON sale_out_detail (serial_key) ;
+
+CREATE CUSTOM INDEX in_stock_adjustment_adjust_stock_no ON stock_adjustment (adjust_stock_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_stock_adjustment_company ON stock_adjustment (company) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_stock_adjustment_adjust_date_time ON stock_adjustment (adjust_date_time) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_stock_adjustment_location_code ON stock_adjustment (location_code) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE INDEX in_stock_adjustment_mat_code_key ON stock_adjustment (mat_code_key);
+CREATE INDEX in_stock_adjustment_brand_key ON stock_adjustment (brand_key) ;
+CREATE INDEX in_stock_adjustment_model_key ON stock_adjustment (model_key) ;
+CREATE INDEX in_stock_adjustment_commercial_name_key ON stock_adjustment (commercial_name_key) ;
+CREATE INDEX in_stock_adjustment_product_type_key ON stock_adjustment (product_type_key) ;
+CREATE INDEX in_stock_adjustment_product_subtype_key ON stock_adjustment (product_subtype_key) ;
+CREATE INDEX in_stock_adjustment_serial_key ON stock_adjustment (serial_key) ;
+
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_substock_daily_no ON sub_stock_daily_detail (substock_daily_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_date_for_sales ON sub_stock_daily_detail (date_for_sales) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_sales_for ON sub_stock_daily_detail (sales_for) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_daily_status ON sub_stock_daily_detail (daily_status) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_controller_name ON sub_stock_daily_detail (controller_name) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_device_payment_name ON sub_stock_daily_detail (device_payment_name) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_daily_detail_create_datetime ON sub_stock_daily_detail (create_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+
+CREATE CUSTOM INDEX in_sub_stock_detail_transfer_transfer_substock_no ON sub_stock_detail_transfer (transfer_substock_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_detail_transfer_to_substock ON sub_stock_detail_transfer (to_substock) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_sub_stock_detail_transfer_transfer_substock_datetime ON sub_stock_detail_transfer (transfer_substock_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE INDEX in_sub_stock_detail_transfer_mat_code_key ON sub_stock_detail_transfer (mat_code_key) ;
+CREATE INDEX in_sub_stock_detail_transfer_serial_keyON sub_stock_detail_transfer (serial_key) ;
+CREATE INDEX in_sub_stock_detail_transfer_from_substock_keyON sub_stock_detail_transfer (from_substock_key) ;
+
+CREATE CUSTOM INDEX in_transfer_out_mismatch_request_no ON tranfer_out_mismatch (request_no) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_transfer_out_mismatch_company ON tranfer_out_mismatch (company) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_transfer_out_mismatch_data_error_datetime ON tranfer_out_mismatch (data_error_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_transfer_out_mismatch_create_by ON tranfer_out_mismatch (create_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_transfer_out_mismatch_create_datetime ON tranfer_out_mismatch (create_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_transfer_out_mismatch_update_by ON tranfer_out_mismatch (update_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+CREATE CUSTOM INDEX in_transfer_out_mismatch_update_datetime ON tranfer_out_mismatch (update_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
+
+
