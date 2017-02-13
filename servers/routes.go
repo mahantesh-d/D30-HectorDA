@@ -28,7 +28,8 @@ func init() {
 		"alltrade_requestgoods_post" : alltrade.RequestGoods_Post,
 		"alltrade_ordertransfer_post" : alltrade.OrderTransfer_Post,
 		"alltrade_saleout_detail_post" : alltrade.SaleOutDetail_Post,
-		"alltrade_checkstock_detail_post" : alltrade.CheckStockDetail_Post        }
+		"alltrade_checkstock_detail_post" : alltrade.CheckStockDetail_Post,
+		"alltrade_reports_requestgoods_get": alltrade.ReportsRequestGood_Get}
 }
 
 

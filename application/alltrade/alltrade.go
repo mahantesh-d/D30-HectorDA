@@ -9,7 +9,7 @@ import(
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/metadata"
 	"github.com/dminGod/D30-HectorDA/lib/queryhelper"
-	_"strings"
+	"strings"
 )
 
 var conf config.Config 
@@ -257,24 +257,91 @@ func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         return prepareResponse(dbAbs)
 
 }
-//
-//
-//func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-//
-//	metaInput := utils.FindMap("table","check_stock_detail", metaData)
-//	metaResult := metadata.Interpret(metaInput, req.Payload)
-//	query := queryhelper.PrepareInsertQuery(metaResult)
-//
-//	var dbAbs model.DBAbstract
-//	dbAbs.DBType = "cassandra"
-//	dbAbs.QueryType = "INSERT"
-//	dbAbs.Query = query
-//	endpoint.Process(nil,&conf,&dbAbs)
-//
-//	return prepareResponse(dbAbs)
-//
-//}
 
+func ReportsRequestGood_Get(req model.RequestAbstract) (model.ResponseAbstract) {
+
+	query := `
+	SELECT to_location_name, 
+	to_location_code, 
+	ship_to_province, 
+	ship_to_code, 
+	reserved_no, 
+	request_no, 
+	remark text, 
+	receive_by, 
+	picking_datetime, 
+	model_key, 
+	mobile_no, 
+	for_substock, 
+	do_no, 
+	create_datetime, 
+	company, 
+	commercial_name_key
+	FROM request_goods
+	`
+	if len(req.Filters) > 0 {
+		
+		query += " WHERE "
+
+		for k,v := range req.Filters {
+			
+			if (k == "transactionType") {
+				query += (" transaction_type = '"+ v + "' AND")
+			} else if k == "fromLocationSubType" {
+				query += (" from_location_subtype = '" + v + "' AND")
+			} else if k == "fromLocationType" {
+				query += (" from_location_type = '" + v + "' AND")
+			} else if k == "requestStatus" {
+				query += (" request_status = '" + v + "' AND")
+			} else if k == "company" {
+				query += (" company IN (")
+			
+				values := strings.Split(v,",")
+	
+				for _,val := range values {
+
+					query += "'" + val + "' ,"
+				}
+				query = strings.Trim(query,",")
+				query += ") AND"
+			} else if k == "fromLocationCode" {
+
+				query += (" from_location_code IN (")
+
+				values := strings.Split(v,",")
+
+				for _,val := range values {
+
+        				query += "'" + val + "' ,"
+				}
+				query = strings.Trim(query,",")
+				query += ") AND"
+
+			} else if k == "createDateTimeRange" {
+
+				values := strings.Split(v,",")
+	
+				if len(values) == 2 {
+
+					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+					query += " AND"
+				}
+
+			}
+
+		}
+
+	}
+
+	query = strings.Trim(query,"AND")	
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "presto"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
+	endpoint.Process(nil,&conf,&dbAbs)
+
+	return prepareResponse(dbAbs)
+}
 
 func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 	

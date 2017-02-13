@@ -1,7 +1,6 @@
 package presto
 
 import (
-
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"time"	
@@ -10,6 +9,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"database/sql"
 	_ "github.com/avct/prestgo"
+	"github.com/dminGod/D30-HectorDA/config"
 )
 
 
@@ -32,6 +32,7 @@ func Handle( dbAbstract *model.DBAbstract ) {
 
 func getSession() (*sql.DB, error) {
 
+	Conf := config.Get()
 	logger.Write("INFO", "Initializing Presto Session")
 	select {
 
@@ -42,8 +43,7 @@ func getSession() (*sql.DB, error) {
          	case <-time.After(100 * time.Millisecond):
                 	logger.Write("INFO", "Creating new Presto Connection")
 
-			// TODO: Make the server config dynanmic
-			db, err := sql.Open("prestgo", "presto://10.138.32.26:8080/cassandra/ais_test_all")
+			db, err := sql.Open("prestgo", Conf.Presto.ConnectionURL)
 
                  	if err != nil {
                         	panic(err)

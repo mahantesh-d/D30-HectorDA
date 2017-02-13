@@ -19,8 +19,13 @@ type hector struct {
 	Log            string
 }
 
+type presto struct {
+	ConnectionURL string
+}
+
 type Config struct {
 	Cassandra cassandra
+	Presto presto
 	Hector    hector
 	loaded    bool
 }
