@@ -30,7 +30,7 @@ var Conf Config
 func Init() {
 
 	viper.SetConfigName("config") // path to look for the config file in
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("/etc/hector")
 	viper.SetConfigType("toml")
 
 	err := viper.ReadInConfig()
