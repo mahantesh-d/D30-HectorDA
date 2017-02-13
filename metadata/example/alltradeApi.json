@@ -72,5 +72,99 @@
 				"priority": 11
 			}
 		}
+	},
+	"alltrade_obtaindetail_get_1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "all_trade",
+		"table": "obtain_detail",
+		"fields": {
+			"transactionType": {
+				"column": "transaction_type",
+				"type": "text",
+				"valueType": "single",
+				"priority": 1
+			},
+			"obtainNo": {
+				"column": "obtain_no",
+				"type": "text",
+				"valueType": "single",
+				"priority": 2
+			},
+			"locationCode": {
+				"column": "location_code",
+				"type": "text",
+				"valueType": "single",
+				"priority": 3
+			},
+			"obtainDateTime": {
+				"column": "obtain_datetime",
+				"type": "timestamp",
+				"valueType": "single",
+				"priority": 4
+			},
+			"salesCode_key": {
+				"column": "sales_code_key",
+				"type": "set<text>",
+				"valueType": "multi",
+				"priority": 5
+			},
+			"matCode_key": {
+				"column": "mat_code_key",
+				"type": "set<text>",
+				"valueType": "multi",
+				"priority": 6
+			},
+			"serial_key": {
+				"column": "serial_key",
+				"type": "set<text>",
+				"valueType": "multi",
+				"priority": 7
+			}
+		}
+	},
+	"alltrade_substocktransferdetail_get_1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "all_trade",
+		"table": "sub_stock_detail_transfer",
+		"fields": {
+			"transferSubStockNo": {
+				"column": "transfer_substock_no",
+				"type": "text",
+				"valueType": "single",
+				"priority": 1
+			},
+			"toSubStock": {
+				"column": "to_substock",
+				"type": "text",
+				"valueType": "single",
+				"priority": 2
+			},
+			"transferSubStockDateTime": {
+				"column": "transfer_substock_datetime",
+				"type": "timestamp",
+				"valueType": "single",
+				"priority": 3
+			},
+			"matCode_key": {
+				"column": "mat_code_key",
+				"type": "set<text>",
+				"valueType": "multi",
+				"priority": 4
+			},
+			"serial_key": {
+				"column": "serial_key",
+				"type": "set<text>",
+				"valueType": "multi",
+				"priority": 5
+			},
+			"fromSubStock_key": {
+				"column": "from_substock_key",
+				"type": "set<text>",
+				"valueType": "multi",
+				"priority": 6
+			}
+		}
 	}
 }
