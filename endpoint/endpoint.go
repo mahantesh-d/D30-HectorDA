@@ -5,6 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
 	"github.com/dminGod/D30-HectorDA/model"
 	"net"
+	"github.com/dminGod/D30-HectorDA/endpoint/presto"
 )
 
 func Process(Conn *net.Conn, Conf *config.Config, DBAbstract *model.DBAbstract) {
@@ -13,8 +14,10 @@ func Process(Conn *net.Conn, Conf *config.Config, DBAbstract *model.DBAbstract) 
 
 	if endpoint == "cassandra" {
 		cassandra.Handle(Conn, Conf, DBAbstract)
-	} else {
+	} else if endpoint == "presto" {
 
+
+		presto.Handle(DBAbstract)
 	}
 
 }
