@@ -1,6 +1,7 @@
 package alltrade
 
 import(
+	_"fmt"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/endpoint"
@@ -13,9 +14,11 @@ import(
 
 var conf config.Config 
 var metaData map[string]interface{}
+var metaDataSelect map[string]interface{}
 func init() {
 	conf = config.Get()
 	metaData = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltrade.json"))
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
 }
 
 func Foo_Post(req model.RequestAbstract) (model.ResponseAbstract) {
@@ -78,7 +81,7 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 	metaInput := utils.FindMap("table","stock_adjustment", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
-	query := queryhelper.PrepareQuery(metaResult)
+	query := queryhelper.PrepareInsertQuery(metaResult)
 
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
@@ -90,11 +93,40 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 }
 
 
+func StockAdjustment_Get(req model.RequestAbstract) (model.ResponseAbstract) {
+
+	// input: map of queryparams key and value and metadata
+	// output: map of queryparams key and values+tablemetadata
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table","stock_adjustment", metaDataSelect)
+
+	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
+
+
+	query := queryhelper.PrepareSelectQuery(metaResult)
+
+	// input: map querparams key and values+tablemetadata
+	// output: SQL query
+	
+	// endpoint process query
+
+        var dbAbs model.DBAbstract
+        dbAbs.DBType = "cassandra"
+        dbAbs.QueryType = "SELECT"
+	
+	dbAbs.Query = query
+        endpoint.Process(nil,&conf,&dbAbs)
+
+        return prepareResponse(dbAbs)
+}
+
+
+
 func Foobar_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 	metaInput := utils.FindMap("table","foobar", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
-	query := queryhelper.PrepareQuery(metaResult)
+	query := queryhelper.PrepareInsertQuery(metaResult)
 
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
@@ -111,7 +143,7 @@ func ObtainDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","obtain_detail", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"
@@ -126,7 +158,7 @@ func SubStockDetailTransfer_Post(req model.RequestAbstract) (model.ResponseAbstr
 
 	metaInput := utils.FindMap("table","sub_stock_detail_transfer", metaData)
  	metaResult := metadata.Interpret(metaInput, req.Payload)
-	query := queryhelper.PrepareQuery(metaResult)
+	query := queryhelper.PrepareInsertQuery(metaResult)
 	
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
@@ -143,7 +175,7 @@ func SubStockDailyDetail_Post(req model.RequestAbstract) (model.ResponseAbstract
 
         metaInput := utils.FindMap("table","sub_stock_daily_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"
@@ -160,7 +192,7 @@ func TransferOutMismatch_Post(req model.RequestAbstract) (model.ResponseAbstract
 
         metaInput := utils.FindMap("table","tranfer_out_mismatch", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"
@@ -179,7 +211,7 @@ func RequestGoods_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","request_goods", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"
@@ -199,7 +231,7 @@ func OrderTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","order_transfer", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"
@@ -218,7 +250,7 @@ func SaleOutDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","sale_out_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"
@@ -237,7 +269,7 @@ func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
         metaInput := utils.FindMap("table","check_stock_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
-        query := queryhelper.PrepareQuery(metaResult)
+        query := queryhelper.PrepareInsertQuery(metaResult)
 
         var dbAbs model.DBAbstract
         dbAbs.DBType = "cassandra"

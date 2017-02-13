@@ -8,7 +8,6 @@ import (
 	"net"
 	"time"	
 	_"strings"
-	_"strconv"
 	"github.com/dminGod/D30-HectorDA/utils"
 )
 
@@ -91,8 +90,9 @@ func Select(dbAbstract *model.DBAbstract) {
 		dbAbstract.Count = 0
 	} else {
 		dbAbstract.Status = "success"
-		dbAbstract.Message = "Inserted successfully"
-		dbAbstract.Data = utils.EncodeJSON(result)
+		dbAbstract.Message = "Query successful"
+		data  := utils.EncodeJSON(result)
+		dbAbstract.Data = data
 		dbAbstract.Count = uint64(len(result))
 	}
 }

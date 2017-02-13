@@ -116,3 +116,20 @@ func addData(output_key_values *map[string]interface{}, output_key_meta *map[str
 		(*output_key_meta)[key] = dataType
 	}
 }
+
+
+func InterpretSelect(input map[string]interface{}, filters map[string]string) map[string]interface{} {
+	output := make(map[string]interface{})
+	fields := input["fields"].(map[string]interface{})
+	for k,v := range filters {
+		if utils.KeyInMap(k,fields) {
+			fieldrecord := fields[k].(map[string]interface{})
+			fieldrecord["value"] = v
+			output[k] = fieldrecord
+		} else {
+		}
+	}
+
+	input["fields"] = output
+	return input
+}

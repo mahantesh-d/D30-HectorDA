@@ -106,7 +106,11 @@ func mapAbstractRequest(req *pb.Request) (model.RequestAbstract) {
 	reqAbs.Application = req.GetApplicationName()
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.HTTPRequestType = req.GetMethod().String()
-	reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
+	if reqAbs.HTTPRequestType == "POST" {
+		reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
+	} else if reqAbs.HTTPRequestType == "GET" {
+		reqAbs.Filters = utils.ParseFilter(req.GetFilter())
+	}
 	return reqAbs
 }
 

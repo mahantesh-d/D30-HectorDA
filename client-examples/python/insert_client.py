@@ -15,13 +15,12 @@ def run():
 	appname = sys.argv[1]
 	method = sys.argv[2]
 	httptype = sys.argv[3]
-	payloadfile = sys.argv[4]
-	# req = d20_pb2.Request(ApplicationName="alltrade", ApplicationMethod="foo", Method=d20_pb2.RESTMethod.Value("POST"), ApplicationPayload='{"id": 1,"name": "fgfh"}')
-
-
-	#req = d20_pb2.Request(ApplicationName="alltrade", ApplicationMethod="foobar", Method=d20_pb2.RESTMethod.Value("POST"), ApplicationPayload='{"email_id" : ["abc@email.com","abcd@email.com"], "dyn": {"a1":"status","b1":"something_else"}}')
-	
-	req = d20_pb2.Request(ApplicationName=appname, ApplicationMethod=method, Method=d20_pb2.RESTMethod.Value(httptype), ApplicationPayload=getpayload(payloadfile))
+	if httptype == "POST":
+		payloadfile = sys.argv[4]
+		req = d20_pb2.Request(ApplicationName=appname, ApplicationMethod=method, Method=d20_pb2.RESTMethod.Value(httptype), ApplicationPayload=getpayload(payloadfile))
+	elif httptype == "GET":
+		filters = sys.argv[4]
+		req = d20_pb2.Request(ApplicationName=appname, ApplicationMethod=method, Method=d20_pb2.RESTMethod.Value(httptype), Filter=filters)
 	print req
         execute(stub,req)
 if __name__ == '__main__':

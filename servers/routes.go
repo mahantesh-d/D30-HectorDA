@@ -18,6 +18,7 @@ func init() {
 
 		// All trade version 1
 		"alltrade_stock_adjustment_post" : alltrade.StockAdjustment_Post,
+		"alltrade_stock_adjustment_get" : alltrade.StockAdjustment_Get,
 		"alltrade_obtain_detail_post" : alltrade.ObtainDetail_Post,
 		"alltrade_substock_detail_transfer_post" : alltrade.SubStockDetailTransfer_Post,
 		"alltrade_substock_daily_detail_post" : alltrade.SubStockDailyDetail_Post,

@@ -1,24 +1,39 @@
 package queryhelper
 
 import(
+	_"fmt"
 	"strings"
 	"github.com/dminGod/D30-HectorDA/utils"
 )
-func PrepareQuery(metaInput map[string]interface{}) string {
+func PrepareInsertQuery(metaInput map[string]interface{}) string {
 
 	// get the endpoint
 	databaseType := metaInput["databaseType"].(string)
 	
 	query := ""
 	if databaseType == "cassandra" {
-		query = cassandraQueryBuild(metaInput)
+		query = cassandraInsertQueryBuild(metaInput)
 	}
 		
 	return query
 }
 
 
-func cassandraQueryBuild(metaInput map[string]interface{}) string {
+func PrepareSelectQuery(metaInput map[string]interface{}) string {
+	// get the endpoint
+	databaseType := metaInput["databaseType"].(string)
+
+	query := ""
+	if databaseType == "cassandra" {
+        	query = cassandraSelectQueryBuild(metaInput)
+	}
+
+	return query
+
+}
+
+
+func cassandraInsertQueryBuild(metaInput map[string]interface{}) string {
 
 	name := ""
 	value := ""
@@ -52,7 +67,35 @@ func cassandraQueryBuild(metaInput map[string]interface{}) string {
 	return query
 }
 
+func cassandraSelectQueryBuild(metaInput map[string]interface{}) string {
 
+	table := metaInput["table"].(string)
+
+	query := "SELECT * from " + table + " WHERE";
+
+	fields := metaInput["fields"].(map[string]interface{})
+	numberOfParams := len(fields)
+	// three type of queries
+	// single condition
+	// multiple conditions in a specific predictable order
+	// multiple conditions in a non-related order
+	if numberOfParams == 1 {
+		for _, v := range fields {
+			fieldMeta := v.(map[string]interface{})
+			query += returnCondition(fieldMeta)
+		}
+	} else {
+		for _, v := range fields {
+        		fieldMeta := v.(map[string]interface{})
+        		query += returnCondition(fieldMeta) + " AND"
+		}
+		query = strings.Trim(query,"AND")
+	
+		query += "ALLOW FILTERING"
+	}
+
+	return query
+}
 func returnString(input interface{}) string{
 
 	return "'" + strings.Replace(input.(string),"'","\\'",-1) + "'"
@@ -97,18 +140,23 @@ func returnMap(input interface{}) string {
 	return returnString(value)
 }
 
-/*func returnSetMap(input interface{}) string {
+func returnCondition(input map[string]interface{}) (string) {
 
-	value := "{"
-
-	inputs := input.([] interface{})
-	
-	for _,v := range inputs {
-
-		value += (returnString(utils.EncodeJSON(v.(map[string]interface{}))) + ",")
+	condition := ""
+	relationalOperator := ""
+	if input["valueType"].(string) == "single" {
+		relationalOperator = "="	
+	} else if input["valueType"].(string) == "multi" {
+		relationalOperator = "CONTAINS"
 	}
 
-	value = strings.Trim(value,",")
-	value += "}"
-	return value
-}*/
+	switch dataType := input["type"]; dataType {
+
+		case "text","timestamp","set<text>":
+			condition += " " + input["column"].(string) + " " + relationalOperator + " " + returnString(input["value"].(string))
+		case "int":
+			condition +=  " " + input["column"].(string) + " " + relationalOperator + " " + returnInt(input["value"].(string))	
+	}	
+
+	return condition	
+}

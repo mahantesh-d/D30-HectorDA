@@ -115,3 +115,28 @@ func ReadFile(path string) string {
 
 	return string(raw)
 }
+
+func ParseFilter(input string) map[string]string {
+	
+	output := make(map[string]string)
+
+	input = input[1:]
+	input = strings.Trim(input,")")	
+	if string(input[0]) == "&" {
+		input = input[1:]
+	}
+	
+	filters := strings.Split(input,")(")
+
+	for _,v := range filters {
+
+		v = strings.Replace(v,"(","",1)
+		v = strings.Replace(v,")","",1)
+
+		keyval := strings.Split(v,"=")
+		output[keyval[0]] = keyval[1]
+	}
+
+	return output
+
+}
