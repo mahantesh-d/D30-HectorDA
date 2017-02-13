@@ -22,16 +22,17 @@ func(g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Respons
 
 func(g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
-	// map the data to the abstract request
-	RequestAbstract = mapAbstractRequest(req)
+	resp := new(pb.Response)
+	if validRequest(req,resp) {
+		// map the data to the abstract request
+		RequestAbstract = mapAbstractRequest(req)
 
-	// routing
-	respAbs,_ := HandleRoutes(RequestAbstract)
+		// routing
+		respAbs,_ := HandleRoutes(RequestAbstract)
 
-
-	// map the result to abstract response
-	resp := mapAbstractResponse(respAbs)
-        
+		// map the result to abstract response
+		resp = mapAbstractResponse(respAbs)
+	}
 	return resp,nil
 }
 
@@ -125,4 +126,38 @@ func mapAbstractResponse(respAbs model.ResponseAbstract) (*pb.Response) {
 	resp.Count =  *(proto.Uint64(respAbs.Count))
 	return resp
 
+}
+
+func validRequest(req *pb.Request,resp *pb.Response) bool {
+
+	var reqAbs model.RequestAbstract
+	reqAbs.Application = req.GetApplicationName()
+	reqAbs.Action = req.GetApplicationMethod()
+	reqAbs.HTTPRequestType = req.GetMethod().String()
+	route := GetRouteName(reqAbs)
+	// check if the route exists
+	if !RouteExists(route) {
+		resp.StatusCode = 404
+		resp.Status = "fail"
+		resp.StatusCodeMessage = "NOT_FOUND"
+		resp.Message = "The given route was not found"
+		resp.Data = "{}"
+		resp.Count = 0
+		return false	
+	}
+
+	// post validations
+	if req.GetMethod().String() == "POST" {
+		if !utils.IsJSON(req.GetApplicationPayload()) {
+			resp.StatusCode = 400
+			resp.Status = "fail"
+			resp.StatusCodeMessage = "INVALID_PARAMETERS"
+			resp.Message = "The parameters are invalid"
+			resp.Data = "{}"
+			resp.Count = 0
+			return false
+		}
+	}
+
+	return true
 } 

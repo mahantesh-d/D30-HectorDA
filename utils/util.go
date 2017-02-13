@@ -7,19 +7,31 @@ import (
 	"strconv"
 	"fmt"
 	"io/ioutil"
+	"regexp"
 )
+
+func IsJSON(input interface{}) bool {
+
+	var output map[string]interface{}
+	
+	return json.Unmarshal([]byte(input.(string)), &output) == nil	
+}
+
 
 func DecodeJSON(input interface{}) map[string]interface{} {
 
-        var payload interface{}
+        var payload map[string]interface{}
 
+	if !IsJSON(input) {
+		return payload
+	}
         err := json.Unmarshal([]byte(input.(string)), &payload)
 
         if err != nil {
                 logger.Write("ERROR", err.Error())
         }
 
-        return payload.(map[string]interface{})
+        return payload
 
 }
 
@@ -120,7 +132,16 @@ func ParseFilter(input string) map[string]string {
 
 	output := make(map[string]string)
 
-	if len(input) == 0 {
+	pattern := `(^\(*\&?\(*)(.*)(\)?\)$)`
+
+	if !RegexMatch(input, pattern) {
+		return output
+	}
+
+	var validID = regexp.MustCompile(pattern)
+	input = (validID.FindStringSubmatch(input))[2]
+
+	/*if len(input) == 0 {
 		return output
 	}
 
@@ -128,7 +149,7 @@ func ParseFilter(input string) map[string]string {
 	input = strings.Trim(input,")")	
 	if string(input[0]) == "&" {
 		input = input[1:]
-	}
+	}*/
 	
 	filters := strings.Split(input,")(")
 
@@ -143,4 +164,11 @@ func ParseFilter(input string) map[string]string {
 
 	return output
 
+}
+
+func RegexMatch(input string,pattern string) bool {
+
+	var validID = regexp.MustCompile(pattern)
+
+	return validID.MatchString(input)
 }
