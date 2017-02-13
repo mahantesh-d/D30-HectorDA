@@ -154,6 +154,33 @@ func ObtainDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         return prepareResponse(dbAbs)
 }
 
+func ObtainDetail_Get(req model.RequestAbstract) (model.ResponseAbstract) {
+
+
+	 // input: map of queryparams key and value and metadata
+	// output: map of queryparams key and values+tablemetadata
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table","obtain_detail", metaDataSelect)
+
+	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
+
+	query := queryhelper.PrepareSelectQuery(metaResult)
+
+	// input: map querparams key and values+tablemetadata
+ 	// output: SQL query
+
+	// endpoint process query
+
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "cassandra"
+	dbAbs.QueryType = "SELECT"
+
+	dbAbs.Query = query
+	endpoint.Process(nil,&conf,&dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
 func SubStockDetailTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
 	metaInput := utils.FindMap("table","sub_stock_detail_transfer", metaData)
@@ -170,6 +197,31 @@ func SubStockDetailTransfer_Post(req model.RequestAbstract) (model.ResponseAbstr
 
 }
 
+func SubStockDetailTransfer_Get(req model.RequestAbstract) (model.ResponseAbstract) {
+
+	// input: map of queryparams key and value and metadata
+	// output: map of queryparams key and values+tablemetadata
+ 	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+ 	metaInput := utils.FindMap("table","sub_stock_detail_transfer", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
+
+	query := queryhelper.PrepareSelectQuery(metaResult)
+
+	// input: map querparams key and values+tablemetadata
+ 	// output: SQL query
+
+ 	// endpoint process query
+
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "cassandra"
+	dbAbs.QueryType = "SELECT"
+
+	dbAbs.Query = query
+	endpoint.Process(nil,&conf,&dbAbs)
+
+	return prepareResponse(dbAbs)
+
+}
 
 func SubStockDailyDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
 
