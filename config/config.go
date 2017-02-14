@@ -17,6 +17,7 @@ type hector struct {
 	Host           string
 	Port           string
 	Log            string
+	LogDirectory   string
 }
 
 type presto struct {

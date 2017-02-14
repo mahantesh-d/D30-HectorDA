@@ -3,9 +3,22 @@ package logger
 import (
 	"log"
 	"github.com/dminGod/D30-HectorDA/config"
+	"os"
+	"fmt"
 )
 
 var AllowedLevels []string = []string{"INFO", "ERROR", "DEBUG"};
+
+func init () {
+	Conf := config.Get()
+	f, err:= os.OpenFile(Conf.Hector.LogDirectory + "/server.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	} else {
+		log.SetOutput(f)
+	}
+}
 
 func Write(level string, msg string) {
 

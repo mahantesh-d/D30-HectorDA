@@ -11,6 +11,7 @@ kversion = "0.0.1"
 	host = "127.0.0.1"
 	port = "9001"
 	log = "INFO"
+	logdirectory = "/var/log/hector"
 
 # Cassandra Config
 [cassandra]
