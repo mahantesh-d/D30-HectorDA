@@ -98,9 +98,9 @@ func cassandraSelectQueryBuild(metaInput map[string]interface{}) string {
 			query += "ALLOW FILTERING"
 		}
 
-	}
-
+	} else {
 		query += " LIMIT 10"
+	}	
 		return query
 }
 func returnString(input interface{}) string{
