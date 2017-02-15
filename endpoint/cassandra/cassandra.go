@@ -76,7 +76,16 @@ func Insert(dbAbstract *model.DBAbstract) {
 
 func Select(dbAbstract *model.DBAbstract) {
 
+	if len(dbAbstract.Query) == 0 {
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Invalid Query"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+		return
+	}
+
 	session,_ := getSession()
+	
 	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query)
 	iter := session.Query(dbAbstract.Query).Iter()
 	result,err := iter.SliceMap()

@@ -5,72 +5,83 @@
 		"database": "all_trade",
 		"table": "stock_adjustment",
 		"fields": {
-			"adjustStockNo": {
-				"column": "adjust_stock_no",
-				"type": "text",
-				"valueType": "single",
-				"priority": 1
-			},
-			"company": {
-				"column": "company",
-				"type": "text",
-				"valueType": "single",
-				"priority": 2
-			},
-			"adjustDateTime": {
-				"column": "adjust_date_time",
-				"type": "timestamp",
-				"valueType": "single",
-				"priority": 3
-			},
-			"locationCode": {
-				"column": "location_code",
-				"type": "text",
-				"valueType": "single",
-				"priority": 4
-			},
-			"matCode_key": {
-				"column": "mat_code_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 5
-			},
-			"brand_key": {
-				"column": "brand_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 6
-			},
-			"model_key": {
-				"column": "model_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 7
-			},
-			"commercialName_key": {
-				"column": "commercial_name_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 8
-			},
-			"productType_key": {
-				"column": "product_type_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 9
-			},
-			"productSubType_key": {
-				"column": "product_subtype_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 10
-			},
-			"serial_key": {
-				"column": "serial_key",
-				"type": "set<text>",
-				"valueType": "multi",
-				"priority": 11
-			}
+			                        "adjustStockNo": {
+                                "column": "adjust_stock_no",
+                                "type": "text",
+                                "valueType": "single",
+                                "priority": 11,
+                                "indexType": "sasi"
+                        },
+                        "company": {
+                                "column": "company",
+                                "type": "text",
+                                "valueType": "single",
+                                "priority": 1,
+                                "indexType" : "sasi"
+                        },
+                        "adjustDateTime": {
+                                "column": "adjust_date_time",
+                                "type": "timestamp",
+                                "valueType": "single",
+                                "priority": 10,
+                                "indexType" : "sasi"
+                        },
+                        "locationCode": {
+                                "column": "location_code",
+                                "type": "text",
+                                "valueType": "single",
+                                "priority": 2,
+                                "indexType" : "sasi"
+                        },
+                        "matCode_key": {
+                                "column": "mat_code_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 7,
+                                "indexType" : "secondary"
+                        },
+                        "brand_key": {
+                                "column": "brand_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 5,
+                                "indexType" : "secondary"
+                        },
+                        "model_key": {
+                                "column": "model_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 6,
+                                "indexType" : "secondary"
+                        },
+                        "commercialName_key": {
+                                "column": "commercial_name_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 8,
+                                "indexType" : "secondary"
+                        },
+                        "productType_key": {
+                                "column": "product_type_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 3,
+                                "indexType" : "secondary"
+                        },
+                        "productSubType_key": {
+                                "column": "product_subtype_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 4,
+                                "indexType" : "secondary"
+                        },
+                        "serial_key": {
+                                "column": "serial_key",
+                                "type": "set<text>",
+                                "valueType": "multi",
+                                "priority": 9,
+                                "indexType" : "secondary"
+                        }
 		}
 	},
 	"alltrade_obtaindetail_get_1": {
@@ -83,7 +94,8 @@
 				"column": "transaction_type",
 				"type": "text",
 				"valueType": "single",
-				"priority": 1
+				"priority": 1,
+				"indexType" : "sasi"
 			},
 			"obtainNo": {
 				"column": "obtain_no",

@@ -50,20 +50,22 @@ func StockAdjustment_Get(req model.RequestAbstract) (model.ResponseAbstract) {
 
 	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
 
+	query := ""	
 
-	query := queryhelper.PrepareSelectQuery(metaResult)
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+		query = queryhelper.PrepareSelectQuery(metaResult)
+		dbAbs.DBType = "cassandra"
+		dbAbs.QueryType = "SELECT"
+		dbAbs.Query = query
+	} else {
+		metaResult["databaseType"] = "presto"
+		query = queryhelper.PrepareSelectQuery(metaResult)
+	}
 
-	// input: map querparams key and values+tablemetadata
-	// output: SQL query
-	
-	// endpoint process query
 
-        var dbAbs model.DBAbstract
-        dbAbs.DBType = "cassandra"
-        dbAbs.QueryType = "SELECT"
-	
-	dbAbs.Query = query
         endpoint.Process(nil,&conf,&dbAbs)
+
 
         return prepareResponse(dbAbs)
 }
@@ -95,18 +97,20 @@ func ObtainDetail_Get(req model.RequestAbstract) (model.ResponseAbstract) {
 
 	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
 
-	query := queryhelper.PrepareSelectQuery(metaResult)
 
-	// input: map querparams key and values+tablemetadata
- 	// output: SQL query
+	query := ""
 
-	// endpoint process query
+ 	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+        	dbAbs.QueryType = "SELECT"
+         	dbAbs.Query = query
+	 } else {
+        	metaResult["databaseType"] = "presto"
+         	query = queryhelper.PrepareSelectQuery(metaResult)
+	}	
 
-	var dbAbs model.DBAbstract
-	dbAbs.DBType = "cassandra"
-	dbAbs.QueryType = "SELECT"
-
-	dbAbs.Query = query
 	endpoint.Process(nil,&conf,&dbAbs)
 
 	return prepareResponse(dbAbs)
@@ -136,18 +140,20 @@ func SubStockDetailTransfer_Get(req model.RequestAbstract) (model.ResponseAbstra
  	metaInput := utils.FindMap("table","sub_stock_detail_transfer", metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
 
-	query := queryhelper.PrepareSelectQuery(metaResult)
 
-	// input: map querparams key and values+tablemetadata
- 	// output: SQL query
-
- 	// endpoint process query
+	 query := ""
 
 	var dbAbs model.DBAbstract
-	dbAbs.DBType = "cassandra"
-	dbAbs.QueryType = "SELECT"
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+        	dbAbs.QueryType = "SELECT"
+        	dbAbs.Query = query
+ 	} else {
+        	metaResult["databaseType"] = "presto"
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+ 	}
 
-	dbAbs.Query = query
 	endpoint.Process(nil,&conf,&dbAbs)
 
 	return prepareResponse(dbAbs)

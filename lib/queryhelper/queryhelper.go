@@ -26,9 +26,42 @@ func PrepareSelectQuery(metaInput map[string]interface{}) string {
 	query := ""
 	if databaseType == "cassandra" {
         	query = cassandraSelectQueryBuild(metaInput)
+	} else if databaseType == "presto" {
+		query = prestoSelectQueryBuild(metaInput)
+	}
+	return query
+
+}
+
+
+func IsValidCassandraQuery(metaInput map[string]interface{}) bool {
+
+	fields := metaInput["fields"].(map[string]interface{})
+	
+	// if no fields are passed, return false ( cannot query all data )
+	if len(fields) == 0 {
+
 	}
 
-	return query
+	// if query is only on 1 index ( custom or sasi ), return true
+	if len(fields) == 1 {
+		return true	
+	}
+
+	uniqueIndex := ""
+	count := 0
+	for _,v := range fields {
+		metaData := v.(map[string]interface{})
+		if count == 0 {
+			uniqueIndex = metaData["indexType"].(string)
+		} else if uniqueIndex != "" && metaData["indexType"].(string) != uniqueIndex {
+			return false
+		}	
+		count++	
+	}
+
+		
+	return true
 
 }
 
@@ -88,18 +121,29 @@ func cassandraSelectQueryBuild(metaInput map[string]interface{}) string {
 				query += returnCondition(fieldMeta)
 			}
 		} else {
+			querySorter := make([][]string,20)
 			for _, v := range fields {
         			fieldMeta := v.(map[string]interface{})
-        			query += returnCondition(fieldMeta) + " AND"
+				priority := int(fieldMeta["priority"].(float64))
+				//query += returnCondition(fieldMeta) + " AND"
+				querySorter[priority] = append(querySorter[priority], returnCondition(fieldMeta) + " AND")
 			}
-			
+		
+
+			for _,v := range querySorter {
+
+				for _,vv := range v {
+					query += vv
+				}
+			}
+	
 			query = strings.Trim(query,"AND")
 	
 			query += "ALLOW FILTERING"
 		}
 
 	} else {
-		query += " LIMIT 10"
+		query = ""	
 	}	
 		return query
 }
@@ -166,4 +210,23 @@ func returnCondition(input map[string]interface{}) (string) {
 	}	
 
 	return condition	
+}
+
+func prestoSelectQueryBuild(metaInput map[string]interface{}) string {
+
+
+	table := metaInput["table"].(string)
+
+
+	query := "SELECT * from " + table;
+	fields := metaInput["fields"].(map[string]interface{})
+
+	for _, v := range fields {
+        	fieldMeta := v.(map[string]interface{})
+        	query += returnCondition(fieldMeta) + " AND"
+	}
+
+	query = strings.Trim(query,"AND")
+	
+	return query
 }

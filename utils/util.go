@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"regexp"
+	"os"
 )
 
 func IsJSON(input interface{}) bool {
@@ -171,4 +172,10 @@ func RegexMatch(input string,pattern string) bool {
 	var validID = regexp.MustCompile(pattern)
 
 	return validID.MatchString(input)
+}
+
+func Exit(code int) {
+
+	os.Exit(code)
+
 }

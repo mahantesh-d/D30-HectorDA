@@ -127,6 +127,9 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 			fieldrecord["value"] = v
 			output[k] = fieldrecord
 		} else {
+			output = make(map[string]interface{})
+			input["fields"] = output
+			return input
 		}
 	}
 
