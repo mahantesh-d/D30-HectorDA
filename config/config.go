@@ -50,7 +50,7 @@ func Init() {
 	if err != nil {
 		fmt.Println("Config not found...")
 
-		viper.AddConfigPath("/ect/hector/")
+		viper.AddConfigPath("/etc/hector/")
 		viper.ReadInConfig()
 	}
 
