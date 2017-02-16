@@ -11,9 +11,6 @@ import (
 )
 
 // IsJSON validates a JSON string
-// For example:
-//  IsJSON('{"foo" : "bar"}') // Output : true
-//  IsJSON('foobar') // Output : false
 func IsJSON(input interface{}) bool {
 
 	var output map[string]interface{}
@@ -22,8 +19,6 @@ func IsJSON(input interface{}) bool {
 }
 
 // DecodeJSON converts a JSON string to a map of string and interface
-// For example:
-//  DecodeJSON('{"foo" : "bar"}') // Output : map[foo : bar]
 func DecodeJSON(input interface{}) map[string]interface{} {
 
 	var payload map[string]interface{}
@@ -42,10 +37,6 @@ func DecodeJSON(input interface{}) map[string]interface{} {
 }
 
 // EncodeJSON converts a map of string and interface to a JSON string
-// For example:
-//  example := make(map[string]interface{})
-//  example["foo"] = "bar"
-//  EncodeJSON(example) // Output : {"foo" : "bar"}
 func EncodeJSON(input interface{}) string {
 	jsonString, err := json.Marshal(input)
 
@@ -57,11 +48,6 @@ func EncodeJSON(input interface{}) string {
 }
 
 // KeyInMap checks if a given key exists in a map of string and interface
-// For example:
-//  example := make(map[string]interface{})
-//  example["foo"] = "bar"
-//  KeyInMap("foo") // Output : true
-//  KeyInMap("bar") // Output : false
 func KeyInMap(key string, attributes map[string]interface{}) bool {
 
 	// iterate over each route
@@ -92,8 +78,6 @@ func FindMap(key string, value interface{}, input map[string]interface{}) map[st
 }
 
 // ReadFile returns the contents of the file
-// For example :
-//  ReadFile("/tmp/foo.txt") // Output : Contents of the file /tmp/foo.txt"
 func ReadFile(path string) string {
 
 	raw, err := ioutil.ReadFile(path)
@@ -105,8 +89,6 @@ func ReadFile(path string) string {
 }
 
 // ParseFilter is used to convert an LDAP type query filter to a map of string and interface
-// For example:
-//  ParseFilter("(&(fooKey=fooValue)(barKey=barValue))") // Output : map[fooKey: fooValue  barKey: barValue]
 func ParseFilter(input string) map[string]string {
 
 	output := make(map[string]string)
@@ -146,9 +128,6 @@ func ParseFilter(input string) map[string]string {
 }
 
 // RegexMatch is used to match an input string with a regex pattern
-// For example :
-//  RegexMatch("abc",`[a-z]+`) // Output : true
-//  RegexMatch("123", `[a-z]+`) // Output : false
 func RegexMatch(input string, pattern string) bool {
 
 	var validID = regexp.MustCompile(pattern)
@@ -157,8 +136,6 @@ func RegexMatch(input string, pattern string) bool {
 }
 
 // Exit is used to Exit the application with the provided exit code
-// For example:
-//  Exit(1) // this will exit the application with exit code 1
 func Exit(code int) {
 
 	os.Exit(code)
