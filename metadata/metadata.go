@@ -13,8 +13,6 @@ func Interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 func interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
 
-	outputString := ""
-
 	output := make(map[string]interface{})
 	output["databaseType"] = metadata["databaseType"]
 	output["version"] = metadata["version"]
@@ -29,8 +27,6 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 		val := make([]string, 2)
 		val[0] = f["name"].(string)
 		val[1] = f["type"].(string)
-
-		outputString += k
 
 		switch t := val[1]; t {
 
