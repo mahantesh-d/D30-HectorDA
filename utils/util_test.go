@@ -13,7 +13,7 @@ func ExampleIsJSON(input interface{}) {
 	fmt.Println(IsJSON(example)) // true
 }
 
-func ExampleDecodeJSON(input interface{}) map[string]interface{} {
+func ExampleDecodeJSON(input interface{}) {
 	example := `
 		{
 		"foo": "bar"
@@ -29,7 +29,7 @@ func ExampleEncodeJSON(input interface{}) {
 }
 
 func ExampleKeyInMap(key string, attributes map[string]interface{}) {
-	example := make([]map[string]interface{})
+	example := make(map[string]interface{})
 	example["fookey"] = "foovalue"
 	example["barkey"] = "barvalue"
 	fmt.Println(KeyInMap("fookey", example))       // true
