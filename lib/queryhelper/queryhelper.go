@@ -1,10 +1,12 @@
 package queryhelper
 
 import(
-	_"fmt"
 	"strings"
 	"github.com/dminGod/D30-HectorDA/utils"
 )
+
+// PrepareInsertQuery is used to parse Application metadata 
+// and return the corresponding INSERT query
 func PrepareInsertQuery(metaInput map[string]interface{}) string {
 
 	// get the endpoint
@@ -18,7 +20,8 @@ func PrepareInsertQuery(metaInput map[string]interface{}) string {
 	return query
 }
 
-
+// PrepareSelectQuery is used to parse Application metadata
+// and return the corresponding SELECT query
 func PrepareSelectQuery(metaInput map[string]interface{}) string {
 	// get the endpoint
 	databaseType := metaInput["databaseType"].(string)
@@ -33,7 +36,9 @@ func PrepareSelectQuery(metaInput map[string]interface{}) string {
 
 }
 
-
+// IsValidCassandraQuery is used to analyze the metadata
+// and check if the data provided is sufficient to trigger
+// a Cassandra Query
 func IsValidCassandraQuery(metaInput map[string]interface{}) bool {
 
 	fields := metaInput["fields"].(map[string]interface{})

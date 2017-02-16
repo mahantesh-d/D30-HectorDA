@@ -7,7 +7,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"net"
 	"time"	
-	_"strings"
 	"github.com/dminGod/D30-HectorDA/utils"
 )
 
@@ -19,6 +18,7 @@ func init() {
 	cassandraChan = make(chan *gocql.Session,100)
 }
 
+// Handle acts as an entry point to handle different operations on Cassandra
 func Handle(Conn *net.Conn, Conf *config.Config, dbAbstract *model.DBAbstract) {
 
 	cassandraHost = Conf.Cassandra.Host
@@ -52,6 +52,7 @@ func getSession() (*gocql.Session,error) {
 	}
 }
 
+// Insert is used to make an Insert into Cassandra
 func Insert(dbAbstract *model.DBAbstract) {
 	
 	session,_ := getSession()
@@ -74,6 +75,7 @@ func Insert(dbAbstract *model.DBAbstract) {
 
 }
 
+// Select is used to query data from Cassandra
 func Select(dbAbstract *model.DBAbstract) {
 
 	if len(dbAbstract.Query) == 0 {

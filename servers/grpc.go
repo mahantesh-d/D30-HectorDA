@@ -9,17 +9,19 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/golang/protobuf/proto"
 	"net"
-	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/model"
 )
 
+// GRPCServer registers
 type GRPCServer struct {}
 
+// AtomicAdd : empty stub
 func(g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
 	return new(pb.Response),nil
 }
 
+// Do is used to perform simple RPC communication to store and query data from the endpoints
 func(g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
 	resp := new(pb.Response)
@@ -36,39 +38,43 @@ func(g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response,error
 	return resp,nil
 }
 
-func(g *GRPCServer) GetStream(req *pb.Request, stream_resp pb.Hector_GetStreamServer) error {
+// GetStream : empty stub
+func(g *GRPCServer) GetStream(req *pb.Request, streamResp pb.Hector_GetStreamServer) error {
 
         return nil
 }
 
-
+// ResolveAlias : empty stub
 func(g *GRPCServer) ResolveAlias(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
         return new(pb.Response),nil
 }
 
+// TxBegin : empty stub
 func(g *GRPCServer) TxBegin(ctx context.Context, req *pb.TxBeginRequest) (*pb.TxBeginResponse,error) {
 
         return new(pb.TxBeginResponse),nil
 }
 
+// TxDo : empty stub
 func(g *GRPCServer) TxDo(ctx context.Context, req *pb.Request) (*pb.Response,error) {
 
         return new(pb.Response),nil
 }
 
-
+// TxCommit : empty stub
 func(g *GRPCServer) TxCommit(ctx context.Context, req *pb.TxCommitRequest) (*pb.TxCommitResponse,error) {
 
         return new(pb.TxCommitResponse),nil
 }
 
-
+// TxRollback : empty stub
 func(g *GRPCServer) TxRollback(ctx context.Context, req *pb.TxRollbackRequest) (*pb.TxRollbackResponse,error) {
 
         return new(pb.TxRollbackResponse),nil
 }
 
+// GRPCStartServer starts the grpc server on the configured port
 func GRPCStartServer() {
 	Conf = config.Get();
 
@@ -86,19 +92,6 @@ func GRPCStartServer() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterHectorServer(grpcServer,new(GRPCServer))
 	grpcServer.Serve(listener)
-}
-
-func handleEndPoint(Conn *net.Conn, Conf *config.Config, RequestAbstract *model.RequestAbstract) {
-	
-	var dbAbstract model.DBAbstract
-
-	dbAbstract.DBType = "cassandra"
-	dbAbstract.QueryType = "INSERT"
-	dbAbstract.Query = "INSERT INTO foo(id, name) VALUES(2,'xyz')"
-	
-
-	endpoint.Process(nil,Conf, &dbAbstract)
-
 }
 
 func mapAbstractRequest(req *pb.Request) (model.RequestAbstract) {

@@ -8,6 +8,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/endpoint/presto"
 )
 
+// Process acts as an entry point to mapping the different data operations to different database endpoints
 func Process(Conn *net.Conn, Conf *config.Config, DBAbstract *model.DBAbstract) {
 
 	endpoint := DBAbstract.DBType

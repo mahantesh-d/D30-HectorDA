@@ -10,7 +10,7 @@ def getpayload(path):
 	return f.read()
 
 def run():
-        channel = grpc.insecure_channel('localhost:9001')
+        channel = grpc.insecure_channel('localhost:9002')
         stub = d20_pb2.HectorStub(channel)
 	appname = sys.argv[1]
 	method = sys.argv[2]

@@ -1,9 +1,7 @@
 package alltrade
-
 import(
-	_"fmt"
 	"github.com/dminGod/D30-HectorDA/model"
-//	"github.com/dminGod/D30-HectorDA/logger"
+	_ "github.com/dminGod/D30-HectorDA/logger" // TODO: Add Intermdiate logs to track detailed activity of each API
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
@@ -15,16 +13,15 @@ import(
 var conf config.Config 
 var metaData map[string]interface{}
 var metaDataSelect map[string]interface{}
+
 func init() {
 	conf = config.Get()
 	metaData = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltrade.json"))
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
 }
 
-// This is is an API to adjust Stock, it accepts POST params
-
-func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// StockAdjustmentPost handles StockAdjustment POST request
+func StockAdjustmentPost(req model.RequestAbstract) (model.ResponseAbstract) {
 	metaInput := utils.FindMap("table","stock_adjustment", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
@@ -38,42 +35,31 @@ func StockAdjustment_Post(req model.RequestAbstract) (model.ResponseAbstract) {
  	return prepareResponse(dbAbs)	
 }
 
-
-// This is is an API to adjust Stock, it accepts GET params
-
-func StockAdjustment_Get(req model.RequestAbstract) (model.ResponseAbstract) {
-
-	// input: map of queryparams key and value and metadata
-	// output: map of queryparams key and values+tablemetadata
+// StockAdjustmentGet handles StockAdjustment GET request
+func StockAdjustmentGet(req model.RequestAbstract) (model.ResponseAbstract) {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table","stock_adjustment", metaDataSelect)
-
 	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
-
 	query := ""	
 
 	var dbAbs model.DBAbstract
 	if queryhelper.IsValidCassandraQuery(metaResult) {
 		query = queryhelper.PrepareSelectQuery(metaResult)
 		dbAbs.DBType = "cassandra"
-		dbAbs.QueryType = "SELECT"
-		dbAbs.Query = query
 	} else {
 		metaResult["databaseType"] = "presto"
 		query = queryhelper.PrepareSelectQuery(metaResult)
+		dbAbs.DBType = "presto"
 	}
-
-
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
         endpoint.Process(nil,&conf,&dbAbs)
-
 
         return prepareResponse(dbAbs)
 }
 
-
-
-func ObtainDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// ObtainDetailPost handles ObtainDetail POST request
+func ObtainDetailPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","obtain_detail", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -87,37 +73,31 @@ func ObtainDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         return prepareResponse(dbAbs)
 }
 
-func ObtainDetail_Get(req model.RequestAbstract) (model.ResponseAbstract) {
-
-
-	 // input: map of queryparams key and value and metadata
-	// output: map of queryparams key and values+tablemetadata
+// ObtainDetailGet handles ObtainDetail GET request
+func ObtainDetailGet(req model.RequestAbstract) (model.ResponseAbstract) {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table","obtain_detail", metaDataSelect)
-
 	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
-
-
 	query := ""
 
- 	var dbAbs model.DBAbstract
+	var dbAbs model.DBAbstract
 	if queryhelper.IsValidCassandraQuery(metaResult) {
         	query = queryhelper.PrepareSelectQuery(metaResult)
         	dbAbs.DBType = "cassandra"
-        	dbAbs.QueryType = "SELECT"
-         	dbAbs.Query = query
-	 } else {
+	} else {
         	metaResult["databaseType"] = "presto"
-         	query = queryhelper.PrepareSelectQuery(metaResult)
-	}	
-
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "presto"
+	}
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
 	endpoint.Process(nil,&conf,&dbAbs)
 
 	return prepareResponse(dbAbs)
 }
 
-func SubStockDetailTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// SubStockDetailTransferPost handles SubStockDetailTransfer POST request 
+func SubStockDetailTransferPost(req model.RequestAbstract) (model.ResponseAbstract) {
 	metaInput := utils.FindMap("table","sub_stock_detail_transfer", metaData)
  	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
@@ -129,39 +109,34 @@ func SubStockDetailTransfer_Post(req model.RequestAbstract) (model.ResponseAbstr
 	endpoint.Process(nil,&conf,&dbAbs)
 
 	return prepareResponse(dbAbs)
-
 }
 
-func SubStockDetailTransfer_Get(req model.RequestAbstract) (model.ResponseAbstract) {
-
-	// input: map of queryparams key and value and metadata
-	// output: map of queryparams key and values+tablemetadata
+// SubStockDetailTransferGet handles SubStockDetailTransfer GET request
+func SubStockDetailTransferGet(req model.RequestAbstract) (model.ResponseAbstract) {
  	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
  	metaInput := utils.FindMap("table","sub_stock_detail_transfer", metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput,req.Filters)
-
-
-	 query := ""
+	query := ""
 
 	var dbAbs model.DBAbstract
 	if queryhelper.IsValidCassandraQuery(metaResult) {
         	query = queryhelper.PrepareSelectQuery(metaResult)
         	dbAbs.DBType = "cassandra"
-        	dbAbs.QueryType = "SELECT"
-        	dbAbs.Query = query
- 	} else {
+	} else {
         	metaResult["databaseType"] = "presto"
         	query = queryhelper.PrepareSelectQuery(metaResult)
- 	}
+        	dbAbs.DBType = "presto"
+	}
 
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
 	endpoint.Process(nil,&conf,&dbAbs)
 
 	return prepareResponse(dbAbs)
-
 }
 
-func SubStockDailyDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// SubStockDailyDetailPost handles SubStockDailyDetail POST request
+func SubStockDailyDetailPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","sub_stock_daily_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -173,12 +148,10 @@ func SubStockDailyDetail_Post(req model.RequestAbstract) (model.ResponseAbstract
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-
 }
 
-
-func TransferOutMismatch_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// TransferOutMismatchPost handles TransferOutMismatch POST request
+func TransferOutMismatchPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","tranfer_out_mismatch", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -190,13 +163,10 @@ func TransferOutMismatch_Post(req model.RequestAbstract) (model.ResponseAbstract
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-
 }
 
-
-
-func RequestGoods_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// RequestGoodsPost handles RequestGoods POST request
+func RequestGoodsPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","request_goods", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -208,12 +178,10 @@ func RequestGoods_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-
 }
 
-
-func OrderTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// OrderTransferPost handles OrderTransfer POST request
+func OrderTransferPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","order_transfer", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -225,12 +193,10 @@ func OrderTransfer_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-
 }
 
-
-func SaleOutDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// SaleOutDetailPost handles SaleOutDetail POST request
+func SaleOutDetailPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","sale_out_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -242,14 +208,10 @@ func SaleOutDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-
 }
 
-
-
-
-func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// CheckStockDetailPost handles CheckStockDetail POST request
+func CheckStockDetailPost(req model.RequestAbstract) (model.ResponseAbstract) {
         metaInput := utils.FindMap("table","check_stock_detail", metaData)
         metaResult := metadata.Interpret(metaInput, req.Payload)
         query := queryhelper.PrepareInsertQuery(metaResult)
@@ -261,11 +223,10 @@ func CheckStockDetail_Post(req model.RequestAbstract) (model.ResponseAbstract) {
         endpoint.Process(nil,&conf,&dbAbs)
 
         return prepareResponse(dbAbs)
-
 }
 
-func ReportsRequestGood_Get(req model.RequestAbstract) (model.ResponseAbstract) {
-
+// ReportsRequestGoodGet handles ReportsRequestGood GET request
+func ReportsRequestGoodGet(req model.RequestAbstract) (model.ResponseAbstract) {
 	query := `
 	SELECT to_location_name, 
 	to_location_code, 

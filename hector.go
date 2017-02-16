@@ -11,6 +11,6 @@ func main() {
 	utils.Init()
 	
 	// Start the Hector Server
-	servers.Server(constant.HECTOR_GRPC_MODE)
+	servers.Server(constant.HectorGrpcMode)
 
 }

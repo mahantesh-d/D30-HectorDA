@@ -12,10 +12,13 @@ import (
 
 var serverType string
 
+// Conf is used to store external Config information
 var Conf config.Config
+
+// RequestAbstract acts as a wrapper for the mapping the incoming request
 var RequestAbstract model.RequestAbstract
 
-// Used to start a TCP server
+// Server is used to start a TCP server
 func Server(serverTypePassed string) {
 
 	// call a named pipe to listen for graceful shutdown
@@ -26,23 +29,24 @@ func Server(serverTypePassed string) {
 
 	// mode
 	logger.Write("INFO","Server Mode : " + serverType)
-	if serverType == constant.HECTOR_PROTOBUF_MODE {
+	if serverType == constant.HectorProtobufMode {
 
 		// TODO: Integration with native protobuf
 		// entry point for native protobuf will come here
 	
-	} else if serverType == constant.HECTOR_GRPC_MODE {
+	} else if serverType == constant.HectorGrpcMode {
 		GRPCStartServer()
 	}
 }
 
+// NamedPipe runs in the background and listens for a server stop event
 func NamedPipe() {
 
 	// remove any pipe if exists
-	os.Remove(constant.HECTOR_PIPE)
+	os.Remove(constant.HectorPipe)
 
 	// create a named pipe	
-	err := syscall.Mkfifo(constant.HECTOR_PIPE, 0666)
+	err := syscall.Mkfifo(constant.HectorPipe, 0666)
 
 	logger.Write("INFO", "Listening for Graceful shutdown")
 	
@@ -51,7 +55,7 @@ func NamedPipe() {
 		utils.Exit(1)
 	}
 
-	file, err := os.OpenFile(constant.HECTOR_PIPE, os.O_CREATE, os.ModeNamedPipe)
+	file, err := os.OpenFile(constant.HectorPipe, os.O_CREATE, os.ModeNamedPipe)
 
 	if err != nil {
 		logger.Write("INFO","Error listening for named pipe" + err.Error())

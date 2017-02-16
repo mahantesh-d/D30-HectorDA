@@ -1,13 +1,14 @@
 package model 
 
+// DBAbstract acts as a wrapper which communicates with underlying Databases
 type DBAbstract struct {
 
-	DBType string
-	QueryType string
-	Query string
-	Status string
-	Message string
-	StatusCodeMessage string
-	Data string
-	Count uint64
+	DBType string	// type of the database ( e.g. cassandra, presto etc. )
+	QueryType string // type of the query ( e.g. SELECT, INSERT )
+	Query string // query string ( e.g. SELECT * from foo )
+	Status string // status string ( e.g. success )
+	Message string // human readable message string ( e.g. Queried successfully )
+	StatusCodeMessage string // program readable status code message string ( e.g. QUERY_SUCCESS ) 
+	Data string // data is the response from the database endpoint
+	Count uint64 // count of the data
 }

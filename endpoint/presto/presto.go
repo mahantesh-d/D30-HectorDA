@@ -4,11 +4,8 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"time"	
-	_ "strings"
-	_ "strconv"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"database/sql"
-	_ "github.com/avct/prestgo"
 	"github.com/dminGod/D30-HectorDA/config"
 )
 
@@ -22,6 +19,7 @@ func init() {
 	prestoChan = make(chan *sql.DB, 100)
 }
 
+// Handle acts as an entry point to handle different operations on Presto
 func Handle( dbAbstract *model.DBAbstract ) {
 
 	if(dbAbstract.QueryType == "SELECT") {
@@ -55,6 +53,7 @@ func getSession() (*sql.DB, error) {
 	}
 }
 
+// Select is used to query data from Cassandra
 func Select(dbAbstract *model.DBAbstract) {
 
 	session, _ := getSession()

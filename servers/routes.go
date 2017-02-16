@@ -9,7 +9,7 @@ import(
 	"strings"
 )
 
-
+// Routes store the mapping of routes to the underlying application logic
 var Routes map[string] func(model.RequestAbstract) model.ResponseAbstract
 
 func init() {
@@ -17,23 +17,23 @@ func init() {
 	Routes = map[string] func(model.RequestAbstract) model.ResponseAbstract {
 
 		// All trade version 1
-		"alltrade_stock_adjustment_post" : alltrade.StockAdjustment_Post,
-		"alltrade_stock_adjustment_get" : alltrade.StockAdjustment_Get,
-		"alltrade_obtain_detail_post" : alltrade.ObtainDetail_Post,
-		"alltrade_obtain_detail_get" : alltrade.ObtainDetail_Get,
-		"alltrade_substock_detail_transfer_post" : alltrade.SubStockDetailTransfer_Post,
-		"alltrade_substock_detail_transfer_get" : alltrade.SubStockDetailTransfer_Get,
-		"alltrade_substock_daily_detail_post" : alltrade.SubStockDailyDetail_Post,
-		"alltrade_transferout_mismatch_post" : alltrade.TransferOutMismatch_Post,
-		"alltrade_requestgoods_post" : alltrade.RequestGoods_Post,
-		"alltrade_ordertransfer_post" : alltrade.OrderTransfer_Post,
-		"alltrade_saleout_detail_post" : alltrade.SaleOutDetail_Post,
-		"alltrade_checkstock_detail_post" : alltrade.CheckStockDetail_Post,
-		"alltrade_reports_requestgoods_get": alltrade.ReportsRequestGood_Get}
+		"alltrade_stock_adjustment_post" : alltrade.StockAdjustmentPost,
+		"alltrade_stock_adjustment_get" : alltrade.StockAdjustmentGet,
+		"alltrade_obtain_detail_post" : alltrade.ObtainDetailPost,
+		"alltrade_obtain_detail_get" : alltrade.ObtainDetailGet,
+		"alltrade_substock_detail_transfer_post" : alltrade.SubStockDetailTransferPost,
+		"alltrade_substock_detail_transfer_get" : alltrade.SubStockDetailTransferGet,
+		"alltrade_substock_daily_detail_post" : alltrade.SubStockDailyDetailPost,
+		"alltrade_transferout_mismatch_post" : alltrade.TransferOutMismatchPost,
+		"alltrade_requestgoods_post" : alltrade.RequestGoodsPost,
+		"alltrade_ordertransfer_post" : alltrade.OrderTransferPost,
+		"alltrade_saleout_detail_post" : alltrade.SaleOutDetailPost,
+		"alltrade_checkstock_detail_post" : alltrade.CheckStockDetailPost,
+		"alltrade_reports_requestgoods_get": alltrade.ReportsRequestGoodGet}
 }
 
 
-
+// HandleRoutes is used resolve incoming routes and execute the corresponding application logic
 func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract,error) {
 
 	route := GetRouteName(reqAbs)
@@ -48,10 +48,15 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract,error) {
 
 }
 
+// RouteExists is used to check if a given route exists
+// For example:
+//  RoutesExists("alltrade_stock_adjustment_post")
+// Output:
+//  true
 func RouteExists(route string) (bool) {
 
 	// iterate over each route
-	for k,_ := range Routes {
+	for k := range Routes {
 
 		if route == k {
 			return true
@@ -61,9 +66,10 @@ func RouteExists(route string) (bool) {
 	return false
 }
 
+// GetRouteName is used to return the route mapping as per the naming convention of Hector
 func GetRouteName(reqAbs model.RequestAbstract) (string) {
 
-	route := strings.ToLower(reqAbs.Application + constant.HECTOR_ROUTE_DELIMITER + reqAbs.Action + constant.HECTOR_ROUTE_DELIMITER + reqAbs.HTTPRequestType)
+	route := strings.ToLower(reqAbs.Application + constant.HectorRouteDelimiter + reqAbs.Action + constant.HectorRouteDelimiter + reqAbs.HTTPRequestType)
 
 	return route
 }

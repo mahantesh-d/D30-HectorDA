@@ -7,7 +7,8 @@ import (
 	"fmt"
 )
 
-var AllowedLevels []string = []string{"INFO", "ERROR", "DEBUG"};
+// AllowedLevels specify the logging levels that are permitted in the application
+var AllowedLevels = []string{"INFO", "ERROR", "DEBUG"};
 
 func init () {
 	Conf := config.Get()
@@ -20,6 +21,11 @@ func init () {
 	}
 }
 
+// Write is used to log to the configured log file ( configuration set by Viper )
+// For example:
+//  Write("INFO", "Writing to the log file")
+// Output:
+//  2017/02/16 05:40:21  [ INFO ] Writing to the log file 
 func Write(level string, msg string) {
 
 	configLevel := config.GetHectorConfig("Log")
