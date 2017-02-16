@@ -1,12 +1,7 @@
 package utils
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/dminGod/D30-HectorDA/logger"
-	"io/ioutil"
-	"regexp"
-	"strings"
 )
 
 func ExampleIsJSON(input interface{}) bool {
@@ -27,13 +22,13 @@ func ExampleDecodeJSON(input interface{}) map[string]interface{} {
 	fmt.Println(DecodeJSON(example)) // map[foo: bar]
 }
 
-func ExampleEncodeJSON(input interface{}) string {
+func ExampleEncodeJSON(input interface{}) {
 	example := make(map[string]interface{})
 	example["foo"] = "bar"
 	fmt.Println(EncodeJSON(example)) // {"foo": "bar"}
 }
 
-func ExampleKeyInMap(key string, attributes map[string]interface{}) bool {
+func ExampleKeyInMap(key string, attributes map[string]interface{}) {
 	example := make([]map[string]interface{})
 	example["fookey"] = "foovalue"
 	example["barkey"] = "barvalue"
@@ -41,12 +36,12 @@ func ExampleKeyInMap(key string, attributes map[string]interface{}) bool {
 	fmt.Println(KeyInMap("someotherkey")) // false
 }
 
-func ExampleParseFilter(input string) map[string]string {
+func ExampleParseFilter(input string) {
 	example := "((foo=bar))"
 	fmt.Println(example) // map[foo: bar]
 }
 
-func ExampleRegexMatch(input string, pattern string) bool {
+func ExampleRegexMatch(input string, pattern string) {
 	exampleString = "abc"
 	examplePattern = `[0-9]+`
 	fmt.Println(RegexMatch(exampleString, examplePattern)) // true
