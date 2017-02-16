@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func ExampleIsJSON(input interface{}) bool {
+func ExampleIsJSON(input interface{}) {
 	example := `
 		{
 		"foo": "bar"
@@ -32,8 +32,8 @@ func ExampleKeyInMap(key string, attributes map[string]interface{}) {
 	example := make([]map[string]interface{})
 	example["fookey"] = "foovalue"
 	example["barkey"] = "barvalue"
-	fmt.Println(KeyInMap("fookey"))       // true
-	fmt.Println(KeyInMap("someotherkey")) // false
+	fmt.Println(KeyInMap("fookey", example))       // true
+	fmt.Println(KeyInMap("someotherkey", example)) // false
 }
 
 func ExampleParseFilter(input string) {
@@ -42,7 +42,7 @@ func ExampleParseFilter(input string) {
 }
 
 func ExampleRegexMatch(input string, pattern string) {
-	exampleString = "abc"
-	examplePattern = `[0-9]+`
+	exampleString := "abc"
+	examplePattern := `[0-9]+`
 	fmt.Println(RegexMatch(exampleString, examplePattern)) // true
 }
