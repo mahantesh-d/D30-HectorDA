@@ -1,14 +1,13 @@
 package presto
 
 import (
-	"github.com/dminGod/D30-HectorDA/model"
-	"github.com/dminGod/D30-HectorDA/logger"
-	"time"	
-	"github.com/dminGod/D30-HectorDA/utils"
 	"database/sql"
 	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/model"
+	"github.com/dminGod/D30-HectorDA/utils"
+	"time"
 )
-
 
 var prestoChan chan *sql.DB
 
@@ -20,11 +19,11 @@ func init() {
 }
 
 // Handle acts as an entry point to handle different operations on Presto
-func Handle( dbAbstract *model.DBAbstract ) {
+func Handle(dbAbstract *model.DBAbstract) {
 
-	if(dbAbstract.QueryType == "SELECT") {
+	if dbAbstract.QueryType == "SELECT" {
 
-		Select( dbAbstract )
+		Select(dbAbstract)
 	}
 }
 
@@ -34,22 +33,22 @@ func getSession() (*sql.DB, error) {
 	logger.Write("INFO", "Initializing Presto Session")
 	select {
 
-     		case prestoSession := <-prestoChan:
-			logger.Write("INFO", "Using Existing Presto session")
-                	return  prestoSession, nil
+	case prestoSession := <-prestoChan:
+		logger.Write("INFO", "Using Existing Presto session")
+		return prestoSession, nil
 
-         	case <-time.After(100 * time.Millisecond):
-                	logger.Write("INFO", "Creating new Presto Connection")
+	case <-time.After(100 * time.Millisecond):
+		logger.Write("INFO", "Creating new Presto Connection")
 
-			db, err := sql.Open("prestgo", Conf.Presto.ConnectionURL)
+		db, err := sql.Open("prestgo", Conf.Presto.ConnectionURL)
 
-                 	if err != nil {
-                        	panic(err)
-                 	}
+		if err != nil {
+			panic(err)
+		}
 
-			defer queueSession(db)
+		defer queueSession(db)
 
-                 	return db, nil
+		return db, nil
 	}
 }
 
@@ -57,8 +56,8 @@ func getSession() (*sql.DB, error) {
 func Select(dbAbstract *model.DBAbstract) {
 
 	session, _ := getSession()
-	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query)
-	rows, err := session.Query( dbAbstract.Query )
+	logger.Write("DEBUG", "QUERY : "+dbAbstract.Query)
+	rows, err := session.Query(dbAbstract.Query)
 
 	if err != nil {
 		panic(err)
@@ -68,7 +67,6 @@ func Select(dbAbstract *model.DBAbstract) {
 
 	data := make([]interface{}, len(cols))
 	args := make([]interface{}, len(data))
-
 
 	for i := range data {
 		args[i] = &data[i]
@@ -82,7 +80,7 @@ func Select(dbAbstract *model.DBAbstract) {
 
 		for i := range data {
 
-			prestoResult = append(prestoResult, map[string]interface{}{ cols[i] : data[i] } )
+			prestoResult = append(prestoResult, map[string]interface{}{cols[i]: data[i]})
 		}
 	}
 
@@ -104,11 +102,11 @@ func Select(dbAbstract *model.DBAbstract) {
 
 func queueSession(session *sql.DB) {
 
-        select {
-                case prestoChan <- session:
-                        // session enqueued
-                default:
-                        logger.Write("INFO", "Channel full")
-                        session.Close()
-        }
+	select {
+	case prestoChan <- session:
+		// session enqueued
+	default:
+		logger.Write("INFO", "Channel full")
+		session.Close()
+	}
 }

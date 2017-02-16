@@ -2,9 +2,9 @@ package servers
 
 import (
 	"github.com/dminGod/D30-HectorDA/config"
-	"github.com/dminGod/D30-HectorDA/model"
-	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/constant"
+	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"os"
 	"syscall"
@@ -28,12 +28,12 @@ func Server(serverTypePassed string) {
 	serverType = serverTypePassed
 
 	// mode
-	logger.Write("INFO","Server Mode : " + serverType)
+	logger.Write("INFO", "Server Mode : "+serverType)
 	if serverType == constant.HectorProtobufMode {
 
 		// TODO: Integration with native protobuf
 		// entry point for native protobuf will come here
-	
+
 	} else if serverType == constant.HectorGrpcMode {
 		GRPCStartServer()
 	}
@@ -45,20 +45,20 @@ func NamedPipe() {
 	// remove any pipe if exists
 	os.Remove(constant.HectorPipe)
 
-	// create a named pipe	
+	// create a named pipe
 	err := syscall.Mkfifo(constant.HectorPipe, 0666)
 
 	logger.Write("INFO", "Listening for Graceful shutdown")
-	
+
 	if err != nil {
-		logger.Write("INFO","Error creating named pipe" + err.Error())
+		logger.Write("INFO", "Error creating named pipe"+err.Error())
 		utils.Exit(1)
 	}
 
 	file, err := os.OpenFile(constant.HectorPipe, os.O_CREATE, os.ModeNamedPipe)
 
 	if err != nil {
-		logger.Write("INFO","Error listening for named pipe" + err.Error())
+		logger.Write("INFO", "Error listening for named pipe"+err.Error())
 		utils.Exit(1)
 	}
 

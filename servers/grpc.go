@@ -1,100 +1,100 @@
 package servers
 
 import (
+	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/model"
+	"github.com/dminGod/D30-HectorDA/proto_types/pb"
+	"github.com/dminGod/D30-HectorDA/utils"
+	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"github.com/dminGod/D30-HectorDA/proto_types/pb"
-	"github.com/dminGod/D30-HectorDA/logger"
-	"github.com/dminGod/D30-HectorDA/utils"
-	"github.com/dminGod/D30-HectorDA/config"
-	"github.com/golang/protobuf/proto"
 	"net"
-	"github.com/dminGod/D30-HectorDA/model"
 )
 
 // GRPCServer registers
-type GRPCServer struct {}
+type GRPCServer struct{}
 
 // AtomicAdd : empty stub
-func(g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Response,error) {
+func (g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 
-	return new(pb.Response),nil
+	return new(pb.Response), nil
 }
 
 // Do is used to perform simple RPC communication to store and query data from the endpoints
-func(g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response,error) {
+func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 
 	resp := new(pb.Response)
-	if validRequest(req,resp) {
+	if validRequest(req, resp) {
 		// map the data to the abstract request
 		RequestAbstract = mapAbstractRequest(req)
 
 		// routing
-		respAbs,_ := HandleRoutes(RequestAbstract)
+		respAbs, _ := HandleRoutes(RequestAbstract)
 
 		// map the result to abstract response
 		resp = mapAbstractResponse(respAbs)
 	}
-	return resp,nil
+	return resp, nil
 }
 
 // GetStream : empty stub
-func(g *GRPCServer) GetStream(req *pb.Request, streamResp pb.Hector_GetStreamServer) error {
+func (g *GRPCServer) GetStream(req *pb.Request, streamResp pb.Hector_GetStreamServer) error {
 
-        return nil
+	return nil
 }
 
 // ResolveAlias : empty stub
-func(g *GRPCServer) ResolveAlias(ctx context.Context, req *pb.Request) (*pb.Response,error) {
+func (g *GRPCServer) ResolveAlias(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 
-        return new(pb.Response),nil
+	return new(pb.Response), nil
 }
 
 // TxBegin : empty stub
-func(g *GRPCServer) TxBegin(ctx context.Context, req *pb.TxBeginRequest) (*pb.TxBeginResponse,error) {
+func (g *GRPCServer) TxBegin(ctx context.Context, req *pb.TxBeginRequest) (*pb.TxBeginResponse, error) {
 
-        return new(pb.TxBeginResponse),nil
+	return new(pb.TxBeginResponse), nil
 }
 
 // TxDo : empty stub
-func(g *GRPCServer) TxDo(ctx context.Context, req *pb.Request) (*pb.Response,error) {
+func (g *GRPCServer) TxDo(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 
-        return new(pb.Response),nil
+	return new(pb.Response), nil
 }
 
 // TxCommit : empty stub
-func(g *GRPCServer) TxCommit(ctx context.Context, req *pb.TxCommitRequest) (*pb.TxCommitResponse,error) {
+func (g *GRPCServer) TxCommit(ctx context.Context, req *pb.TxCommitRequest) (*pb.TxCommitResponse, error) {
 
-        return new(pb.TxCommitResponse),nil
+	return new(pb.TxCommitResponse), nil
 }
 
 // TxRollback : empty stub
-func(g *GRPCServer) TxRollback(ctx context.Context, req *pb.TxRollbackRequest) (*pb.TxRollbackResponse,error) {
+func (g *GRPCServer) TxRollback(ctx context.Context, req *pb.TxRollbackRequest) (*pb.TxRollbackResponse, error) {
 
-        return new(pb.TxRollbackResponse),nil
+	return new(pb.TxRollbackResponse), nil
 }
 
 // GRPCStartServer starts the grpc server on the configured port
 func GRPCStartServer() {
-	Conf = config.Get();
+	Conf = config.Get()
 
 	// listen to the TCP port
-	logger.Write("INFO", "Server Starting - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port)
- 	listener, err := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host + ":" + Conf.Hector.Port)
-	
+	logger.Write("INFO", "Server Starting - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+	listener, err := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host+":"+Conf.Hector.Port)
+
 	if err != nil {
-        	logger.Write("ERROR", "Server Starting Fail - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
-        	utils.AppExit("Exiting app, configured port not available")
- 	} else {
-        	logger.Write("INFO", "Server Running - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.Port )
- 	}
+		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+		utils.AppExit("Exiting app, configured port not available")
+	} else {
+		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterHectorServer(grpcServer,new(GRPCServer))
+	pb.RegisterHectorServer(grpcServer, new(GRPCServer))
 	grpcServer.Serve(listener)
 }
 
-func mapAbstractRequest(req *pb.Request) (model.RequestAbstract) {
+func mapAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 	var reqAbs model.RequestAbstract
 	reqAbs.Application = req.GetApplicationName()
@@ -108,20 +108,20 @@ func mapAbstractRequest(req *pb.Request) (model.RequestAbstract) {
 	return reqAbs
 }
 
-func mapAbstractResponse(respAbs model.ResponseAbstract) (*pb.Response) {
+func mapAbstractResponse(respAbs model.ResponseAbstract) *pb.Response {
 
 	resp := new(pb.Response)
 	resp.StatusCode = *(proto.Uint32(uint32(float64(respAbs.StatusCode))))
-	resp.Status = respAbs.Status	
+	resp.Status = respAbs.Status
 	resp.StatusCodeMessage = respAbs.StandardStatusMessage
 	resp.Message = respAbs.Text
 	resp.Data = respAbs.Data
-	resp.Count =  *(proto.Uint64(respAbs.Count))
+	resp.Count = *(proto.Uint64(respAbs.Count))
 	return resp
 
 }
 
-func validRequest(req *pb.Request,resp *pb.Response) bool {
+func validRequest(req *pb.Request, resp *pb.Response) bool {
 
 	var reqAbs model.RequestAbstract
 	reqAbs.Application = req.GetApplicationName()
@@ -136,7 +136,7 @@ func validRequest(req *pb.Request,resp *pb.Response) bool {
 		resp.Message = "The given route was not found"
 		resp.Data = "{}"
 		resp.Count = 0
-		return false	
+		return false
 	}
 
 	// post validations
@@ -153,4 +153,4 @@ func validRequest(req *pb.Request,resp *pb.Response) bool {
 	}
 
 	return true
-} 
+}

@@ -1,18 +1,18 @@
 package logger
 
 import (
-	"log"
-	"github.com/dminGod/D30-HectorDA/config"
-	"os"
 	"fmt"
+	"github.com/dminGod/D30-HectorDA/config"
+	"log"
+	"os"
 )
 
 // AllowedLevels specify the logging levels that are permitted in the application
-var AllowedLevels = []string{"INFO", "ERROR", "DEBUG"};
+var AllowedLevels = []string{"INFO", "ERROR", "DEBUG"}
 
-func init () {
+func init() {
 	Conf := config.Get()
-	f, err:= os.OpenFile(Conf.Hector.LogDirectory + "/server.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
+	f, err := os.OpenFile(Conf.Hector.LogDirectory+"/server.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
@@ -25,7 +25,7 @@ func init () {
 // For example:
 //  Write("INFO", "Writing to the log file")
 // Output:
-//  2017/02/16 05:40:21  [ INFO ] Writing to the log file 
+//  2017/02/16 05:40:21  [ INFO ] Writing to the log file
 func Write(level string, msg string) {
 
 	configLevel := config.GetHectorConfig("Log")
@@ -33,7 +33,7 @@ func Write(level string, msg string) {
 	message := " [ " + level + " ] " + msg
 
 	// If this guy tried to log something other than allowed levels
-	if ! containsStr(AllowedLevels, level) {
+	if !containsStr(AllowedLevels, level) {
 
 		log.Printf("[Error] Irony! Another level or error, log type is wrong, changing original type '" + level + "' to ERROR")
 		level = "ERROR"
@@ -56,7 +56,6 @@ func Write(level string, msg string) {
 	}
 
 }
-
 
 func containsStr(s []string, e string) bool {
 	for _, a := range s {

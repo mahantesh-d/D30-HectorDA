@@ -2,12 +2,12 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/dminGod/D30-HectorDA/logger"
-	"strings"
 	"fmt"
+	"github.com/dminGod/D30-HectorDA/logger"
 	"io/ioutil"
-	"regexp"
 	"os"
+	"regexp"
+	"strings"
 )
 
 // IsJSON validates a JSON string
@@ -17,8 +17,8 @@ import (
 func IsJSON(input interface{}) bool {
 
 	var output map[string]interface{}
-	
-	return json.Unmarshal([]byte(input.(string)), &output) == nil	
+
+	return json.Unmarshal([]byte(input.(string)), &output) == nil
 }
 
 // DecodeJSON converts a JSON string to a map of string and interface
@@ -26,18 +26,18 @@ func IsJSON(input interface{}) bool {
 //  DecodeJSON('{"foo" : "bar"}') // Output : map[foo : bar]
 func DecodeJSON(input interface{}) map[string]interface{} {
 
-        var payload map[string]interface{}
+	var payload map[string]interface{}
 
 	if !IsJSON(input) {
 		return payload
 	}
-        err := json.Unmarshal([]byte(input.(string)), &payload)
+	err := json.Unmarshal([]byte(input.(string)), &payload)
 
-        if err != nil {
-                logger.Write("ERROR", err.Error())
-        }
+	if err != nil {
+		logger.Write("ERROR", err.Error())
+	}
 
-        return payload
+	return payload
 
 }
 
@@ -48,7 +48,7 @@ func DecodeJSON(input interface{}) map[string]interface{} {
 //  EncodeJSON(example) // Output : {"foo" : "bar"}
 func EncodeJSON(input interface{}) string {
 	jsonString, err := json.Marshal(input)
-	
+
 	if err != nil {
 		logger.Write("ERROR", "Error Parsing JSON")
 	}
@@ -62,26 +62,25 @@ func EncodeJSON(input interface{}) string {
 //  example["foo"] = "bar"
 //  KeyInMap("foo") // Output : true
 //  KeyInMap("bar") // Output : false
-func KeyInMap(key string, attributes map[string]interface{}) (bool) {
+func KeyInMap(key string, attributes map[string]interface{}) bool {
 
-    // iterate over each route
-    for k := range attributes {
+	// iterate over each route
+	for k := range attributes {
 
-            if key == k {
-                    return true
-            }
-    }
+		if key == k {
+			return true
+		}
+	}
 
-    return false
+	return false
 }
 
 // FindMap checks if a given key matches a given value and returns the entire map
 func FindMap(key string, value interface{}, input map[string]interface{}) map[string]interface{} {
 
-
 	output := make(map[string]interface{})
 	// iterate over each map
-	for _,v := range input {
+	for _, v := range input {
 		meta := v.(map[string]interface{})
 		if meta[key] == value {
 			output = meta
@@ -96,11 +95,11 @@ func FindMap(key string, value interface{}, input map[string]interface{}) map[st
 // For example :
 //  ReadFile("/tmp/foo.txt") // Output : Contents of the file /tmp/foo.txt"
 func ReadFile(path string) string {
-	
+
 	raw, err := ioutil.ReadFile(path)
- 	if err != nil {
-        	fmt.Println(err.Error())
- 	}	
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	return string(raw)
 }
@@ -126,19 +125,19 @@ func ParseFilter(input string) map[string]string {
 	}
 
 	input = input[1:]
-	input = strings.Trim(input,")")	
+	input = strings.Trim(input,")")
 	if string(input[0]) == "&" {
 		input = input[1:]
 	}*/
-	
-	filters := strings.Split(input,")(")
 
-	for _,v := range filters {
+	filters := strings.Split(input, ")(")
 
-		v = strings.Replace(v,"(","",1)
-		v = strings.Replace(v,")","",1)
+	for _, v := range filters {
 
-		keyval := strings.Split(v,"=")
+		v = strings.Replace(v, "(", "", 1)
+		v = strings.Replace(v, ")", "", 1)
+
+		keyval := strings.Split(v, "=")
 		output[keyval[0]] = keyval[1]
 	}
 
@@ -150,7 +149,7 @@ func ParseFilter(input string) map[string]string {
 // For example :
 //  RegexMatch("abc",`[a-z]+`) // Output : true
 //  RegexMatch("123", `[a-z]+`) // Output : false
-func RegexMatch(input string,pattern string) bool {
+func RegexMatch(input string, pattern string) bool {
 
 	var validID = regexp.MustCompile(pattern)
 

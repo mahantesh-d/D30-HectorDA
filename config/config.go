@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"github.com/oleiade/reflections"
+	"github.com/spf13/viper"
 )
 
 // cassandra struct represents the configuration parameters for the Cassandra endpoint
@@ -30,7 +30,7 @@ type presto struct {
 // Config struct represents the overall configuration comprising of nested cassandra, presto and hector information
 type Config struct {
 	Cassandra cassandra
-	Presto presto
+	Presto    presto
 	Hector    hector
 	loaded    bool
 }
@@ -71,7 +71,7 @@ func Get() Config {
 
 // GetHectorConfig returns a specific Hector server setting
 // For example:
-//  GetHectorConfig("Host") 
+//  GetHectorConfig("Host")
 // Output:
 //  127.0.0.1
 func GetHectorConfig(setting string) string {
