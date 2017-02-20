@@ -17,34 +17,34 @@ func init() {
 	Routes = map[string]func(model.RequestAbstract) model.ResponseAbstract{
 
 		// All trade version 1
-		"alltrade_stock_adjustment_post":         alltrade.StockAdjustmentPost,
-		"alltrade_stock_adjustment_get":          alltrade.StockAdjustmentGet,
+		"alltrade_stock_adjustment_post": alltrade.StockAdjustmentPost,
+		"alltrade_stock_adjustment_get":  alltrade.StockAdjustmentGet,
 
-		"alltrade_obtain_detail_post":            alltrade.ObtainDetailPost,
-		"alltrade_obtain_detail_get":             alltrade.ObtainDetailGet,
+		"alltrade_obtain_detail_post": alltrade.ObtainDetailPost,
+		"alltrade_obtain_detail_get":  alltrade.ObtainDetailGet,
 
 		"alltrade_substock_detail_transfer_post": alltrade.SubStockDetailTransferPost,
 		"alltrade_substock_detail_transfer_get":  alltrade.SubStockDetailTransferGet,
 
-		"alltrade_substock_daily_detail_post":    alltrade.SubStockDailyDetailPost,
-		"alltrade_substock_daily_detail_get":     alltrade.SubStockDailyDetailGet,
+		"alltrade_substock_daily_detail_post": alltrade.SubStockDailyDetailPost,
+		"alltrade_substock_daily_detail_get":  alltrade.SubStockDailyDetailGet,
 
-		"alltrade_transferout_mismatch_post":     alltrade.TransferOutMismatchPost,
-		"alltrade_transferout_mismatch_get":      alltrade.TransferOutMismatchGet,
+		"alltrade_transferout_mismatch_post": alltrade.TransferOutMismatchPost,
+		"alltrade_transferout_mismatch_get":  alltrade.TransferOutMismatchGet,
 
-		"alltrade_requestgoods_post":             alltrade.RequestGoodsPost,
-		"alltrade_requestgoods_get":              alltrade.RequestGoodsGet,
+		"alltrade_requestgoods_post": alltrade.RequestGoodsPost,
+		"alltrade_requestgoods_get":  alltrade.RequestGoodsGet,
 
-		"alltrade_ordertransfer_post":            alltrade.OrderTransferPost,
-		"alltrade_ordertransfer_get":             alltrade.OrderTransferGet,
+		"alltrade_ordertransfer_post": alltrade.OrderTransferPost,
+		"alltrade_ordertransfer_get":  alltrade.OrderTransferGet,
 
-		"alltrade_saleout_detail_post":           alltrade.SaleOutDetailPost,
-		"alltrade_saleout_detail_get":            alltrade.SaleOutDetailGet,
+		"alltrade_saleout_detail_post": alltrade.SaleOutDetailPost,
+		"alltrade_saleout_detail_get":  alltrade.SaleOutDetailGet,
 
-		"alltrade_checkstock_detail_post":        alltrade.CheckStockDetailPost,
-		"alltrade_checkstock_detail_get":       alltrade.CheckStockDetailGet,
-		
-		"alltrade_reports_requestgoods_get":      alltrade.ReportsRequestGoodGet}
+		"alltrade_checkstock_detail_post": alltrade.CheckStockDetailPost,
+		"alltrade_checkstock_detail_get":  alltrade.CheckStockDetailGet,
+
+		"alltrade_reports_requestgoods_get": alltrade.ReportsRequestGoodGet}
 }
 
 // HandleRoutes is used resolve incoming routes and execute the corresponding application logic

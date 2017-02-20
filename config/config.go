@@ -2,9 +2,9 @@ package config
 
 import (
 	"fmt"
+	"github.com/dminGod/D30-HectorDA/constant"
 	"github.com/oleiade/reflections"
 	"github.com/spf13/viper"
-	"github.com/dminGod/D30-HectorDA/constant"
 )
 
 // cassandra struct represents the configuration parameters for the Cassandra endpoint
