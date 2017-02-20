@@ -37,6 +37,7 @@
 				"name": "adjustDateTime",
 				"type": "timestamp"
 			},
+			"adjust_detail_s":{"name":"adjustDetail","type":"set<text>"},
 			"adjust_status": {
 				"name": "adjustStatus",
 				"type": "text"
@@ -216,7 +217,7 @@
 			},
 			"obtaindetail_s": {
 				"name": "obtainDetail",
-				"type": "text"
+				"type": "set<text>"
 			},
 			"sales_code_key": {
 				"name": "salesCode_key",
@@ -328,6 +329,7 @@
 				"name": "transferSubStockDateTime",
 				"type": "timestamp"
 			},
+			"transfer_substock_detail_s":{"name":"transferSubStockDetail","type":"set<text>"},
 			"transfer_substock_no": {
 				"name": "transferSubStockNo",
 				"type": "text"
@@ -405,12 +407,13 @@
 			},
 			"location_type": {
 				"name": "locationType",
-				"t?ype": "text"
+				"type": "text"
 			},
 			"sales_for": {
 				"name": "salesFor",
 				"type": "text"
 			},
+			"substock_daily_detail_s":{"name":"subStockDailyDetail","type":"set<text>"},
 			"substock_daily_no": {
 				"name": "subStockDetail",
 				"type": "text"
@@ -462,6 +465,7 @@
 				"name": "dataErrorDateTime",
 				"type": "timestamp"
 			},
+			"mismatch_detail_s":{"name":"misMatchDetail","type":"set<text>"},
 			"request_no": {
 				"name": "requestNo",
 				"type": "text"
@@ -596,6 +600,7 @@
 				"name": "remark",
 				"type": "text"
 			},
+			"request_detail_s":{"name":"requestDetail","type":"set<text>"},
 			"request_no": {
 				"name": "requestNo",
 				"type": "text"
@@ -729,6 +734,7 @@
 "transaction_id":{"name":"transactionId","type":"text"},
 "transaction_type":{"name":"transactionType","type":"text"},
 "transfer_datetime":{"name":"transferDateTime","type":"timestamp"},
+"transfer_detail_s":{"name":"transferDetail","type":"set<text>"},
 "transfer_no":{"name":"transferNo","type":"text"},
 "transfer_status":{"name":"transferStatus","type":"text"},
 "update_by":{"name":"updateBy","type":"text"},
@@ -843,6 +849,7 @@
 				"name": "salesCode",
 				"type": "text"
 			},
+			"salesoutdetail_s":{"name":"salesOut","type":"set<text>"},
 			"serial_key": {
 				"name": "serial_key",
 				"type": "set<text>"
@@ -884,6 +891,7 @@
                         "type" : "uuid"
                         },
 		"brand_key":{"name":"brand_key","type":"set<text>"},
+		"check_stock_detail_s":{"name":"checkStockDetail","type":"set<text>"},
 "commercial_name_key":{"name":"commercialName_key","type":"set<text>"},
 "confirm_datetime":{"name":"confirmDateTime","type":"timestamp"},
 "confirm_no":{"name":"confirmNo","type":"text"},
