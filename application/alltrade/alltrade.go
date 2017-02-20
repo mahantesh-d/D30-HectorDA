@@ -151,6 +151,29 @@ func SubStockDailyDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+func SubStockDailyDetailGet(req model.RequestAbstract) model.ResponseAbstract {
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table", "sub_stock_daily_detail", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+	query := ""
+ 
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+         	dbAbs.DBType = "cassandra"
+	} else {
+        	metaResult["databaseType"] = "presto"
+         	query = queryhelper.PrepareSelectQuery(metaResult)
+         	dbAbs.DBType = "presto"
+ 	}
+
+ 	dbAbs.QueryType = "SELECT"
+ 	dbAbs.Query = query
+ 	endpoint.Process(nil, &conf, &dbAbs)
+
+ 	return prepareResponse(dbAbs)
+}
+
 // TransferOutMismatchPost handles TransferOutMismatch POST request
 func TransferOutMismatchPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "tranfer_out_mismatch", metaData)
@@ -160,6 +183,29 @@ func TransferOutMismatchPost(req model.RequestAbstract) model.ResponseAbstract {
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
 	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(nil, &conf, &dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
+func TransferOutMismatchGet(req model.RequestAbstract) model.ResponseAbstract {
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table", "tranfer_out_mismatch", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+	query := ""
+
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+	} else {
+        	metaResult["databaseType"] = "presto"
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "presto"
+	}
+
+	dbAbs.QueryType = "SELECT"
 	dbAbs.Query = query
 	endpoint.Process(nil, &conf, &dbAbs)
 
@@ -181,6 +227,29 @@ func RequestGoodsPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+func RequestGoodsGet(req model.RequestAbstract) model.ResponseAbstract {
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table", "request_goods", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+	query := ""
+
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+	} else {
+        	metaResult["databaseType"] = "presto"
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "presto"
+	}
+
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
+	endpoint.Process(nil, &conf, &dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
 // OrderTransferPost handles OrderTransfer POST request
 func OrderTransferPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "order_transfer", metaData)
@@ -190,6 +259,29 @@ func OrderTransferPost(req model.RequestAbstract) model.ResponseAbstract {
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
 	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(nil, &conf, &dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
+func OrderTransferGet(req model.RequestAbstract) model.ResponseAbstract {
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table", "order_transfer", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+	query := ""
+
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+	} else {
+        	metaResult["databaseType"] = "presto"
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "presto"
+	}
+
+	dbAbs.QueryType = "SELECT"
 	dbAbs.Query = query
 	endpoint.Process(nil, &conf, &dbAbs)
 
@@ -211,6 +303,30 @@ func SaleOutDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+func SaleOutDetailGet(req model.RequestAbstract) model.ResponseAbstract {
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table", "sale_out_detail", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+	query := ""
+
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+	} else {
+        	metaResult["databaseType"] = "presto"
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "presto"
+	}
+
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
+	endpoint.Process(nil, &conf, &dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
+
 // CheckStockDetailPost handles CheckStockDetail POST request
 func CheckStockDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "check_stock_detail", metaData)
@@ -220,6 +336,29 @@ func CheckStockDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
 	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(nil, &conf, &dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
+func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
+	metaDataSelect = utils.DecodeJSON(utils.ReadFile("/etc/hector/metadata/alltrade/alltradeApi.json"))
+	metaInput := utils.FindMap("table", "check_stock_detail", metaDataSelect)
+	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+	query := ""
+
+	var dbAbs model.DBAbstract
+	if queryhelper.IsValidCassandraQuery(metaResult) {
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "cassandra"
+	} else {
+        	metaResult["databaseType"] = "presto"
+        	query = queryhelper.PrepareSelectQuery(metaResult)
+        	dbAbs.DBType = "presto"
+	}
+
+	dbAbs.QueryType = "SELECT"
 	dbAbs.Query = query
 	endpoint.Process(nil, &conf, &dbAbs)
 
