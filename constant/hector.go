@@ -12,5 +12,8 @@ const HectorGrpcMode string = "grpc"
 // HectorProtobufMode is the native protobuf server mode
 const HectorProtobufMode string = "protobuf"
 
+// HTTP is the HTTP server mode
+const HTTP string = "http"
+
 // HectorRouteDelimiter is the delimiter used for route mapping
 const HectorRouteDelimiter = "_"

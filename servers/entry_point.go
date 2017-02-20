@@ -36,6 +36,8 @@ func Server(serverTypePassed string) {
 
 	} else if serverType == constant.HectorGrpcMode {
 		GRPCStartServer()
+	} else if serverType == constant.HTTP {
+		HTTPStartServer()
 	}
 }
 

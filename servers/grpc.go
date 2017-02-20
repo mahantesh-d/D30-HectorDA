@@ -25,9 +25,9 @@ func (g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Respon
 func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 
 	resp := new(pb.Response)
-	if validRequest(req, resp) {
+	if validGRPCRequest(req, resp) {
 		// map the data to the abstract request
-		RequestAbstract = mapAbstractRequest(req)
+		RequestAbstract = mapGRPCAbstractRequest(req)
 
 		// routing
 		respAbs, _ := HandleRoutes(RequestAbstract)
@@ -94,7 +94,7 @@ func GRPCStartServer() {
 	grpcServer.Serve(listener)
 }
 
-func mapAbstractRequest(req *pb.Request) model.RequestAbstract {
+func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 	var reqAbs model.RequestAbstract
 	reqAbs.Application = req.GetApplicationName()
@@ -121,7 +121,7 @@ func mapAbstractResponse(respAbs model.ResponseAbstract) *pb.Response {
 
 }
 
-func validRequest(req *pb.Request, resp *pb.Response) bool {
+func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 
 	var reqAbs model.RequestAbstract
 	reqAbs.Application = req.GetApplicationName()

@@ -12,5 +12,5 @@ func main() {
 
 	// Start the Hector Server
 	servers.Server(constant.HectorGrpcMode)
-
+	//servers.Server(constant.HTTP)
 }
