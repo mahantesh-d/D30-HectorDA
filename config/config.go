@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/oleiade/reflections"
 	"github.com/spf13/viper"
+	"github.com/dminGod/D30-HectorDA/constant"
 )
 
 // cassandra struct represents the configuration parameters for the Cassandra endpoint
@@ -42,7 +43,7 @@ var Conf Config
 func Init() {
 
 	viper.SetConfigName("config") // path to look for the config file in
-	viper.AddConfigPath("/etc/hector")
+	viper.AddConfigPath(constant.HectorConf)
 	viper.SetConfigType("toml")
 
 	err := viper.ReadInConfig()

@@ -6,6 +6,6 @@ go:
   - 1.7
 
 script:
-  - sudo mkdir -p /etc/hector; sudo cp config.toml /etc/hector
-  - sudo mkdir -p /etc/hector/metadata/alltrade; sudo cp metadata/example/alltrade.json /etc/hector/metadata/alltrade/; sudo cp metadata/example/alltradeApi.json /etc/hector/metadata/alltrade/;sudo mkdir -p /var/log/hector; sudo touch /var/log/hector/server.log; sudo chmod -R 777 /var/log/hector
+  - sudo mkdir -p /etc/hector; sudo cp -R conf-example/* /etc/hector
+  - sudo mkdir -p /var/log/hector; sudo touch /var/log/hector/server.log; sudo chmod -R 777 /var/log/hector
   - go test -v ./...
