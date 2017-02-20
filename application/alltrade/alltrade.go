@@ -152,6 +152,7 @@ func SubStockDailyDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+// SubStockDailyDetailGet handles SubStockDailyDetail GET request
 func SubStockDailyDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table", "sub_stock_daily_detail", metaDataSelect)
@@ -190,6 +191,7 @@ func TransferOutMismatchPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+// TransferOutMismatchGet handles TransferOutMismatch GET request
 func TransferOutMismatchGet(req model.RequestAbstract) model.ResponseAbstract {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table", "tranfer_out_mismatch", metaDataSelect)
@@ -228,6 +230,7 @@ func RequestGoodsPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+// RequestGoodsGet handles RequestGoods GET request
 func RequestGoodsGet(req model.RequestAbstract) model.ResponseAbstract {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table", "request_goods", metaDataSelect)
@@ -266,6 +269,7 @@ func OrderTransferPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+// OrderTransferGet handles OrderTransfer GET request
 func OrderTransferGet(req model.RequestAbstract) model.ResponseAbstract {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table", "order_transfer", metaDataSelect)
@@ -304,6 +308,7 @@ func SaleOutDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+// SaleOutDetailGet handles SaleOutDetail GET request
 func SaleOutDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table", "sale_out_detail", metaDataSelect)
@@ -342,6 +347,7 @@ func CheckStockDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	return prepareResponse(dbAbs)
 }
 
+// CheckStockDetailGet handles CheckStockDetail GET request
 func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 	metaInput := utils.FindMap("table", "check_stock_detail", metaDataSelect)

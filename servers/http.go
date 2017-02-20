@@ -11,12 +11,14 @@ import (
 	"strings"
 )
 
+// HttpServer is the http server handler
 var HttpServer *http.ServeMux
 
+// HTTPStartServer starts the HTTP Server on the configured port
 func HTTPStartServer() {
 	Conf = config.Get()
 	HttpServer = http.NewServeMux()
-	handleHttpRoutes()
+	handleHTTPRoutes()
 	logger.Write("INFO", "Server Starting - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
 	err := http.ListenAndServe(Conf.Hector.Host+":"+Conf.Hector.Port, HttpServer)
 	if err != nil {
@@ -27,7 +29,7 @@ func HTTPStartServer() {
 	}
 }
 
-func handleHttpRoutes() {
+func handleHTTPRoutes() {
 
 	fmt.Println("Handling")
 	HttpServer.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@ package constant
 // HectorPipe is the Named pipe used to listen for graceful server shutdown
 const HectorPipe = "/tmp/hector"
 
-// HectorConf
+// HectorConf is the path of the configuration file
 const HectorConf = "conf-example"
 
 // HectorGrpcMode is the GRPC server mode
