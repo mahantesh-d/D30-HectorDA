@@ -44,7 +44,15 @@ func init() {
 		"alltrade_checkstock_detail_post": alltrade.CheckStockDetailPost,
 		"alltrade_checkstock_detail_get":  alltrade.CheckStockDetailGet,
 
-		"alltrade_reports_requestgoods_get": alltrade.ReportsRequestGoodGet}
+		// Reports
+		"alltrade_reports_requestgoods_get": alltrade.ReportsRequestGoodGet,
+		"alltrade_reports_adjuststock_get" : alltrade.ReportsAdjustStockGet,
+		"alltrade_reports_checkstockdetail_get"  : alltrade.ReportsCheckStockDetailGet,
+		"alltrade_reports_directsaledetail_get" : alltrade.ReportsDirectSaleDetailGet,
+		"alltrade_reports_directsalesummary_get" : alltrade.ReportsDirectSaleSummaryGet,
+		"alltrade_reports_requestgoodssummary_get" : alltrade.ReportsRequestGoodsSummaryGet,
+		"alltrade_reports_transferdetail_get" : alltrade.ReportsTransferDetailGet,
+		"alltrade_reports_transfersummary_get" : alltrade.ReportsTransferSummaryGet}
 }
 
 // HandleRoutes is used resolve incoming routes and execute the corresponding application logic
