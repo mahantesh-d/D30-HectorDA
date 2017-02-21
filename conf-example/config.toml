@@ -2,7 +2,7 @@
 # Location : /etc/hector/config.toml
 # DO NOT DELETE THIS FILE
 
-kversion = "0.0.1"
+version = "0.0.1"
 
 # Hector Server Config
 [hector]
