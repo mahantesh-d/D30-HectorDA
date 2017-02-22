@@ -4,7 +4,7 @@ package constant
 const HectorPipe = "/tmp/hector"
 
 // HectorConf is the path of the configuration file
-const HectorConf = "conf-example"
+const HectorConf = "/etc/hector"
 
 // HectorGrpcMode is the GRPC server mode
 const HectorGrpcMode string = "grpc"
