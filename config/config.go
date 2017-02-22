@@ -104,7 +104,6 @@ func etcdInit() error {
  	runtime_viper.SetConfigType(constant.EtcdConfigType)
 	err := runtime_viper.ReadRemoteConfig()
  	if err != nil {
- 		fmt.Println("Error")
 		return err
 	}
  	runtime_viper.Unmarshal(&Conf)
@@ -135,6 +134,7 @@ func localInit() {
 	err := viper.ReadInConfig()
 
 	if err != nil {
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 
