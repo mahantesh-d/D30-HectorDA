@@ -7,6 +7,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"time"
+	_ "github.com/avct/prestgo" // SQL Driver uses prestgo
 )
 
 var prestoChan chan *sql.DB
@@ -43,7 +44,7 @@ func getSession() (*sql.DB, error) {
 		db, err := sql.Open("prestgo", Conf.Presto.ConnectionURL)
 
 		if err != nil {
-			panic(err)
+			logger.Write("ERROR", "Could not connect: " + err.Error())	
 		}
 
 		defer queueSession(db)
