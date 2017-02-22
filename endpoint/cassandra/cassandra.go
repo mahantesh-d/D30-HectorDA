@@ -12,7 +12,7 @@ import (
 
 var cassandraChan chan *gocql.Session
 var cassandraSession *gocql.Session
-var cassandraHost string
+var cassandraHost []string
 
 func init() {
 	cassandraChan = make(chan *gocql.Session, 100)
@@ -39,7 +39,7 @@ func getSession() (*gocql.Session, error) {
 		return cassandraSession, nil
 	case <-time.After(100 * time.Millisecond):
 		logger.Write("INFO", "Creating new Cassandra Connection")
-		cluster := gocql.NewCluster(cassandraHost)
+		cluster := gocql.NewCluster(cassandraHost...)
 		cluster.Keyspace = "all_trade"
 		cluster.ProtoVersion = 3
 		session, err := cluster.CreateSession()
