@@ -6,6 +6,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -140,4 +141,13 @@ func Exit(code int) {
 
 	os.Exit(code)
 
+}
+
+func ExecuteCommand(command string, args ...string) string {
+        out, _ := exec.Command(command, args...).Output()
+        output := string(out)
+        output = strings.Trim(output, "\r");
+        output = strings.Trim(output, "\n");
+
+        return output
 }
