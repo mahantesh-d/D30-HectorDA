@@ -126,3 +126,43 @@
 2017/02/28 15:51:41  [ INFO ] Initializing Cassandra Session
 2017/02/28 15:51:41  [ INFO ] Creating new Cassandra Connection
 2017/02/28 15:51:41  [ DEBUG ] QUERY : SELECT * FROM stock_adjustment WHERE stock_adjustment_pk IN (e9134b79-bf25-460c-9e68-5bc3257d72bf)
+2017/02/28 16:58:08  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 16:58:08  [ INFO ] Server Mode : http
+2017/02/28 16:58:08  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 16:58:34  [ INFO ] Initializing Presto Session
+2017/02/28 16:58:34  [ INFO ] Creating new Presto Connection
+2017/02/28 16:58:34  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  company = 'AIS' AND ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' 
+2017/02/28 16:58:35  [ INFO ] Initializing Cassandra Session
+2017/02/28 16:58:35  [ INFO ] Creating new Cassandra Connection
+2017/02/28 16:58:36  [ DEBUG ] QUERY : SELECT * FROM stock_adjustment WHERE stock_adjustment_pk IN (e9134b79-bf25-460c-9e68-5bc3257d72bf)
+2017/02/28 16:59:09  [ INFO ] Initializing Cassandra Session
+2017/02/28 16:59:09  [ INFO ] Creating new Cassandra Connection
+2017/02/28 16:59:09  [ DEBUG ] QUERY : SELECT * from obtain_detail WHERE obtain_no = 'PU1177160500009' AND location_code = '1177' ALLOW FILTERING
+2017/02/28 16:59:39  [ INFO ] Initializing Cassandra Session
+2017/02/28 16:59:39  [ INFO ] Creating new Cassandra Connection
+2017/02/28 16:59:40  [ DEBUG ] QUERY : SELECT * from stock_adjustment WHERE company = 'AIS' AND adjust_stock_no = 'AJ0000882530486' ALLOW FILTERING
+2017/02/28 16:59:47  [ INFO ] Initializing Presto Session
+2017/02/28 16:59:47  [ INFO ] Using Existing Presto session
+2017/02/28 16:59:47  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 16:59:49  [ INFO ] Initializing Cassandra Session
+2017/02/28 16:59:49  [ INFO ] Creating new Cassandra Connection
+2017/02/28 16:59:49  [ DEBUG ] QUERY : SELECT * FROM stock_adjustment WHERE stock_adjustment_pk IN (e9134b79-bf25-460c-9e68-5bc3257d72bf)
+2017/02/28 18:13:30  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 18:13:30  [ INFO ] Server Mode : http
+2017/02/28 18:13:30  [ INFO ] Server Starting - host:port -  : 9001
+2017/02/28 18:13:33  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:34  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:13:37  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:38  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:13:41  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:42  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:13:45  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:46  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:13:49  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:50  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:13:53  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:54  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:13:57  [ INFO ] Sending Hearbeat
+2017/02/28 18:13:58  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout
+2017/02/28 18:14:01  [ INFO ] Sending Hearbeat
+2017/02/28 18:14:02  [ ERROR ] Could not send hearbeat : client: etcd cluster is unavailable or misconfigured; error #0: client: endpoint http://localhost:2379 exceeded header timeout

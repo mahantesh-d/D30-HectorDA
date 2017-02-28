@@ -548,8 +548,8 @@ func ReportsAdjustStockGet(req model.RequestAbstract) model.ResponseAbstract {
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = query
-	endpoint.Process(nil, &conf, &dbAbs)
+	dbAbs.Query = []string{query}
+	endpoint.Process( &dbAbs )
 
 	return prepareResponse(dbAbs)
 }
@@ -607,8 +607,8 @@ func ReportsCheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstrac
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = query
-	endpoint.Process(nil, &conf, &dbAbs)
+	dbAbs.Query = []string{ query }
+	endpoint.Process( &dbAbs )
 
 	return prepareResponse(dbAbs)	
 	
@@ -664,8 +664,8 @@ func ReportsDirectSaleDetailGet(req model.RequestAbstract) model.ResponseAbstrac
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = query
-	endpoint.Process(nil, &conf, &dbAbs)
+	dbAbs.Query = []string{ query }
+	endpoint.Process( &dbAbs )
 
 	return prepareResponse(dbAbs)	
 	
@@ -729,9 +729,8 @@ func ReportsDirectSaleSummaryGet(req model.RequestAbstract) model.ResponseAbstra
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
 
-	query_arr = append(query_arr, query)
 
-	dbAbs.Query = query_arr
+	dbAbs.Query = []string{ query }
 	endpoint.Process(&dbAbs)
 
 	return prepareResponse(dbAbs)
@@ -796,8 +795,8 @@ func ReportsRequestGoodsSummaryGet(req model.RequestAbstract) model.ResponseAbst
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = query
-	endpoint.Process(nil, &conf, &dbAbs)
+	dbAbs.Query = []string{ query }
+	endpoint.Process( &dbAbs )
 
 	return prepareResponse(dbAbs)
 }
@@ -850,8 +849,8 @@ func ReportsTransferDetailGet(req model.RequestAbstract) model.ResponseAbstract 
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = query
-	endpoint.Process(nil, &conf, &dbAbs)
+	dbAbs.Query = []string{ query }
+	endpoint.Process( &dbAbs )
 
 	return prepareResponse(dbAbs)	
 }
@@ -908,8 +907,8 @@ func ReportsTransferSummaryGet(req model.RequestAbstract) model.ResponseAbstract
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = query
-	endpoint.Process(nil, &conf, &dbAbs)
+	dbAbs.Query = []string{ query }
+	endpoint.Process( &dbAbs )
 
 	return prepareResponse(dbAbs)	
 }
