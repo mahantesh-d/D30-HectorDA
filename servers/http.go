@@ -33,7 +33,6 @@ func HTTPStartServer() {
 
 func handleHTTPRoutes() {
 
-	fmt.Println("Handling")
 	HttpServer.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		var response string
 		if validHTTPRequest(r, &response) {
@@ -41,7 +40,6 @@ func handleHTTPRoutes() {
 			resp, _ := HandleRoutes(RequestAbstract)
 			response = utils.EncodeJSON(resp)
 		}
-		fmt.Println("Printing")
 
 		fmt.Fprintln(w, response)
 
@@ -49,11 +47,9 @@ func handleHTTPRoutes() {
 }
 
 func validHTTPRequest(r *http.Request, response *string) bool {
-	fmt.Println("Validating")
 	applicationConfig := strings.Split(r.URL.Path, "/")
 	var reqAbs model.RequestAbstract
 	resp := make(map[string]interface{})
-	fmt.Println("Made map of string and interface")
 	if len(applicationConfig) != 4 {
 		resp["StatusCode"] = 404
 		resp["Status"] = "fail"

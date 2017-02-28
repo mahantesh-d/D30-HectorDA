@@ -79,8 +79,8 @@ func GRPCStartServer() {
 	Conf = config.Get()
 
 	// listen to the TCP port
-	logger.Write("INFO", "Server Starting - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
-	listener, err := net.Listen(Conf.Hector.ConnectionType, Conf.Hector.Host+":"+Conf.Hector.Port)
+	logger.Write("INFO", "Server Starting - host:port - "+ utils.ExecuteCommand("hostname","-i") + " : "+Conf.Hector.Port)
+	listener, err := net.Listen(Conf.Hector.ConnectionType, utils.ExecuteCommand("hostname","-i") + ":" + Conf.Hector.Port)
 
 	if err != nil {
 		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)

@@ -2,13 +2,12 @@
 # Location : /etc/hector/config.toml
 # DO NOT DELETE THIS FILE
 
-kversion = "0.0.1"
+version = "0.0.1"
 
 # Hector Server Config
 [hector]
 	connectionType = "tcp"
 	version = "0.0.1"
-	host = "127.0.0.1"
 	port = "9001"
 	log = "INFO"
 	logDirectory = "conf-example"
@@ -16,8 +15,8 @@ kversion = "0.0.1"
 
 # Cassandra Config
 [cassandra]
-	host = "10.138.32.77"
-	port = "9042"
+	host = ["10.138.32.77"]
+    port = "9042"
 
 # Presto
 [presto]

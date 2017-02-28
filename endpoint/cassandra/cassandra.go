@@ -13,7 +13,7 @@ import (
 
 var cassandraChan chan *gocql.Session
 var cassandraSession *gocql.Session
-var cassandraHost string
+var cassandraHost []string
 
 func init() {
 	cassandraChan = make(chan *gocql.Session, 100)
@@ -44,9 +44,11 @@ func getSession() (*gocql.Session, error) {
 		return cassandraSession, nil
 	case <-time.After(100 * time.Millisecond):
 		logger.Write("INFO", "Creating new Cassandra Connection")
-		cluster := gocql.NewCluster(cassandraHost)
+
+		cluster := gocql.NewCluster(cassandraHost...)
 		// TODO: This is hardcoded, it needs to be changed to be dynamic. This must either be default keyspace or be allocated dynamically based on the query
 		cluster.Keyspace = "ais_test_all"
+
 		cluster.ProtoVersion = 3
 		session, err := cluster.CreateSession()
 

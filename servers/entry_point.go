@@ -6,6 +6,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
+	"github.com/dminGod/D30-HectorDA/etcd"
 	"os"
 
 )
@@ -20,6 +21,9 @@ var RequestAbstract model.RequestAbstract
 
 // Server is used to start a TCP server
 func Server(serverTypePassed string) {
+
+	// send heartbeat to etcd
+	go etcd.Heartbeat()
 
 	// call a named pipe to listen for graceful shutdown
 	// go NamedPipe()

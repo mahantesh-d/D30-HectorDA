@@ -30,9 +30,11 @@ func init() {
 		// Loop over all the string : methods and add each of them to the Routes map
 		for key, value := range curAppMap {
 
+
 			Routes[key] = value
 		}
 	}
+
 }
 
 // HandleRoutes is used resolve incoming routes and execute the corresponding application logic
