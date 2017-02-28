@@ -4,6 +4,8 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "stock_adjustment",
+		"apiName" : "alltrade_stock_adjustment_get",
+		"child_table_prefix" : "ct_sa_",
 		"fields": {
 			"adjustStockNo": {
 				"column": "adjust_stock_no",
@@ -84,11 +86,13 @@
 			}
 		}
 	},
+
 	"alltrade_obtaindetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "obtain_detail",
+		"apiName" : "alltrade_obtain_detail_get",
 		"fields": {
 			"transactionType": {
 				"column": "transaction_type",
@@ -101,89 +105,105 @@
 				"column": "obtain_no",
 				"type": "text",
 				"valueType": "single",
+				"indexType": "sasi",
 				"priority": 2
 			},
 			"locationCode": {
 				"column": "location_code",
 				"type": "text",
 				"valueType": "single",
+				"indexType": "sasi",
 				"priority": 3
 			},
 			"obtainDateTime": {
 				"column": "obtain_datetime",
 				"type": "timestamp",
 				"valueType": "single",
+				"indexType": "sasi",
 				"priority": 4
 			},
 			"salesCode_key": {
 				"column": "sales_code_key",
 				"type": "set<text>",
 				"valueType": "multi",
+				"indexType": "secondary",
 				"priority": 5
 			},
 			"matCode_key": {
 				"column": "mat_code_key",
 				"type": "set<text>",
 				"valueType": "multi",
+				"indexType": "secondary",
 				"priority": 6
 			},
 			"serial_key": {
 				"column": "serial_key",
 				"type": "set<text>",
 				"valueType": "multi",
+				"indexType": "secondary",
 				"priority": 7
 			}
 		}
 	},
+
 	"alltrade_substocktransferdetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
+		"apiName" : "alltrade_substock_detail_transfer_get",
 		"fields": {
 			"transferSubStockNo": {
 				"column": "transfer_substock_no",
 				"type": "text",
 				"valueType": "single",
+				"indexType": "sasi",
 				"priority": 1
 			},
 			"toSubStock": {
 				"column": "to_substock",
 				"type": "text",
 				"valueType": "single",
+				"indexType": "sasi",
 				"priority": 2
 			},
 			"transferSubStockDateTime": {
 				"column": "transfer_substock_datetime",
 				"type": "timestamp",
 				"valueType": "single",
+				"indexType": "sasi",
 				"priority": 3
 			},
 			"matCode_key": {
 				"column": "mat_code_key",
 				"type": "set<text>",
 				"valueType": "multi",
+				"indexType": "secondary",
 				"priority": 4
 			},
 			"serial_key": {
 				"column": "serial_key",
 				"type": "set<text>",
 				"valueType": "multi",
+				"indexType": "secondary",
 				"priority": 5
 			},
 			"fromSubStock_key": {
 				"column": "from_substock_key",
 				"type": "set<text>",
 				"valueType": "multi",
+				"indexType": "secondary",
 				"priority": 6
 			}
 		}
 	},
+
 	"alltrade_substockdailydetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
+		"apiName" : "alltrade_substock_daily_detail_get",
 		"fields": {
 			"subStockDailyNo": {
 				"column": "substock_daily_no",
@@ -242,6 +262,7 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "tranfer_out_mismatch",
+		"apiName" : "alltrade_transferout_mismatch_get",
 		"fields": {
 			"requestNo": {
 				"column": "request_no",
@@ -301,6 +322,7 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "request_goods",
+		"apiName" : "alltrade_requestgoods_get",
 		"fields": {
 			"transactionType": {
 				"column": "transaction_type",
@@ -436,6 +458,7 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "order_transfer",
+		"apiName" : "alltrade_ordertransfer_get",
 		"fields": {
 			"transactionType": {
 				"column": "transaction_type",
@@ -559,12 +582,12 @@
 		}
 	},
 
-
 	"alltrade_saleoutdetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sale_out_detail",
+		"apiName" : "alltrade_saleout_detail_get",
 		"fields": {
 			"documentNo": {
 				"column": "document_no",
@@ -674,12 +697,12 @@
 		}
 	},
 
-
 	"alltrade_checkstockdetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "check_stock_detail",
+		"apiName" : "alltrade_checkstock_detail_get",
 		"fields": {
 			"locationCode": {
 				"column": "location_code",
@@ -795,6 +818,5 @@
 			}
 		}
 	}
-
 
 }

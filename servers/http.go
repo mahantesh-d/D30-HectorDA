@@ -9,6 +9,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"regexp"
+	"strconv"
 )
 
 // HttpServer is the http server handler
@@ -60,7 +62,7 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 		resp["Data"] = "{}"
 		resp["Count"] = 0
 		*response = utils.EncodeJSON(resp)
-		fmt.Println("returning false")
+
 		return false
 	}
 
@@ -103,9 +105,11 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 	applicationConfig := strings.Split(r.URL.Path, "/")
 	var reqAbs model.RequestAbstract
+	reqAbs.APIVersion = parseAPIVersion(applicationConfig[1])
 	reqAbs.Application = applicationConfig[2]
 	reqAbs.Action = applicationConfig[3]
 	reqAbs.HTTPRequestType = r.Method
+
 	if reqAbs.HTTPRequestType == "POST" {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -120,8 +124,18 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 	}
 
 	return reqAbs
-
 }
+
+
+func parseAPIVersion(verStr string) uint32 {
+
+	r, _ := regexp.Compile("\\d+")
+	singleMatch := r.FindString(verStr)
+	retInt, _ := strconv.Atoi(singleMatch)
+
+	return uint32(retInt)
+}
+
 
 func mapHTTPAbstractResponse() {
 

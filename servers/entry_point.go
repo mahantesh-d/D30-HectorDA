@@ -7,7 +7,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"os"
-	"syscall"
+
 )
 
 var serverType string
@@ -22,7 +22,7 @@ var RequestAbstract model.RequestAbstract
 func Server(serverTypePassed string) {
 
 	// call a named pipe to listen for graceful shutdown
-	go NamedPipe()
+	// go NamedPipe()
 
 	// Set the server Type
 	serverType = serverTypePassed
@@ -35,10 +35,13 @@ func Server(serverTypePassed string) {
 		// entry point for native protobuf will come here
 
 	} else if serverType == constant.HectorGrpcMode {
+
 		GRPCStartServer()
 	} else if serverType == constant.HTTP {
+
 		HTTPStartServer()
 	}
+
 }
 
 // NamedPipe runs in the background and listens for a server stop event
@@ -48,14 +51,14 @@ func NamedPipe() {
 	os.Remove(constant.HectorPipe)
 
 	// create a named pipe
-	err := syscall.Mkfifo(constant.HectorPipe, 0666)
+	// err := syscall.Mkfifo(constant.HectorPipe, 0666)
 
 	logger.Write("INFO", "Listening for Graceful shutdown")
 
-	if err != nil {
-		logger.Write("INFO", "Error creating named pipe"+err.Error())
-		utils.Exit(1)
-	}
+	//if err != nil {
+	//	logger.Write("INFO", "Error creating named pipe"+err.Error())
+	//	utils.Exit(1)
+	//}
 
 	file, err := os.OpenFile(constant.HectorPipe, os.O_CREATE, os.ModeNamedPipe)
 

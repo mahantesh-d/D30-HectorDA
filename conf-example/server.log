@@ -1,0 +1,128 @@
+2017/02/27 18:28:21  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/27 18:28:21  [ INFO ] Server Mode : http
+2017/02/27 18:28:21  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/27 18:28:27  [ INFO ] Initializing Presto Session
+2017/02/27 18:28:27  [ INFO ] Creating new Presto Connection
+2017/02/27 18:28:27  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:28:37  [ INFO ] Initializing Presto Session
+2017/02/27 18:28:37  [ INFO ] Using Existing Presto session
+2017/02/27 18:28:37  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:29:19  [ INFO ] Initializing Presto Session
+2017/02/27 18:29:19  [ INFO ] Creating new Presto Connection
+2017/02/27 18:29:19  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:32:00  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/27 18:32:00  [ INFO ] Server Mode : http
+2017/02/27 18:32:00  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/27 18:32:12  [ INFO ] Initializing Presto Session
+2017/02/27 18:32:13  [ INFO ] Creating new Presto Connection
+2017/02/27 18:32:13  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' 
+2017/02/27 18:32:27  [ INFO ] Initializing Presto Session
+2017/02/27 18:32:27  [ INFO ] Using Existing Presto session
+2017/02/27 18:32:27  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:34:37  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/27 18:34:37  [ INFO ] Server Mode : http
+2017/02/27 18:34:37  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/27 18:34:49  [ INFO ] Initializing Presto Session
+2017/02/27 18:34:49  [ INFO ] Creating new Presto Connection
+2017/02/27 18:34:49  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:35:15  [ INFO ] Initializing Presto Session
+2017/02/27 18:35:15  [ INFO ] Using Existing Presto session
+2017/02/27 18:35:15  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:36:57  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/27 18:36:57  [ INFO ] Server Mode : http
+2017/02/27 18:36:57  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/27 18:37:03  [ INFO ] Initializing Presto Session
+2017/02/27 18:37:03  [ INFO ] Creating new Presto Connection
+2017/02/27 18:37:03  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' 
+2017/02/27 18:37:16  [ INFO ] Initializing Presto Session
+2017/02/27 18:37:16  [ INFO ] Using Existing Presto session
+2017/02/27 18:37:16  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:39:56  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/27 18:39:56  [ INFO ] Server Mode : http
+2017/02/27 18:39:56  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/27 18:40:03  [ INFO ] Initializing Presto Session
+2017/02/27 18:40:03  [ INFO ] Creating new Presto Connection
+2017/02/27 18:40:03  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:40:15  [ INFO ] Initializing Presto Session
+2017/02/27 18:40:15  [ INFO ] Using Existing Presto session
+2017/02/27 18:40:15  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:42:37  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/27 18:42:37  [ INFO ] Server Mode : http
+2017/02/27 18:42:37  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/27 18:42:40  [ INFO ] Initializing Presto Session
+2017/02/27 18:42:41  [ INFO ] Creating new Presto Connection
+2017/02/27 18:42:41  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  company = 'AIS' AND ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' 
+2017/02/27 18:42:46  [ INFO ] Initializing Presto Session
+2017/02/27 18:42:46  [ INFO ] Using Existing Presto session
+2017/02/27 18:42:46  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  company = 'AIS' AND ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' 
+2017/02/27 18:42:56  [ INFO ] Initializing Presto Session
+2017/02/27 18:42:56  [ INFO ] Creating new Presto Connection
+2017/02/27 18:42:56  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/27 18:43:16  [ INFO ] Initializing Presto Session
+2017/02/27 18:43:16  [ INFO ] Using Existing Presto session
+2017/02/27 18:43:16  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 13:03:32  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 13:03:32  [ INFO ] Server Mode : http
+2017/02/28 13:03:32  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 13:05:11  [ INFO ] Initializing Presto Session
+2017/02/28 13:05:11  [ INFO ] Creating new Presto Connection
+2017/02/28 13:05:11  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' 
+2017/02/28 13:07:43  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 13:07:43  [ INFO ] Server Mode : http
+2017/02/28 13:07:43  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 13:07:48  [ INFO ] Initializing Presto Session
+2017/02/28 13:07:48  [ INFO ] Creating new Presto Connection
+2017/02/28 13:07:48  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 13:16:32  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 13:16:32  [ INFO ] Server Mode : http
+2017/02/28 13:16:32  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 13:16:37  [ INFO ] Initializing Presto Session
+2017/02/28 13:16:37  [ INFO ] Creating new Presto Connection
+2017/02/28 13:16:37  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  company = 'AIS' AND ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' 
+2017/02/28 13:17:05  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 13:17:05  [ INFO ] Server Mode : http
+2017/02/28 13:17:05  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 13:17:15  [ INFO ] Initializing Presto Session
+2017/02/28 13:17:15  [ INFO ] Creating new Presto Connection
+2017/02/28 13:17:15  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 13:19:43  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 13:19:43  [ INFO ] Server Mode : http
+2017/02/28 13:19:43  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 13:19:45  [ INFO ] Initializing Presto Session
+2017/02/28 13:19:45  [ INFO ] Creating new Presto Connection
+2017/02/28 13:19:45  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 13:56:39  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 13:56:39  [ INFO ] Server Mode : http
+2017/02/28 13:56:39  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 13:56:42  [ INFO ] Initializing Presto Session
+2017/02/28 13:56:42  [ INFO ] Creating new Presto Connection
+2017/02/28 13:56:42  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' 
+2017/02/28 15:48:00  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 15:48:00  [ INFO ] Server Mode : http
+2017/02/28 15:48:00  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 15:48:17  [ INFO ] Initializing Presto Session
+2017/02/28 15:48:17  [ INFO ] Creating new Presto Connection
+2017/02/28 15:48:17  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  company = 'AIS' AND ct_sa_brand_key.value = 'Asus' AND adjust_stock_no = 'AJ0000882530486' 
+2017/02/28 15:48:20  [ INFO ] Initializing Cassandra Session
+2017/02/28 15:48:20  [ INFO ] Creating new Cassandra Connection
+2017/02/28 15:48:20  [ DEBUG ] QUERY : SELECT * FROM stock_adjustment WHERE stock_adjustment_pk IN ("e9134b79-bf25-460c-9e68-5bc3257d72bf")
+2017/02/28 15:48:20  [ ERROR ] line 1:99 no viable alternative at input ')' (... stock_adjustment WHERE stock_adjustment_pk IN (["e9134b79-bf25-460c-9e68-5bc3257d72b]f"))
+2017/02/28 15:49:30  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 15:49:30  [ INFO ] Server Mode : http
+2017/02/28 15:49:30  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 15:49:41  [ INFO ] Initializing Presto Session
+2017/02/28 15:49:41  [ INFO ] Creating new Presto Connection
+2017/02/28 15:49:41  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 15:49:44  [ INFO ] Initializing Cassandra Session
+2017/02/28 15:49:44  [ INFO ] Creating new Cassandra Connection
+2017/02/28 15:49:44  [ DEBUG ] QUERY : SELECT * FROM stock_adjustment WHERE stock_adjustment_pk IN (e9134b79-bf25-460c-9e68-5bc3257d72bf")
+2017/02/28 15:49:44  [ ERROR ] line 1:99 mismatched character '<EOF>' expecting '"'
+2017/02/28 15:51:35  [ INFO ] Hector initialize called, Version : 0.0.1
+2017/02/28 15:51:35  [ INFO ] Server Mode : http
+2017/02/28 15:51:35  [ INFO ] Server Starting - host:port - 127.0.0.1 : 9001
+2017/02/28 15:51:38  [ INFO ] Initializing Presto Session
+2017/02/28 15:51:38  [ INFO ] Creating new Presto Connection
+2017/02/28 15:51:38  [ DEBUG ] QUERY : SELECT distinct(stock_adjustment_pk) from stock_adjustment   LEFT JOIN ct_sa_brand_key ON ct_sa_brand_key.parent_pk = stock_adjustment.stock_adjustment_pk   WHERE  adjust_stock_no = 'AJ0000882530486' AND company = 'AIS' AND ct_sa_brand_key.value = 'Asus' 
+2017/02/28 15:51:41  [ INFO ] Initializing Cassandra Session
+2017/02/28 15:51:41  [ INFO ] Creating new Cassandra Connection
+2017/02/28 15:51:41  [ DEBUG ] QUERY : SELECT * FROM stock_adjustment WHERE stock_adjustment_pk IN (e9134b79-bf25-460c-9e68-5bc3257d72bf)

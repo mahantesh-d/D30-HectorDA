@@ -15,12 +15,13 @@ type cassandra struct {
 
 // hector struct represents the configuration parameters for the hector server
 type hector struct {
-	ConnectionType string
-	Version        string
-	Host           string
-	Port           string
-	Log            string
-	LogDirectory   string
+	ConnectionType 	string
+	Version        	string
+	Host           	string
+	Port           	string
+	Log            	string
+	LogDirectory   	string
+	StartServersOfType 	[]string
 }
 
 // presto struct represents the configuration parameters for the Presto endpoint

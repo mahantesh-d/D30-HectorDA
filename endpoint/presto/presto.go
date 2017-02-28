@@ -7,11 +7,13 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"time"
+	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
+	"github.com/dminGod/D30-HectorDA/endpoint/presto_helper"
 )
 
 var prestoChan chan *sql.DB
 
-var prestoResult []map[string]interface{}
+
 
 func init() {
 
@@ -52,12 +54,25 @@ func getSession() (*sql.DB, error) {
 	}
 }
 
-// Select is used to query data from Cassandra
+// Select is used to query data from presto
 func Select(dbAbstract *model.DBAbstract) {
 
+	var prestoResult []map[string]interface{}
+
+	if len(dbAbstract.Query) == 0 {
+
+		logger.Write("ERROR", "Presto received a blank query to process in the DBAbstract object")
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Presto received a blank query to process in the DBAbstract object"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+		return
+	}
+
 	session, _ := getSession()
-	logger.Write("DEBUG", "QUERY : "+dbAbstract.Query)
-	rows, err := session.Query(dbAbstract.Query)
+	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query[0])
+	rows, err := session.Query(dbAbstract.Query[0])
+
 
 	if err != nil {
 		panic(err)
@@ -94,11 +109,36 @@ func Select(dbAbstract *model.DBAbstract) {
 	} else {
 
 		dbAbstract.Status = "success"
-		dbAbstract.Message = "Inserted successfully"
+		dbAbstract.Message = "Select successful"
 		dbAbstract.Data = utils.EncodeJSON(prestoResult)
 		dbAbstract.Count = uint64(len(prestoResult))
+		dbAbstract.RichData = prestoResult
 	}
 }
+
+
+func QueryPrestoMakeCassandraInQuery( metaResult map[string]interface{}, metaInput map[string]interface{} ) string {
+
+	metaResult["databaseType"] = "presto"
+	query := []string{presto_helper.FindIDQueryBuild(metaInput)}
+
+
+	var dbAbsPresto model.DBAbstract
+
+	dbAbsPresto.QueryType = "SELECT"
+	dbAbsPresto.Query = query
+	dbAbsPresto.DBType = "presto"
+
+	Select(&dbAbsPresto)
+
+	cassandraInQuery := cassandra_helper.MakeCassandraInQuery(dbAbsPresto.RichData, metaInput)
+
+	return cassandraInQuery
+}
+
+
+
+
 
 func queueSession(session *sql.DB) {
 

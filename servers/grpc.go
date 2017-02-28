@@ -91,13 +91,14 @@ func GRPCStartServer() {
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterHectorServer(grpcServer, new(GRPCServer))
-	grpcServer.Serve(listener)
+	grpcServer.Serve( listener )
 }
 
 func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 	var reqAbs model.RequestAbstract
 	reqAbs.Application = req.GetApplicationName()
+	reqAbs.APIVersion = req.GetApplicationVersion()
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.HTTPRequestType = req.GetMethod().String()
 	if reqAbs.HTTPRequestType == "POST" {

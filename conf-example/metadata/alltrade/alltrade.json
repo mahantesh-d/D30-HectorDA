@@ -23,11 +23,13 @@
 			}
 		}
 	},
+
 	"alltrade_stockadjustment_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "alltrade",
 		"table": "stock_adjustment",
+		"child_table_prefix" : "ct_sa_",
 		"fields": {
 			"stock_adjustment_pk": {
 				"name": "stock_adjustment_pk",
@@ -153,11 +155,13 @@
 
 		}
 	},
+
 	"alltrade_obtaindetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "alltrade",
 		"table": "obtain_detail",
+		"child_table_prefix" : "ct_od_",
 		"fields": {
 			"obtain_detail_pk": {
 				"name": "obtain_detail_pk",
@@ -251,6 +255,7 @@
 		"version": 1,
 		"database": "alltrade",
 		"table": "sub_stock_detail_transfer",
+		"child_table_prefix" : "ct_ssdt_",
 		"fields": {
 			"substock_detail_transfer_pk": {
 				"name": "substock_detail_transfer_pk",
@@ -356,6 +361,7 @@
 		"version": 1,
 		"database": "alltrade",
 		"table": "sub_stock_daily_detail",
+		"child_table_prefix" : "ct_ssdd_",
 		"fields": {
 			"substock_daily_detail_pk": {
 				"name": "substock_daily_detail_pk",
@@ -444,6 +450,7 @@
 		"version": 1,
 		"database": "alltrade",
 		"table": "tranfer_out_mismatch",
+		"child_table_prefix" : "ct_od_",
 		"fields": {
 			"transfer_out_mismatch_pk": {
 				"name": "transfer_out_mismatch_pk",
