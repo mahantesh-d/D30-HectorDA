@@ -8,9 +8,9 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // HttpServer is the http server handler
@@ -122,7 +122,6 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 	return reqAbs
 }
 
-
 func parseAPIVersion(verStr string) uint32 {
 
 	r, _ := regexp.Compile("\\d+")
@@ -131,7 +130,6 @@ func parseAPIVersion(verStr string) uint32 {
 
 	return uint32(retInt)
 }
-
 
 func mapHTTPAbstractResponse() {
 

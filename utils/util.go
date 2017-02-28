@@ -144,10 +144,10 @@ func Exit(code int) {
 }
 
 func ExecuteCommand(command string, args ...string) string {
-        out, _ := exec.Command(command, args...).Output()
-        output := string(out)
-        output = strings.Trim(output, "\r");
-        output = strings.Trim(output, "\n");
+	out, _ := exec.Command(command, args...).Output()
+	output := string(out)
+	output = strings.Trim(output, "\r")
+	output = strings.Trim(output, "\n")
 
-        return output
+	return output
 }

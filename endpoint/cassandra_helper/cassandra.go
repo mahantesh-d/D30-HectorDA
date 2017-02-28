@@ -1,11 +1,10 @@
 package cassandra_helper
 
 import (
-	"strings"
-	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"fmt"
+	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
+	"strings"
 )
-
 
 // IsValidCassandraQuery is used to analyze the metadata
 // and check if the data provided is sufficient to trigger
@@ -41,12 +40,10 @@ func IsValidCassandraQuery(metaInput map[string]interface{}) bool {
 
 }
 
-func MakeCassandraInQuery( prestoResult []map[string]interface{}, metaInput map[string]interface{} ) string {
-
+func MakeCassandraInQuery(prestoResult []map[string]interface{}, metaInput map[string]interface{}) string {
 
 	var makeRet []string
 	tableName := metaInput["table"].(string)
-
 
 	for _, val := range prestoResult {
 
@@ -55,12 +52,10 @@ func MakeCassandraInQuery( prestoResult []map[string]interface{}, metaInput map[
 
 	retStr := "SELECT * FROM " + tableName + " WHERE " + tableName + "_pk IN (" + strings.Join(makeRet, ",") + ")"
 
-	fmt.Println( retStr )
+	fmt.Println(retStr)
 
 	return retStr
 }
-
-
 
 func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
@@ -73,12 +68,10 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 	var record_uuid string
 	var child_query string
 
-
 	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
 
 		name += (k + ",")
 		value += " "
-
 
 		switch dataType := v.(string); v {
 		case "uuid":
@@ -94,8 +87,8 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 			// Table name : Table Prefix + field name
 			child_table_name = metaInput["child_table_prefix"].(string) + k
 			record_uuid = metaInput["record_uuid"].(string)
-			
-			inputs := ( (metaInput["field_keyvalue"].(map[string]interface{}))[k] ).( []interface{} )
+
+			inputs := ((metaInput["field_keyvalue"].(map[string]interface{}))[k]).([]interface{})
 
 			for _, v := range inputs {
 
@@ -114,8 +107,6 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 					_ = vType
 				}
 			}
-
-
 
 		case "map<text,text>":
 			value += endpoint_common.ReturnMap((metaInput["field_keyvalue"].(map[string]interface{}))[k])
@@ -187,7 +178,6 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 	return query
 }
 
-
 func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) string {
 
 	table := metaInput["table"].(string)
@@ -196,7 +186,6 @@ func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) st
 
 	return query
 }
-
 
 // We are deciding what type of query to run for the application.
 // Currently there are 3 choices :
@@ -212,9 +201,7 @@ func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) st
 //     Presto will only return back one or more IDs in an array which are the result of the search. The actual data will be
 //     fetched from cassandra and returned back to the user as it is currently done.
 
-
 // Using the older method for checking valid cassandra query, not this one
-
 
 //func DecideQueryTypeByRequest(reqAbs *model.RequestAbstract, metaDataSelect map[string]interface{}) string {
 //

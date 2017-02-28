@@ -4,14 +4,14 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/constant"
 	"github.com/dminGod/D30-HectorDA/endpoint"
+	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
+	"github.com/dminGod/D30-HectorDA/endpoint/presto"
 	"github.com/dminGod/D30-HectorDA/lib/queryhelper"
 	_ "github.com/dminGod/D30-HectorDA/logger" // TODO: Add Intermdiate logs to track detailed activity of each API
 	"github.com/dminGod/D30-HectorDA/metadata"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"strings"
-	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
-	"github.com/dminGod/D30-HectorDA/endpoint/presto"
 )
 
 var conf config.Config
@@ -24,7 +24,7 @@ func init() {
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
 }
 
-func ReturnRoutes() (map[string]func(model.RequestAbstract) model.ResponseAbstract){
+func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
 
 	routes := map[string]func(model.RequestAbstract) model.ResponseAbstract{
 
@@ -66,26 +66,25 @@ func EnrichRequest(reqAbs *model.RequestAbstract) {
 
 	// Cassandra Query Type Decision:
 
-//	if(reqAbs.HTTPRequestType == "GET") {
+	//	if(reqAbs.HTTPRequestType == "GET") {
 
-		// One of the 3 options will be returned on this :
-		// "single_column", "multi_column_same_index", "multi_column_mixed_index"
+	// One of the 3 options will be returned on this :
+	// "single_column", "multi_column_same_index", "multi_column_mixed_index"
 
-		//_, ok := reqAbs.AdditionalData["cassandra_query_type"]
-		//
-		//if !ok {
-		//
-		//	fmt.Println("going in to not okay")
-		//	os.Exit(1)
-		//	// reqAbs.AdditionalData["cassandra_query_type"]
-		//}
+	//_, ok := reqAbs.AdditionalData["cassandra_query_type"]
+	//
+	//if !ok {
+	//
+	//	fmt.Println("going in to not okay")
+	//	os.Exit(1)
+	//	// reqAbs.AdditionalData["cassandra_query_type"]
+	//}
 
-		// reqAbs.AdditionalData["cassandra_query_type"] = cassandra_helper.DecideQueryTypeByRequest(reqAbs, metaDataSelect)
-//	}
+	// reqAbs.AdditionalData["cassandra_query_type"] = cassandra_helper.DecideQueryTypeByRequest(reqAbs, metaDataSelect)
+	//	}
 }
 
 func EnrichResponse(reqAbs *model.ResponseAbstract) {
-
 
 }
 
@@ -125,7 +124,7 @@ func StockAdjustmentGet(req model.RequestAbstract) model.ResponseAbstract {
 		query = queryhelper.PrepareSelectQuery(metaResult)
 	} else {
 
-		query = []string{presto.QueryPrestoMakeCassandraInQuery( metaResult, metaInput )}
+		query = []string{presto.QueryPrestoMakeCassandraInQuery(metaResult, metaInput)}
 	}
 
 	dbAbs.Query = query
@@ -133,8 +132,6 @@ func StockAdjustmentGet(req model.RequestAbstract) model.ResponseAbstract {
 
 	return prepareResponse(dbAbs)
 }
-
-
 
 // ObtainDetailPost handles ObtainDetail POST request
 
@@ -151,7 +148,6 @@ func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 	return prepareResponse(dbAbs)
 }
-
 
 func commonRequestProcess(req model.RequestAbstract, table_name string) model.DBAbstract {
 
@@ -181,14 +177,11 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	return dbAbs
 }
 
-
-
-
 // ObtainDetailGet handles ObtainDetail GET request
 
 func ObtainDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	dbAbs := commonRequestProcess( req, "obtain_detail" )
+	dbAbs := commonRequestProcess(req, "obtain_detail")
 
 	return prepareResponse(dbAbs)
 }
@@ -213,7 +206,7 @@ func SubStockDetailTransferPost(req model.RequestAbstract) model.ResponseAbstrac
 
 func SubStockDetailTransferGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	dbAbs := commonRequestProcess( req, "sub_stock_detail_transfer" )
+	dbAbs := commonRequestProcess(req, "sub_stock_detail_transfer")
 
 	return prepareResponse(dbAbs)
 }
@@ -238,8 +231,7 @@ func SubStockDailyDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func SubStockDailyDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
-
-	dbAbs := commonRequestProcess( req, "sub_stock_daily_detail" )
+	dbAbs := commonRequestProcess(req, "sub_stock_daily_detail")
 
 	return prepareResponse(dbAbs)
 }
@@ -264,7 +256,7 @@ func TransferOutMismatchPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func TransferOutMismatchGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	dbAbs := commonRequestProcess( req, "tranfer_out_mismatch" )
+	dbAbs := commonRequestProcess(req, "tranfer_out_mismatch")
 
 	return prepareResponse(dbAbs)
 }
@@ -289,7 +281,7 @@ func RequestGoodsPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func RequestGoodsGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	dbAbs := commonRequestProcess( req, "request_goods" )
+	dbAbs := commonRequestProcess(req, "request_goods")
 
 	return prepareResponse(dbAbs)
 }
@@ -315,8 +307,7 @@ func OrderTransferPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func OrderTransferGet(req model.RequestAbstract) model.ResponseAbstract {
 
-
-	dbAbs := commonRequestProcess( req, "order_transfer" )
+	dbAbs := commonRequestProcess(req, "order_transfer")
 
 	return prepareResponse(dbAbs)
 }
@@ -341,7 +332,7 @@ func SaleOutDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func SaleOutDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	dbAbs := commonRequestProcess( req, "sale_out_detail" )
+	dbAbs := commonRequestProcess(req, "sale_out_detail")
 
 	return prepareResponse(dbAbs)
 }
@@ -391,7 +382,6 @@ func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 // ReportsRequestGoodGet handles ReportsRequestGood GET request
 
 func ReportsRequestGoodGet(req model.RequestAbstract) model.ResponseAbstract {
-
 
 	valid := true
 
@@ -473,17 +463,16 @@ func ReportsRequestGoodGet(req model.RequestAbstract) model.ResponseAbstract {
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{ query }
-	endpoint.Process( &dbAbs )
+	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
 
-	return prepareResponse( dbAbs )
+	return prepareResponse(dbAbs)
 }
-
 
 func ReportsAdjustStockGet(req model.RequestAbstract) model.ResponseAbstract {
 	valid := true
@@ -504,22 +493,20 @@ func ReportsAdjustStockGet(req model.RequestAbstract) model.ResponseAbstract {
 	FROM stock_adjustment
 	`
 
-	
-	
 	if len(req.Filters) > 0 {
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "adjustStatus" { 
-				query +=  ( " adjust_status = '" +  v  + "' AND")
-			} else if k == "createDateTimeRange" { 
+			if k == "adjustStatus" {
+				query += (" adjust_status = '" + v + "' AND")
+			} else if k == "createDateTimeRange" {
 				values := strings.Split(v, ",")
 				if len(values) == 2 {
 
 					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
 					query += " AND"
 				}
-			} else if k == "locationCode" { 
+			} else if k == "locationCode" {
 				query += (" location_code IN (")
 
 				values := strings.Split(v, ",")
@@ -530,26 +517,30 @@ func ReportsAdjustStockGet(req model.RequestAbstract) model.ResponseAbstract {
 				}
 				query = strings.Trim(query, ",")
 				query += ") AND"
-			} else if k == "locationSubType" { query +=  ( " location_subtype = '" +  v  + "' AND")
-			} else if k == "locationType" { query +=  ( " location_type = '" +  v  + "' AND")
-			} else if k == "matCode_key" { query +=  ( " mat_code_key = '" +  v  + "' AND")
-			} else if k == "serial_key" { query +=  ( " serial_key = '" +  v  + "' AND") 
+			} else if k == "locationSubType" {
+				query += (" location_subtype = '" + v + "' AND")
+			} else if k == "locationType" {
+				query += (" location_type = '" + v + "' AND")
+			} else if k == "matCode_key" {
+				query += (" mat_code_key = '" + v + "' AND")
+			} else if k == "serial_key" {
+				query += (" serial_key = '" + v + "' AND")
 			} else {
 				valid = false
 			}
-		}	
+		}
 	}
-	
+
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
 	dbAbs.Query = []string{query}
-	endpoint.Process( &dbAbs )
+	endpoint.Process(&dbAbs)
 
 	return prepareResponse(dbAbs)
 }
@@ -571,19 +562,19 @@ func ReportsCheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstrac
 			stock_on_hand_qty
 	FROM check_stock_detail		
 	`
-	
+
 	if len(req.Filters) > 0 {
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "createDateTimeRange" { 
+			if k == "createDateTimeRange" {
 				values := strings.Split(v, ",")
 				if len(values) == 2 {
 
 					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
 					query += " AND"
 				}
-			} else if k == "locationCode" { 
+			} else if k == "locationCode" {
 				query += (" location_code IN (")
 
 				values := strings.Split(v, ",")
@@ -594,24 +585,27 @@ func ReportsCheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstrac
 				}
 				query = strings.Trim(query, ",")
 				query += ") AND"
-			} else if k == "transactionType" { query +=  ( " transaction_type = '" +  v  + "' AND")
-			} else { valid = false }
+			} else if k == "transactionType" {
+				query += (" transaction_type = '" + v + "' AND")
+			} else {
+				valid = false
+			}
 		}
 	}
 
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{ query }
-	endpoint.Process( &dbAbs )
+	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
 
-	return prepareResponse(dbAbs)	
-	
+	return prepareResponse(dbAbs)
+
 }
 
 func ReportsDirectSaleDetailGet(req model.RequestAbstract) model.ResponseAbstract {
@@ -633,8 +627,9 @@ func ReportsDirectSaleDetailGet(req model.RequestAbstract) model.ResponseAbstrac
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "createBy" { query +=  ( " create_by = '" +  v  + "' AND")
-			} else if k == "locationCode" { 
+			if k == "createBy" {
+				query += (" create_by = '" + v + "' AND")
+			} else if k == "locationCode" {
 				query += (" location_code IN (")
 
 				values := strings.Split(v, ",")
@@ -645,33 +640,39 @@ func ReportsDirectSaleDetailGet(req model.RequestAbstract) model.ResponseAbstrac
 				}
 				query = strings.Trim(query, ",")
 				query += ") AND"
-			} else if k == "locationRegion" { query +=  ( " location_region = '" +  v  + "' AND") 
-			} else if k == "locationSubType" { query +=  ( " location_subtype = '" +  v  + "' AND") 
-			} else if k == "locationType" { query +=  ( " location_type = '" +  v  + "' AND")
-			// TODO: Sales Code BETWEEN Query  - will do after the final queries come
-			} else if k == "salesCode" { query +=  ( " sales_code = '" +  v  + "' AND") 
-			} else if k == "soldStatus" { query +=  ( " sold_status = '" +  v  + "' AND")
-			} else if k == "transactionType" { query +=  ( " transaction_type = '" +  v  + "' AND")
-			} else { valid = false }
+			} else if k == "locationRegion" {
+				query += (" location_region = '" + v + "' AND")
+			} else if k == "locationSubType" {
+				query += (" location_subtype = '" + v + "' AND")
+			} else if k == "locationType" {
+				query += (" location_type = '" + v + "' AND")
+				// TODO: Sales Code BETWEEN Query  - will do after the final queries come
+			} else if k == "salesCode" {
+				query += (" sales_code = '" + v + "' AND")
+			} else if k == "soldStatus" {
+				query += (" sold_status = '" + v + "' AND")
+			} else if k == "transactionType" {
+				query += (" transaction_type = '" + v + "' AND")
+			} else {
+				valid = false
+			}
 		}
 	}
 
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{ query }
-	endpoint.Process( &dbAbs )
+	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
 
-	return prepareResponse(dbAbs)	
-	
+	return prepareResponse(dbAbs)
 
 }
-
 
 func ReportsDirectSaleSummaryGet(req model.RequestAbstract) model.ResponseAbstract {
 	valid := true
@@ -692,14 +693,14 @@ func ReportsDirectSaleSummaryGet(req model.RequestAbstract) model.ResponseAbstra
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "createDateTimeRange" { 
+			if k == "createDateTimeRange" {
 				values := strings.Split(v, ",")
 				if len(values) == 2 {
 
 					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
 					query += " AND"
 				}
-			} else if k == "locationCode" { 
+			} else if k == "locationCode" {
 				query += (" location_code IN (")
 
 				values := strings.Split(v, ",")
@@ -710,32 +711,37 @@ func ReportsDirectSaleSummaryGet(req model.RequestAbstract) model.ResponseAbstra
 				}
 				query = strings.Trim(query, ",")
 				query += ") AND"
-			} else if k == "locationSubType" { query +=  ( " location_subtype = '" +  v  + "' AND") 
-			} else if k == "locationType" { query +=  ( " location_type = '" +  v  + "' AND")
-			// TODO: Sales Code BETWEEN Query  - will do after the final queries come
-			} else if k == "salesCode" { query +=  ( " sales_code = '" +  v  + "' AND")
-			} else if k == "soldStatus" { query +=  ( " sold_status = '" +  v  + "' AND") 
-			} else if k == "transactionType" { query +=  ( " transaction_type = '" +  v  + "' AND")
-			} else { valid = false }
+			} else if k == "locationSubType" {
+				query += (" location_subtype = '" + v + "' AND")
+			} else if k == "locationType" {
+				query += (" location_type = '" + v + "' AND")
+				// TODO: Sales Code BETWEEN Query  - will do after the final queries come
+			} else if k == "salesCode" {
+				query += (" sales_code = '" + v + "' AND")
+			} else if k == "soldStatus" {
+				query += (" sold_status = '" + v + "' AND")
+			} else if k == "transactionType" {
+				query += (" transaction_type = '" + v + "' AND")
+			} else {
+				valid = false
+			}
 		}
 	}
 
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, "AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
 
-
-	dbAbs.Query = []string{ query }
+	dbAbs.Query = []string{query}
 	endpoint.Process(&dbAbs)
 
 	return prepareResponse(dbAbs)
 }
-
 
 func ReportsRequestGoodsSummaryGet(req model.RequestAbstract) model.ResponseAbstract {
 	valid := true
@@ -758,12 +764,17 @@ func ReportsRequestGoodsSummaryGet(req model.RequestAbstract) model.ResponseAbst
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "transactionType" { query +=  ( " transaction_type = '" +  v  + "' AND")
-			} else if k == "requestStatus" { query +=  ( " request_status = '" +  v  + "' AND")
-			} else if k == "fromLocationType" { query +=  ( " from_location_type = '" +  v  + "' AND")
-			} else if k == "fromLocationSubType" { query +=  ( " from_location_subtype = '" +  v  + "' AND")
-			} else if k == "company" { query +=  ( " company = '" +  v  + "' AND")
-			} else if k == "createDateTimeRange" { 
+			if k == "transactionType" {
+				query += (" transaction_type = '" + v + "' AND")
+			} else if k == "requestStatus" {
+				query += (" request_status = '" + v + "' AND")
+			} else if k == "fromLocationType" {
+				query += (" from_location_type = '" + v + "' AND")
+			} else if k == "fromLocationSubType" {
+				query += (" from_location_subtype = '" + v + "' AND")
+			} else if k == "company" {
+				query += (" company = '" + v + "' AND")
+			} else if k == "createDateTimeRange" {
 				values := strings.Split(v, ",")
 				if len(values) == 2 {
 
@@ -783,24 +794,25 @@ func ReportsRequestGoodsSummaryGet(req model.RequestAbstract) model.ResponseAbst
 				query = strings.Trim(query, ",")
 				query += ") AND"
 
-			} else { valid = false }
+			} else {
+				valid = false
+			}
 		}
 	}
 
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{ query }
-	endpoint.Process( &dbAbs )
+	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
 
 	return prepareResponse(dbAbs)
 }
-
 
 func ReportsTransferDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 	valid := true
@@ -816,15 +828,16 @@ func ReportsTransferDetailGet(req model.RequestAbstract) model.ResponseAbstract 
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "transactionType" { query +=  ( " sub_stock_detail_transfer.transaction_type = '" +  v  + "' AND")
-			} else if k == "createDateTimeRange" { 
+			if k == "transactionType" {
+				query += (" sub_stock_detail_transfer.transaction_type = '" + v + "' AND")
+			} else if k == "createDateTimeRange" {
 				values := strings.Split(v, ",")
 				if len(values) == 2 {
 
 					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
 					query += " AND"
 				}
-			} else if k == "locationCode" { 
+			} else if k == "locationCode" {
 				query += (" location_code IN (")
 
 				values := strings.Split(v, ",")
@@ -835,26 +848,29 @@ func ReportsTransferDetailGet(req model.RequestAbstract) model.ResponseAbstract 
 				}
 				query = strings.Trim(query, ",")
 				query += ") AND"
-			} else if k == "locationSubType" { query +=  ( " sub_stock_detail_transfer.location_subtype = '" +  v  + "' AND")
-			} else if k == "locationType" { query +=  ( " sub_stock_detail_transfer.location_type = '" +  v  + "' AND")
-			} else { valid = false }
+			} else if k == "locationSubType" {
+				query += (" sub_stock_detail_transfer.location_subtype = '" + v + "' AND")
+			} else if k == "locationType" {
+				query += (" sub_stock_detail_transfer.location_type = '" + v + "' AND")
+			} else {
+				valid = false
+			}
 		}
 	}
 
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{ query }
-	endpoint.Process( &dbAbs )
+	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
 
-	return prepareResponse(dbAbs)	
+	return prepareResponse(dbAbs)
 }
-
 
 func ReportsTransferSummaryGet(req model.RequestAbstract) model.ResponseAbstract {
 	valid := true
@@ -874,15 +890,16 @@ func ReportsTransferSummaryGet(req model.RequestAbstract) model.ResponseAbstract
 		query += " WHERE "
 
 		for k, v := range req.Filters {
-			if k == "transactionType" { query +=  ( " sub_stock_detail_transfer.transaction_type = '" +  v  + "' AND")
-			} else if k == "createDateTimeRange" { 
+			if k == "transactionType" {
+				query += (" sub_stock_detail_transfer.transaction_type = '" + v + "' AND")
+			} else if k == "createDateTimeRange" {
 				values := strings.Split(v, ",")
 				if len(values) == 2 {
 
 					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
 					query += " AND"
 				}
-			} else if k == "locationCode" { 
+			} else if k == "locationCode" {
 				query += (" location_code IN (")
 
 				values := strings.Split(v, ",")
@@ -893,26 +910,29 @@ func ReportsTransferSummaryGet(req model.RequestAbstract) model.ResponseAbstract
 				}
 				query = strings.Trim(query, ",")
 				query += ") AND"
-			} else if k == "locationSubType" { query +=  ( " sub_stock_detail_transfer.location_subtype = '" +  v  + "' AND")
-			} else if k == "locationType" { query +=  ( " sub_stock_detail_transfer.location_type = '" +  v  + "' AND")
-			} else { valid = false }
+			} else if k == "locationSubType" {
+				query += (" sub_stock_detail_transfer.location_subtype = '" + v + "' AND")
+			} else if k == "locationType" {
+				query += (" sub_stock_detail_transfer.location_type = '" + v + "' AND")
+			} else {
+				valid = false
+			}
 		}
 	}
 
 	if !valid {
 		query = ""
 	}
-	
+
 	query = strings.Trim(query, " AND")
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{ query }
-	endpoint.Process( &dbAbs )
+	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
 
-	return prepareResponse(dbAbs)	
+	return prepareResponse(dbAbs)
 }
-
 
 func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 

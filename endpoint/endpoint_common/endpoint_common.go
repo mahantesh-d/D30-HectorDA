@@ -1,8 +1,8 @@
 package endpoint_common
 
 import (
-	"strings"
 	"github.com/dminGod/D30-HectorDA/utils"
+	"strings"
 )
 
 func ReturnString(input interface{}) string {
@@ -67,5 +67,3 @@ func ReturnCondition(input map[string]interface{}) string {
 
 	return condition
 }
-
-

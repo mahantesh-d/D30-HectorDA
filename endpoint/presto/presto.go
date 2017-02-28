@@ -2,20 +2,17 @@ package presto
 
 import (
 	"database/sql"
+	_ "github.com/avct/prestgo" // SQL Driver uses prestgo
 	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
+	"github.com/dminGod/D30-HectorDA/endpoint/presto_helper"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"time"
-	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
-	"github.com/dminGod/D30-HectorDA/endpoint/presto_helper"
-	_ "github.com/avct/prestgo" // SQL Driver uses prestgo
-
 )
 
 var prestoChan chan *sql.DB
-
-
 
 func init() {
 
@@ -47,7 +44,7 @@ func getSession() (*sql.DB, error) {
 		db, err := sql.Open("prestgo", Conf.Presto.ConnectionURL)
 
 		if err != nil {
-			logger.Write("ERROR", "Could not connect: " + err.Error())	
+			logger.Write("ERROR", "Could not connect: "+err.Error())
 		}
 
 		defer queueSession(db)
@@ -72,9 +69,8 @@ func Select(dbAbstract *model.DBAbstract) {
 	}
 
 	session, _ := getSession()
-	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query[0])
+	logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
 	rows, err := session.Query(dbAbstract.Query[0])
-
 
 	if err != nil {
 		panic(err)
@@ -118,12 +114,10 @@ func Select(dbAbstract *model.DBAbstract) {
 	}
 }
 
-
-func QueryPrestoMakeCassandraInQuery( metaResult map[string]interface{}, metaInput map[string]interface{} ) string {
+func QueryPrestoMakeCassandraInQuery(metaResult map[string]interface{}, metaInput map[string]interface{}) string {
 
 	metaResult["databaseType"] = "presto"
 	query := []string{presto_helper.FindIDQueryBuild(metaInput)}
-
 
 	var dbAbsPresto model.DBAbstract
 
@@ -137,10 +131,6 @@ func QueryPrestoMakeCassandraInQuery( metaResult map[string]interface{}, metaInp
 
 	return cassandraInQuery
 }
-
-
-
-
 
 func queueSession(session *sql.DB) {
 

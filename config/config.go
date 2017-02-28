@@ -3,10 +3,10 @@ package config
 import (
 	"fmt"
 	"github.com/dminGod/D30-HectorDA/constant"
-	"os"
 	"github.com/oleiade/reflections"
 	"github.com/spf13/viper"
 	_ "github.com/spf13/viper/remote"
+	"os"
 	"time"
 )
 
@@ -17,13 +17,13 @@ type cassandra struct {
 
 // hector struct represents the configuration parameters for the hector server
 type hector struct {
-	ConnectionType 	string
-	Version        	string
-	Host           	string
-	Port           	string
-	Log            	string
-	LogDirectory   	string
-	StartServersOfType 	[]string
+	ConnectionType     string
+	Version            string
+	Host               string
+	Port               string
+	Log                string
+	LogDirectory       string
+	StartServersOfType []string
 }
 
 // presto struct represents the configuration parameters for the Presto endpoint
@@ -63,7 +63,7 @@ var Conf Config
 }*/
 
 func Init() {
-	
+
 	if etcdInit() != nil {
 		fmt.Println("Getting localconfig")
 		localInit()
@@ -98,32 +98,31 @@ func GetHectorConfig(setting string) string {
 	return retval.(string)
 }
 
-
 func etcdInit() error {
- 	var runtime_viper = viper.New()
- 	runtime_viper.AddRemoteProvider("etcd", constant.EtcdConnectionURL, constant.EtcdKey)
- 	runtime_viper.SetConfigType(constant.EtcdConfigType)
+	var runtime_viper = viper.New()
+	runtime_viper.AddRemoteProvider("etcd", constant.EtcdConnectionURL, constant.EtcdKey)
+	runtime_viper.SetConfigType(constant.EtcdConfigType)
 	err := runtime_viper.ReadRemoteConfig()
- 	if err != nil {
+	if err != nil {
 		return err
 	}
- 	runtime_viper.Unmarshal(&Conf)
- 	
-	go func(){
-    		for {
-        		time.Sleep(time.Second * 5) // delay after each request
+	runtime_viper.Unmarshal(&Conf)
 
-        		// currently, only tested with etcd support
-        		err := runtime_viper.WatchRemoteConfig()
-        		if err != nil {
-            			continue
-        		}
-        		// unmarshal new config into our runtime config struct. you can also use channel
-        		// to implement a signal to notify the system of the changes
-        		runtime_viper.Unmarshal(&Conf)
+	go func() {
+		for {
+			time.Sleep(time.Second * 5) // delay after each request
+
+			// currently, only tested with etcd support
+			err := runtime_viper.WatchRemoteConfig()
+			if err != nil {
+				continue
+			}
+			// unmarshal new config into our runtime config struct. you can also use channel
+			// to implement a signal to notify the system of the changes
+			runtime_viper.Unmarshal(&Conf)
 		}
 	}()
-	
+
 	Conf.loaded = true
 	return nil
 }
@@ -140,5 +139,5 @@ func localInit() {
 	}
 
 	viper.Unmarshal(&Conf)
-	Conf.loaded = true	
+	Conf.loaded = true
 }

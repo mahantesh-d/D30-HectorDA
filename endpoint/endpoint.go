@@ -7,7 +7,7 @@ import (
 )
 
 // Process acts as an entry point to mapping the different data operations to different database endpoints
-func Process( DBAbstract *model.DBAbstract ) {
+func Process(DBAbstract *model.DBAbstract) {
 
 	endpoint := DBAbstract.DBType
 
@@ -15,7 +15,6 @@ func Process( DBAbstract *model.DBAbstract ) {
 
 		cassandra.Handle(DBAbstract)
 	} else if endpoint == "presto" {
-
 
 		presto.Handle(DBAbstract)
 	}

@@ -25,11 +25,10 @@ func init() {
 	Routes = make(map[string]func(model.RequestAbstract) model.ResponseAbstract)
 
 	// Loop over all the Apps
-	for _, curAppMap :=  range routesArr{
+	for _, curAppMap := range routesArr {
 
 		// Loop over all the string : methods and add each of them to the Routes map
 		for key, value := range curAppMap {
-
 
 			Routes[key] = value
 		}
@@ -102,7 +101,7 @@ func enrichRequest(reqAbs *model.RequestAbstract) {
 	// For now we will just do a simple if conditional, later we want to move this out
 
 	// TODO: Make a global, application to package level mapping -- each application package will have an implementation of the global filter in it
-	if(reqAbs.Application == "alltrade" ) {
+	if reqAbs.Application == "alltrade" {
 
 		alltrade.EnrichRequest(reqAbs)
 	}
@@ -119,7 +118,7 @@ func enrichResponse(respAbs *model.ResponseAbstract) {
 
 	/// enrichAllResponses(respAbs)
 
-	if(respAbs.RequestAbs.Application == "alltrade") {
+	if respAbs.RequestAbs.Application == "alltrade" {
 
 		// alltrade.EnrichResponse(respAbs)
 	}

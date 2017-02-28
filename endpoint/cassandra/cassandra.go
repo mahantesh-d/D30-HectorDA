@@ -1,14 +1,14 @@
 package cassandra
 
 import (
+	"fmt"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
-	"time"
 	"strings"
-	"fmt"
+	"time"
 )
 
 var cassandraChan chan *gocql.Session
@@ -64,27 +64,26 @@ func getSession() (*gocql.Session, error) {
 func Insert(dbAbstract *model.DBAbstract) {
 
 	session, _ := getSession()
-	logger.Write("DEBUG", "Running Queries for insert start : num of queries to run " + string(len(dbAbstract.Query)))
+	logger.Write("DEBUG", "Running Queries for insert start : num of queries to run "+string(len(dbAbstract.Query)))
 
-	success_count := 0;
+	success_count := 0
 	var error_messages []string
 
 	// Loop over all the queries and execute the insert queries
 	for _, single_query := range dbAbstract.Query {
 
 		logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
-		err := session.Query( single_query ).Exec()
+		err := session.Query(single_query).Exec()
 
 		if err != nil {
 
-			logger.Write("ERROR", "Query from set failed - Query : '" + single_query + "' - Error : " + err.Error())
-			error_messages = append(error_messages, "Query from set failed - Query : '" + single_query + "' - Error : " + err.Error())
+			logger.Write("ERROR", "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
+			error_messages = append(error_messages, "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
 		} else {
 
 			success_count += 1
 		}
 	}
-
 
 	if len(error_messages) > 0 {
 
@@ -126,7 +125,7 @@ func Select(dbAbstract *model.DBAbstract) {
 	// Currently only single queries for select are supported.
 	// The query field is an []string so we are using the 0 element on it
 
-	logger.Write("DEBUG", "QUERY : " + dbAbstract.Query[0])
+	logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
 
 	iter := session.Query(dbAbstract.Query[0]).Iter()
 	result, err := iter.SliceMap()

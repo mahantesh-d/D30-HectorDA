@@ -13,6 +13,4 @@ func enrichAllRequests(reqAbs *model.RequestAbstract) {
 
 func enrichAllResponses(resAbs *model.ResponseAbstract) {
 
-
 }
-

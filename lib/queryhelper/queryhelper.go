@@ -27,7 +27,7 @@ func PrepareSelectQuery(metaInput map[string]interface{}) []string {
 	// get the endpoint
 	databaseType := metaInput["databaseType"].(string)
 
-	var query  []string
+	var query []string
 
 	if databaseType == "cassandra" {
 
@@ -39,4 +39,3 @@ func PrepareSelectQuery(metaInput map[string]interface{}) []string {
 
 	return query
 }
-

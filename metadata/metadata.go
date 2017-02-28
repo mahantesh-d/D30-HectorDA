@@ -1,8 +1,8 @@
 package metadata
 
 import (
-	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
 )
 
@@ -27,14 +27,12 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 	record_uuid := ""
 
-
 	for k, v := range metadata["fields"].(map[string]interface{}) {
 
 		f := v.(map[string]interface{})
 		val := make([]string, 2)
 		val[0] = f["name"].(string)
 		val[1] = f["type"].(string)
-
 
 		switch t := val[1]; t {
 
@@ -69,10 +67,6 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 	return output
 
 }
-
-
-
-
 
 func addData(outputKeyValues *map[string]interface{}, outputKeyMeta *map[string]interface{}, key string, payload map[string]interface{}, value interface{}, dataType string) {
 
@@ -109,7 +103,7 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 			input["fields"] = output
 
 			// Logging this out as an error
-			logger.Write("ERROR", "Field passed in the filters '" + k + "' was not found in the JSON API filter definition. Please use the correct filter. Using wrong filters has been set to cause API to fail." )
+			logger.Write("ERROR", "Field passed in the filters '"+k+"' was not found in the JSON API filter definition. Please use the correct filter. Using wrong filters has been set to cause API to fail.")
 			return input
 		}
 	}
