@@ -7,7 +7,7 @@ import (
 
 func ReturnString(input interface{}) string {
 
-	return "'" + strings.Replace(input.(string), "'", "\\'", -1) + "'"
+	return "'" + strings.Replace(input.(string), "'", "''", -1) + "'"
 
 }
 
