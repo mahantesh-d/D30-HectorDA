@@ -35,6 +35,8 @@ func PrepareSelectQuery(metaInput map[string]interface{}) []string {
 	} else if databaseType == "presto" {
 
 		query = []string{presto_helper.FindIDQueryBuild(metaInput)}
+	} else if databaseType == "cassandra_stratio" {
+		query = []string{cassandra_helper.StratioSelectQueryBuild(metaInput)}
 	}
 
 	return query

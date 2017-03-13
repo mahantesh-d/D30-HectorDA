@@ -1,7 +1,6 @@
 package cassandra_helper
 
 import (
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"strings"
 )
@@ -52,8 +51,6 @@ func MakeCassandraInQuery(prestoResult []map[string]interface{}, metaInput map[s
 
 	retStr := "SELECT * FROM " + tableName + " WHERE " + tableName + "_pk IN (" + strings.Join(makeRet, ",") + ")"
 
-	fmt.Println(retStr)
-
 	return retStr
 }
 
@@ -82,7 +79,7 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
 		case "set<text>":
 			value += endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
-
+			mValue := endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 			// Make the insert into the extra cassandra table :
 			// Table name : Table Prefix + field name
 			child_table_name = metaInput["child_table_prefix"].(string) + k
@@ -98,8 +95,8 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 					// Only for string values we are handling inserts into external tables
 					child_query = "INSERT INTO " + child_table_name + " (ct_pk, parent_pk, value) VALUES ("
 					child_query += "now(), "
-					child_query += endpoint_common.ReturnString(record_uuid) + ", " + endpoint_common.ReturnString(value)
-
+					child_query += record_uuid + ", " + endpoint_common.ReturnString(mValue)
+					child_query += " ) "
 					minor_queries = append(minor_queries, child_query)
 				case map[string]interface{}:
 					// Do Nothing here
@@ -177,6 +174,35 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 	}
 	return query
 }
+
+
+func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
+
+        table := metaInput["table"].(string)
+
+        query := "SELECT * from " + table + " WHERE lucene= '"
+        fields := metaInput["fields"].(map[string]interface{})
+
+
+        filter := "{ filter : {  type: \"boolean\" , must: ["
+
+        typeTemplate := "{ type: \"phrase\", field: \"|1\", value: \"|2\" }"
+
+        for _,v := range fields {
+                fieldInfo := v.(map[string]interface{})
+		condition := strings.Replace(typeTemplate,"|1",fieldInfo["column"].(string),-1)
+                condition = strings.Replace(condition,"|2",fieldInfo["value"].(string),-1)
+                filter += condition + ","
+        }
+
+        filter = strings.Trim(filter,",")
+        filter += "]}}"
+
+        query += (filter + "'")
+
+        return query
+}
+
 
 func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) string {
 

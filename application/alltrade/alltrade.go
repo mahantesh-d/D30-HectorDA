@@ -5,7 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/constant"
 	"github.com/dminGod/D30-HectorDA/endpoint"
 	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
-	"github.com/dminGod/D30-HectorDA/endpoint/presto"
+	// "github.com/dminGod/D30-HectorDA/endpoint/presto"
 	"github.com/dminGod/D30-HectorDA/lib/queryhelper"
 	_ "github.com/dminGod/D30-HectorDA/logger" // TODO: Add Intermdiate logs to track detailed activity of each API
 	"github.com/dminGod/D30-HectorDA/metadata"
@@ -108,29 +108,10 @@ func StockAdjustmentPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func StockAdjustmentGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
-	metaInput := utils.FindMap("table", "stock_adjustment", metaDataSelect)
-	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
-
-	var query []string
-
-	var dbAbs model.DBAbstract
-
-	dbAbs.QueryType = "SELECT"
-	dbAbs.DBType = "cassandra"
-
-	if cassandra_helper.IsValidCassandraQuery(metaResult) {
-
-		query = queryhelper.PrepareSelectQuery(metaResult)
-	} else {
-
-		query = []string{presto.QueryPrestoMakeCassandraInQuery(metaResult, metaInput)}
-	}
-
-	dbAbs.Query = query
-	endpoint.Process(&dbAbs)
+	dbAbs := commonRequestProcess(req, "stock_adjustment")
 
 	return prepareResponse(dbAbs)
+
 }
 
 // ObtainDetailPost handles ObtainDetail POST request
@@ -168,6 +149,9 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 	} else {
 
+		// query = queryhelper.PrepareSelectQuery(metaResult)
+		// query = []string{presto.QueryPrestoMakeCassandraInQuery(metaResult, metaInput)}
+		metaResult["databaseType"] = "cassandra_stratio"
 		query = queryhelper.PrepareSelectQuery(metaResult)
 	}
 
