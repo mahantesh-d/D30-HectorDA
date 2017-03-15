@@ -11,4 +11,5 @@ type RequestAbstract struct {
 	AdditionalData  map[string]interface{} // This is extra data related to a request, used by specific methods
 	APIVersion      uint32                 // This is the version of the API
 	RouteName       string                 // This is the route taken for the request
+	RequestTime	int64		       // This is the time when the request was made
 }

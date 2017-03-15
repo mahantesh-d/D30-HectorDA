@@ -66,3 +66,13 @@ func containsStr(s []string, e string) bool {
 
 	return false
 }
+
+func Metric(msg string) {
+	config := config.Get()
+
+	// check if logging is enabled
+	if config.Hector.RequestMetrics {
+		log.Printf("[Metrics] " + msg)
+	}
+
+}

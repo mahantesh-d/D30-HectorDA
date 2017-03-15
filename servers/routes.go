@@ -116,7 +116,7 @@ func enrichRequest(reqAbs *model.RequestAbstract) {
 
 func enrichResponse(respAbs *model.ResponseAbstract) {
 
-	/// enrichAllResponses(respAbs)
+	enrichAllResponses(respAbs)
 
 	if respAbs.RequestAbs.Application == "alltrade" {
 

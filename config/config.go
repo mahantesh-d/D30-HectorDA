@@ -24,6 +24,8 @@ type hector struct {
 	Log                string
 	LogDirectory       string
 	StartServersOfType []string
+	RequestMetrics     bool
+	QueryMetrics       bool
 }
 
 // presto struct represents the configuration parameters for the Presto endpoint
