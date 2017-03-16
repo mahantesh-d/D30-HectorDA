@@ -25,7 +25,7 @@ func enrichAllResponses(resAbs *model.ResponseAbstract) {
 	// calculate total time taken for the request
 	resAbs.RequestTotalTime = resAbs.ResponseTime - resAbs.RequestAbs.RequestTime
 
-	resAbsRefined := resAbs
+	resAbsRefined := *resAbs
 	resAbsRefined.RequestAbs.Payload = make(map[string]interface{})
 	resAbsRefined.Data = "" 
 	logger.Metric(fmt.Sprintln(resAbsRefined))
