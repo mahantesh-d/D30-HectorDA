@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd /root/hector
+
+# Build hector
+go build hector.go
+
+# copy hector to bin directory
+rm -rf /usr/bin/hector
+cp hector /usr/bin
+
+# copy stop-hector to bin directory
+cd /root/hector/scripts
+rm -rf /usr/bin/stop-hector
+cp stop-hector /usr/bin

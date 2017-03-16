@@ -1,0 +1,109 @@
+#!/bin/bash
+
+BASEDIRECTORY=~
+# go to hector folder
+cd $BASEDIRECTORY/hector
+
+# remove any existing executables
+mv hector hector_previous
+
+# modify the configuration information
+sed -i -r 's/conf-example/\/etc\/hector/' constant/hector.go
+
+# get dependencies
+echo "Getting dependencies..."
+go get
+
+echo "Building Hector - this could take a while..."
+# build the executable
+go build hector.go
+
+sed -i -r 's/\/etc\/hector/conf-example/' constant/hector.go
+
+# check if the build was successful
+built=`ls | grep ^hector$ | wc -l`
+if [ $built -eq 0 ]
+then
+	echo "Cancelling Package Build"
+	exit 1
+fi
+
+echo "Hector has been built. Performing packaging. Please wait..."
+
+# remove the previous build
+rm -f hector_previous
+
+# make the directory if it does not exist
+mkdir -p  $BASEDIRECTORY/hector-builds
+
+# go to hector builds folder
+cd $BASEDIRECTORY/hector-builds
+
+# make a directory for a new build
+directory=`date +%s`
+mkdir $directory
+cd $directory
+mkdir hector-1.0
+cd hector-1.0
+mkdir -p etc/hector
+mkdir -p usr/bin
+mkdir -p etc/supervisord.d
+
+# move relevant files
+cd $BASEDIRECTORY/hector
+cp hector $BASEDIRECTORY/hector-builds/$directory/hector-1.0/usr/bin
+cp -R conf-example/* $BASEDIRECTORY/hector-builds/$directory/hector-1.0/etc/hector/
+
+cat << EOF > $BASEDIRECTORY/hector-builds/$directory/hector-1.0/etc/supervisord.d/hector.ini
+[program: hector]
+command=/usr/bin/hector
+stdout_logfile=/var/log/hector/supervisor_stdout.log
+stderr_logfile=/var/log/hector/supervisor_error.log
+exitcodes=0
+EOF
+
+cd $BASEDIRECTORY/hector-builds/$directory
+tar zcf hector-1.0.tar.gz hector-1.0
+cp hector-1.0.tar.gz ~/rpmbuild/SOURCES/
+files=`tar -tvf hector-1.0.tar.gz | awk '{gsub("hector-1.0","",$NF);if(NR > 1)print $NF}' | grep -vw "/etc/"  | grep -vw "/usr/" | grep -vw "/usr/bin/"`
+
+cd ~/rpmbuild
+cat << EOF > SPECS/hector-1.0-$directory.spec
+%define _binaries_in_noarch_packages_terminate_build   0
+Name: hector
+Version: 1.0
+Release: 0
+Summary: A modular Data as a Service application
+Source0: hector-1.0.tar.gz
+License: GPL
+Group: Akshay
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-buildroot
+Requires: supervisor
+%description
+A modular Data as a Service application
+%prep
+%setup -q
+%build
+%install
+install -m 0755 -d \$RPM_BUILD_ROOT/var/log/hector
+cp -R * \$RPM_BUILD_ROOT/
+%clean
+rm -rf \$RPM_BUILD_ROOT
+%post
+echo . .
+echo .Hector Installed Successfully - start hector using supervisord.
+echo .Command: sudo service supervisord start.
+%files
+%dir 
+EOF
+
+echo "$files" >> SPECS/hector-1.0-$directory.spec
+echo "/etc/supervisord.d/" >> SPECS/hector-1.0-$directory.spec
+echo "/etc/supervisord.d/hector.ini" >> SPECS/hector-1.0-$directory.spec
+echo "/var/log/hector/" >> SPECS/hector-1.0-$directory.spec
+echo "Building RPM..."
+ln -s $BASEDIRECTORY/hector-builds/$directory $BASEDIRECTORY/hector-builds/latest
+rpmbuild --define "debug_package %{nil}" -ba SPECS/hector-1.0-$directory.spec
+echo ""
+echo "Successfully done"
