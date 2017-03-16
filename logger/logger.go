@@ -44,7 +44,7 @@ func Write(level string, msg string) {
 		log.Printf(message)
 	} else if configLevel == "INFO" {
 
-		if level == "INFO" {
+		if level == "INFO" || level == "ERROR"{
 
 			log.Printf(message)
 		}
