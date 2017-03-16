@@ -12,6 +12,8 @@ version = "0.0.1"
 	log = "INFO"
 	logDirectory = "/var/log/hector"
 	startServersOfType = ["grpc"]
+	requestMetrics = false
+	queryMetrics = false
 
 # Cassandra Config
 [cassandra]
