@@ -43,13 +43,13 @@ func MakeCassandraInQuery(prestoResult []map[string]interface{}, metaInput map[s
 
 	var makeRet []string
 	tableName := metaInput["table"].(string)
-
+	database := metaInput["database"].(string)
 	for _, val := range prestoResult {
 
 		makeRet = append(makeRet, val["stock_adjustment_pk"].(string))
 	}
 
-	retStr := "SELECT * FROM " + tableName + " WHERE " + tableName + "_pk IN (" + strings.Join(makeRet, ",") + ")"
+	retStr := "SELECT * FROM " + database + "." + tableName + " WHERE " + tableName + "_pk IN (" + strings.Join(makeRet, ",") + ")"
 
 	return retStr
 }
@@ -64,7 +64,7 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 	var child_table_name string
 	var record_uuid string
 	var child_query string
-
+	database := metaInput["database"].(string)
 	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
 
 		name += (k + ",")
@@ -93,7 +93,7 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
 				case string:
 					// Only for string values we are handling inserts into external tables
-					child_query = "INSERT INTO " + child_table_name + " (ct_pk, parent_pk, value) VALUES ("
+					child_query = "INSERT INTO " + database + "." + child_table_name + " (ct_pk, parent_pk, value) VALUES ("
 					child_query += "now(), "
 					child_query += record_uuid + ", " + endpoint_common.ReturnString(mValue)
 					child_query += " ) "
@@ -121,7 +121,7 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 	name = strings.Trim(name, ",")
 	value = strings.Trim(value, ",")
 
-	main_query := "INSERT INTO " + metaInput["table"].(string) + " ( " + name + " ) VALUES ( " + value + " ) "
+	main_query := "INSERT INTO " + database + "." + metaInput["table"].(string) + " ( " + name + " ) VALUES ( " + value + " ) "
 
 	queries := append(minor_queries, main_query)
 
@@ -131,8 +131,8 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 	table := metaInput["table"].(string)
-
-	query := "SELECT * from " + table
+	database := metaInput["database"].(string)
+	query := "SELECT * FROM " + database + "." + table
 	fields := metaInput["fields"].(map[string]interface{})
 	if len(fields) > 0 {
 
@@ -179,8 +179,8 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
 
         table := metaInput["table"].(string)
-
-        query := "SELECT * from " + table + " WHERE lucene= '"
+	database := metaInput["database"].(string)
+        query := "SELECT * FROM " + database + "." + table + " WHERE lucene= '"
         fields := metaInput["fields"].(map[string]interface{})
 
 
@@ -207,8 +207,8 @@ func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
 func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) string {
 
 	table := metaInput["table"].(string)
-
-	query := "SELECT * from " + table + " WHERE " + table + "_pk IN ( " + pk_id + ")"
+	database := metaInput["database"].(string)
+	query := "SELECT * FROM " + database + "." + table + " WHERE " + table + "_pk IN ( " + pk_id + ")"
 
 	return query
 }

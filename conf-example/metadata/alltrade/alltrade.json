@@ -2,7 +2,7 @@
 	"alltrade_foobar_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "foobar",
 		"fields": {
 			"id": {
@@ -27,7 +27,7 @@
 	"alltrade_stockadjustment_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "stock_adjustment",
 		"child_table_prefix" : "ct_sa_",
 		"fields": {
@@ -159,7 +159,7 @@
 	"alltrade_obtaindetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "obtain_detail",
 		"child_table_prefix" : "ct_od_",
 		"fields": {
@@ -253,7 +253,7 @@
 	"alltrade_substockdetailtransfer_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
 		"child_table_prefix" : "ct_ssdt_",
 		"fields": {
@@ -359,7 +359,7 @@
 	"alltrade_substockdailydetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
 		"child_table_prefix" : "ct_ssdd_",
 		"fields": {
@@ -448,7 +448,7 @@
 	"alltrade_transferoutmismatch_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "tranfer_out_mismatch",
 		"child_table_prefix" : "ct_od_",
 		"fields": {
@@ -500,7 +500,7 @@
 	"alltrade_requestgoods_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "request_goods",
 		"fields": {
 			"request_goods_pk": {
@@ -695,7 +695,7 @@
 	"alltrade_ordertransfer_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "order_transfer",
 		"fields": {
 			"order_transfer_pk": {
@@ -755,7 +755,7 @@
 	"alltrade_saleoutdetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
-		"database": "alltrade",
+		"database": "all_trade",
 		"table": "sale_out_detail",
 		"fields": {
 			"sale_out_detail_pk": {
@@ -889,7 +889,7 @@
 "alltrade_checkstockdetail_v1": {
         "databaseType" : "cassandra",
         "version" : 1,
-        "database" : "alltrade",
+        "database" : "all_trade",
         "table" : "check_stock_detail",
         "fields" : {
                  "check_stock_detail_pk":
