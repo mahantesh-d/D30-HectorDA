@@ -73,7 +73,7 @@ func Select(dbAbstract *model.DBAbstract) {
 	rows, err := session.Query(dbAbstract.Query[0])
 
 	if err != nil {
-		panic(err)
+		logger.Write("ERROR", "An Error occurred during Presto Query : " + err.Error())
 	}
 
 	cols, err := rows.Columns()
@@ -88,7 +88,7 @@ func Select(dbAbstract *model.DBAbstract) {
 	for rows.Next() {
 
 		if err := rows.Scan(args...); err != nil {
-			panic(err.Error())
+			logger.Write("ERROR", "An Error occurred while scanning results : " + err.Error())
 		}
 
 		for i := range data {
