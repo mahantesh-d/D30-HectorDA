@@ -97,7 +97,7 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 					child_query += "now(), "
 					child_query += record_uuid + ", " + endpoint_common.ReturnString(mValue)
 					child_query += " ) "
-					minor_queries = append(minor_queries, child_query)
+					//minor_queries = append(minor_queries, child_query)
 				case map[string]interface{}:
 					// Do Nothing here
 				default:

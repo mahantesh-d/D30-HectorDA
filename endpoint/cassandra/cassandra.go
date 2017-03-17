@@ -50,12 +50,8 @@ func getSession() (*gocql.Session, error) {
 		cluster.ProtoVersion = 3
 		session, err := cluster.CreateSession()
 
-		if err != nil {
-			logger.Write("ERROR", "An error occurred while connecting to Cassandra : " + err.Error())
-			return nil, err
-		}
-
-		return session, nil
+		utils.HandleError(err)	
+		return session, err
 	}
 }
 

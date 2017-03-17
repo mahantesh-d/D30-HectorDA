@@ -502,6 +502,7 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "request_goods",
+		"child_table_prefix" : "",
 		"fields": {
 			"request_goods_pk": {
 				"name": "request_goods_pk",

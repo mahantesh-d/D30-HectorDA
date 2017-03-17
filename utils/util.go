@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"io/ioutil"
 	"os"
@@ -28,10 +27,7 @@ func DecodeJSON(input interface{}) map[string]interface{} {
 		return payload
 	}
 	err := json.Unmarshal([]byte(input.(string)), &payload)
-
-	if err != nil {
-		logger.Write("ERROR", err.Error())
-	}
+	HandleError(err)
 
 	return payload
 
@@ -40,10 +36,7 @@ func DecodeJSON(input interface{}) map[string]interface{} {
 // EncodeJSON converts a map of string and interface to a JSON string
 func EncodeJSON(input interface{}) string {
 	jsonString, err := json.Marshal(input)
-
-	if err != nil {
-		logger.Write("ERROR", "Error Parsing JSON")
-	}
+	HandleError(err)	
 
 	return string(jsonString)
 }
@@ -82,10 +75,7 @@ func FindMap(key string, value interface{}, input map[string]interface{}) map[st
 func ReadFile(path string) string {
 
 	raw, err := ioutil.ReadFile(path)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
+	HandleError(err)
 	return string(raw)
 }
 
@@ -150,4 +140,11 @@ func ExecuteCommand(command string, args ...string) string {
 	output = strings.Trim(output, "\n")
 
 	return output
+}
+
+
+func HandleError(err error) {
+	if err != nil {
+		logger.Write("ERROR", err.Error())
+	}
 }

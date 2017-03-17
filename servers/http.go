@@ -79,10 +79,7 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 
 	if r.Method == "POST" {
 		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-
+		utils.HandleError(err)
 		if !utils.IsJSON(string(body)) {
 			resp["StatusCode"] = 400
 			resp["Status"] = "fail"
@@ -108,9 +105,7 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 
 	if reqAbs.HTTPRequestType == "POST" {
 		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Println(err.Error())
-		}
+		utils.HandleError(err)
 		reqAbs.Payload = utils.DecodeJSON(string(body))
 	} else if reqAbs.HTTPRequestType == "GET" {
 		params := r.URL.Query()
