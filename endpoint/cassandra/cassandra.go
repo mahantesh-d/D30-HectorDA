@@ -52,6 +52,7 @@ func getSession() (*gocql.Session, error) {
 
 		if err != nil {
 			logger.Write("ERROR", "An error occurred while connecting to Cassandra : " + err.Error())
+			return nil, err
 		}
 
 		return session, nil
@@ -61,7 +62,15 @@ func getSession() (*gocql.Session, error) {
 // Insert is used to make an Insert into Cassandra
 func Insert(dbAbstract *model.DBAbstract) {
 
-	session, _ := getSession()
+	session, err := getSession()
+	if err != nil {
+        	logger.Write("ERROR", err.Error())
+        	dbAbstract.Status = "fail"
+        	dbAbstract.Message = "Error connecting to endpoint"
+        	dbAbstract.Data = "{}"
+        	dbAbstract.Count = 0
+         	return
+ 	}
 	logger.Write("DEBUG", "Running Queries for insert start : num of queries to run "+string(len(dbAbstract.Query)))
 
 	success_count := 0
@@ -118,7 +127,16 @@ func Select(dbAbstract *model.DBAbstract) {
 		return
 	}
 
-	session, _ := getSession()
+	session, err := getSession()
+	
+	if err != nil {
+        	logger.Write("ERROR", err.Error())
+        	dbAbstract.Status = "fail"
+        	dbAbstract.Message = "Error connecting to endpoint"
+        	dbAbstract.Data = "{}"
+        	dbAbstract.Count = 0
+		return
+	}
 
 	// Currently only single queries for select are supported.
 	// The query field is an []string so we are using the 0 element on it
