@@ -130,6 +130,7 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 	reqAbs.HTTPRequestType = req.GetMethod().String()
 	route := GetRouteName(reqAbs)
 	// check if the route exists
+	logger.Write("INFO","Route : " + route)
 	if !RouteExists(route) {
 		resp.StatusCode = 404
 		resp.Status = "fail"
