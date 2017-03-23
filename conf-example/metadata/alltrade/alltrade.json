@@ -421,7 +421,7 @@
 			},
 			"substock_daily_detail_s":{"name":"subStockDailyDetail","type":"set<text>"},
 			"substock_daily_no": {
-				"name": "subStockDetail",
+				"name": "subStockDailyNo",
 				"type": "text"
 			},
 			"transaction_id": {
@@ -698,6 +698,7 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "order_transfer",
+		"child_table_prefix": "",
 		"fields": {
 			"order_transfer_pk": {
 				"name": "order_transfer_pk",
@@ -758,6 +759,7 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "sale_out_detail",
+		"child_table_prefix": "",
 		"fields": {
 			"sale_out_detail_pk": {
 				"name": "sale_out_detail_pk",
@@ -892,6 +894,7 @@
         "version" : 1,
         "database" : "all_trade",
         "table" : "check_stock_detail",
+	"child_table_prefix" : "",
         "fields" : {
                  "check_stock_detail_pk":
                         {
