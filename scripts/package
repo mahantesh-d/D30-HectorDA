@@ -79,7 +79,6 @@ License: GPL
 Group: Akshay
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Requires: supervisor
 %description
 A modular Data as a Service application
 %prep
