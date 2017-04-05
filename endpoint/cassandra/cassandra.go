@@ -16,7 +16,7 @@ var cassandraSession *gocql.Session
 var cassandraHost []string
 
 func init() {
-	cassandraChan = make(chan *gocql.Session, 500)
+	cassandraChan = make(chan *gocql.Session, 5)
 }
 
 // Handle acts as an entry point to handle different operations on Cassandra
@@ -48,6 +48,7 @@ func getSession() (*gocql.Session, error) {
 		cluster := gocql.NewCluster(cassandraHost...)
 		cluster.Keyspace = "system"
 		cluster.ProtoVersion = 3
+		cluster.Timeout = 30 * time.Second
 		session, err := cluster.CreateSession()
 
 		utils.HandleError(err)	
@@ -115,9 +116,20 @@ func Insert(dbAbstract *model.DBAbstract) {
 // Select is used to query data from Cassandra
 func Select(dbAbstract *model.DBAbstract) {
 
+	// Check if the array is not blank
 	if len(dbAbstract.Query) == 0 {
 		dbAbstract.Status = "fail"
 		dbAbstract.Message = "Invalid Query"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+		return
+	}
+
+
+	if len(dbAbstract.Query[0]) == 0 {
+		
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Query sent is blank"
 		dbAbstract.Data = "{}"
 		dbAbstract.Count = 0
 		return
@@ -127,10 +139,11 @@ func Select(dbAbstract *model.DBAbstract) {
 	
 	if err != nil {
         	logger.Write("ERROR", err.Error())
-        	dbAbstract.Status = "fail"
+		dbAbstract.Status = "fail"
         	dbAbstract.Message = "Error connecting to endpoint"
         	dbAbstract.Data = "{}"
         	dbAbstract.Count = 0
+		
 		return
 	}
 
@@ -139,10 +152,29 @@ func Select(dbAbstract *model.DBAbstract) {
 
 	logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
 
+
+
+
 	iter := session.Query(dbAbstract.Query[0]).Iter()
 	result, err := iter.SliceMap()
 
+//	 iter.Close()
+	defer  closeSession(iter)
+/*
+	if err != nil {
+		logger.Write("ERROR", "Iter error!!!!")
+		logger.Write("ERROR",err2.Error())
+	}else {
+	        logger.Write("INFO", "Closing----------------------")
+			
+	}
+*/
+
 	fmt.Println("Running the cassandra select query : " + dbAbstract.Query[0])
+
+
+
+	go queueSession(session)
 
 	_ = err
 	if err != nil {
@@ -159,6 +191,34 @@ func Select(dbAbstract *model.DBAbstract) {
 		dbAbstract.Count = uint64(len(result))
 	}
 }
+
+
+func closeSession(iter *gocql.Iter){
+
+   err := iter.Close()
+
+   if err != nil {
+
+
+    logger.Write("ERROR", err.Error())
+    logger.Write("INFO", "Calling Iter after 2 secs")
+    time.Sleep(2 * time.Second)  
+    err2 := iter.Close()
+    if err2 != nil {
+
+      logger.Write("ERROR", err2.Error())
+      logger.Write("ERROR", "Tried 2 times to close the iter... faaaaail")
+   }
+  }
+ 
+
+
+
+}
+
+
+
+
 
 func queueSession(session *gocql.Session) {
 
