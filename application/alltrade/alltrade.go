@@ -17,11 +17,17 @@ import (
 var conf config.Config
 var metaData map[string]interface{}
 var metaDataSelect map[string]interface{}
+var jsonFileContentsApi string = utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json")
+var jsonFileContents string = utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json")
+
 
 func init() {
 	conf = config.Get()
 	metaData = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json"))
 	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+        metaData = utils.DecodeJSON(jsonFileContents)
+	metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
+
 }
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
@@ -132,7 +138,12 @@ func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func commonRequestProcess(req model.RequestAbstract, table_name string) model.DBAbstract {
 
-	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+//	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+
+        metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
+
+
+
 	metaInput := utils.FindMap("table", table_name, metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
 
@@ -341,7 +352,10 @@ func CheckStockDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
-	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+//	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+        metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
+
+
 	metaInput := utils.FindMap("table", "check_stock_detail", metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
 	var query []string
