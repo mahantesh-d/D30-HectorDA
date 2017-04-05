@@ -147,7 +147,11 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 			for _, v := range fields {
 				fieldMeta := v.(map[string]interface{})
 				query += endpoint_common.ReturnCondition(fieldMeta)
+			
 			}
+
+
+				query += " LIMIT 200"
 		} else {
 			querySorter := make([][]string, 20)
 			for _, v := range fields {
@@ -166,7 +170,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 			query = strings.Trim(query, "AND")
 
-			query += "ALLOW FILTERING"
+			query += " LIMIT 200 ALLOW FILTERING"
 		}
 
 	} else {
