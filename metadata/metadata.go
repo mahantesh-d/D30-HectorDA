@@ -4,6 +4,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
+	"fmt"
 )
 
 // Interpret is used to cross-reference application metadata with the request metadata
@@ -26,6 +27,9 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 	outputKeyMeta := make(map[string]interface{})
 
 	record_uuid := ""
+
+	fmt.Println("Metadata : ", metadata, "Payload", payload)
+
 
 	for k, v := range metadata["fields"].(map[string]interface{}) {
 

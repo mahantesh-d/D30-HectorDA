@@ -12,4 +12,5 @@ type RequestAbstract struct {
 	APIVersion      uint32                 // This is the version of the API
 	RouteName       string                 // This is the route taken for the request
 	RequestTime	int64		       // This is the time when the request was made
+	ID              uint64		       // This is the request ID that will be sent by calling application, we just need to return it back...
 }

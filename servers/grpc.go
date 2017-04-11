@@ -33,7 +33,7 @@ func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, err
 		respAbs, _ := HandleRoutes(RequestAbstract)
 
 		// map the result to abstract response
-		resp = mapAbstractResponse(respAbs)
+		resp = mapAbstractResponse(respAbs, req)
 	}
 	return resp, nil
 }
@@ -100,6 +100,8 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 	reqAbs.Application = req.GetApplicationName()
 	reqAbs.APIVersion = req.GetApplicationVersion()
 	reqAbs.Action = req.GetApplicationMethod()
+	reqAbs.ID = req.GetID()
+
 	reqAbs.HTTPRequestType = req.GetMethod().String()
 	if reqAbs.HTTPRequestType == "POST" {
 		reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
@@ -109,7 +111,7 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 	return reqAbs
 }
 
-func mapAbstractResponse(respAbs model.ResponseAbstract) *pb.Response {
+func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb.Response {
 
 	resp := new(pb.Response)
 	resp.StatusCode = *(proto.Uint32(uint32(float64(respAbs.StatusCode))))
@@ -118,6 +120,7 @@ func mapAbstractResponse(respAbs model.ResponseAbstract) *pb.Response {
 	resp.Message = respAbs.Text
 	resp.Data = respAbs.Data
 	resp.Count = *(proto.Uint64(respAbs.Count))
+	resp.ID = reqAbs.ID
 	return resp
 
 }

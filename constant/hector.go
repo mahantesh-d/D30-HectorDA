@@ -6,8 +6,8 @@ const HectorPipe = "/tmp/hector"
 // TODO: 1) Change this to a better folder name -- 2) All the configuration should be outside the binary and in one place
 
 // HectorConf is the path of the configuration file
-// const HectorConf = "/etc/hector"
-const HectorConf = "conf-example"
+const HectorConf = "/etc/hector"
+// const HectorConf = "conf-example"
 
 // HectorGrpcMode is the GRPC server mode
 const HectorGrpcMode string = "grpc"
