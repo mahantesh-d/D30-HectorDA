@@ -69,7 +69,7 @@ CREATE CUSTOM INDEX in_sale_out_detail_location_region ON sale_out_detail (locat
 CREATE CUSTOM INDEX in_sale_out_detail_location_province ON sale_out_detail (location_province) USING 'org.apache.cassandra.index.sasi.SASIIndex';
 CREATE CUSTOM INDEX in_sale_out_detail_update_by ON sale_out_detail (update_by) USING 'org.apache.cassandra.index.sasi.SASIIndex';
 CREATE CUSTOM INDEX in_sale_out_detail_update_datetime ON sale_out_detail (update_datetime) USING 'org.apache.cassandra.index.sasi.SASIIndex';
-CREATE INDEX ?in_sale_out_detail_matcode_key ON sale_out_detail (matcode_key) ;
+CREATE INDEX in_sale_out_detail_matcode_key ON sale_out_detail (matcode_key) ;
 CREATE INDEX in_sale_out_detail_brand_key ON sale_out_detail (brand_key) ;
 CREATE INDEX in_sale_out_detail_model_key ON sale_out_detail (model_key) ;
 CREATE INDEX in_sale_out_detail_product_type_key ON sale_out_detail (product_type_key) ;
