@@ -154,8 +154,7 @@ func Select(dbAbstract *model.DBAbstract) {
 
 
 
-
-	iter := session.Query(dbAbstract.Query[0]).Consistency(gocql.Any).Iter()
+	iter := session.Query(dbAbstract.Query[0]).Consistency(gocql.LocalOne).Iter()
 	result, err := iter.SliceMap()
 
 //	 iter.Close()
