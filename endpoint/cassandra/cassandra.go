@@ -77,7 +77,7 @@ func Insert(dbAbstract *model.DBAbstract) {
 	for _, single_query := range dbAbstract.Query {
 
 		logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
-		err := session.Query(single_query).Exec()
+		err := session.Query(single_query).Consistency(gocql.Any).Exec()
 
 		if err != nil {
 
@@ -155,7 +155,7 @@ func Select(dbAbstract *model.DBAbstract) {
 
 
 
-	iter := session.Query(dbAbstract.Query[0]).Iter()
+	iter := session.Query(dbAbstract.Query[0]).Consistency(gocql.Any).Iter()
 	result, err := iter.SliceMap()
 
 //	 iter.Close()
