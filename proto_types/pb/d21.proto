@@ -5,7 +5,7 @@ syntax = "proto3";
 package pb;
 
 // The Add service definition.
-service D20 {
+service D21 {
   rpc Do (Request) returns (Response);
   rpc ResolveAlias (Request) returns (Response);
   rpc AtomicAdd (Request) returns (Response);

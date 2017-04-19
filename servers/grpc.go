@@ -39,7 +39,7 @@ func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, err
 }
 
 // GetStream : empty stub
-func (g *GRPCServer) GetStream(req *pb.Request, streamResp pb.D20_GetStreamServer) error {
+func (g *GRPCServer) GetStream(req *pb.Request, streamResp pb.D21_GetStreamServer) error {
 
 	return nil
 }
@@ -90,7 +90,7 @@ func GRPCStartServer() {
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterD20Server(grpcServer, new(GRPCServer))
+	pb.RegisterD21Server(grpcServer, new(GRPCServer))
 	grpcServer.Serve(listener)
 }
 
