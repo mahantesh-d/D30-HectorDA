@@ -56,8 +56,8 @@ func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstrac
 		"alltrade_ordertransfer_post": OrderTransferPost,
 		"alltrade_ordertransfer_get":  OrderTransferGet,
 
-		"alltrade_saleout_detail_post": SaleOutDetailPost,
-		"alltrade_saleout_detail_get":  SaleOutDetailGet,
+		"alltrade_salesout_detail_post": SaleOutDetailPost,
+		"alltrade_salesout_detail_get":  SaleOutDetailGet,
 
 		"alltrade_checkstock_detail_post": CheckStockDetailPost,
 		"alltrade_checkstock_detail_get":  CheckStockDetailGet,
@@ -310,6 +310,7 @@ func OrderTransferGet(req model.RequestAbstract) model.ResponseAbstract {
 // SaleOutDetailPost handles SaleOutDetail POST request
 
 func SaleOutDetailPost(req model.RequestAbstract) model.ResponseAbstract {
+
 	metaInput := utils.FindMap("table", "sale_out_detail", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)

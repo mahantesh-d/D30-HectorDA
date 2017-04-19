@@ -153,7 +153,6 @@ func Select(dbAbstract *model.DBAbstract) {
 	logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
 
 
-
 	iter := session.Query(dbAbstract.Query[0]).Consistency(gocql.LocalOne).Iter()
 	result, err := iter.SliceMap()
 
