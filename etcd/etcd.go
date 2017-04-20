@@ -29,11 +29,11 @@ func Heartbeat() {
 		}
 
 		kapi := client.NewKeysAPI(c)
-		logger.Write("INFO", "Sending Hearbeat")
+		logger.Write("VERBOSE", "Sending Hearbeat")
 		_, err = kapi.Set(context.Background(), constant.EtcdHeartbeatDirectory+"/"+utils.ExecuteCommand("hostname", "-i")+":"+Port, "alive", &client.SetOptions{TTL: time.Duration(constant.EtcdTTL) * time.Second})
 
 		if err != nil {
-			logger.Write("INFO", "Could not send hearbeat : "+err.Error())
+			logger.Write("VERBOSE", "Could not send hearbeat : "+err.Error())
 		} else {
 
 		}
