@@ -132,6 +132,8 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.HTTPRequestType = req.GetMethod().String()
 	route := GetRouteName(reqAbs)
+	reqAbs.ID = req.GetID()
+
 	// check if the route exists
 	logger.Write("INFO","Route : " + route)
 	if !RouteExists(route) {
