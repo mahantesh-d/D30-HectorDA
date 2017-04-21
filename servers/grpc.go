@@ -142,6 +142,7 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 		resp.StatusCodeMessage = "NOT_FOUND"
 		resp.Message = "The given route was not found"
 		resp.Data = "{}"
+		resp.ID = req.GetID()
 		resp.Count = 0
 		return false
 	}
@@ -154,6 +155,7 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 			resp.StatusCodeMessage = "INVALID_PARAMETERS"
 			resp.Message = "The parameters are invalid"
 			resp.Data = "{}"
+			resp.ID = req.GetID()
 			resp.Count = 0
 			return false
 		}
