@@ -78,7 +78,7 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 	}
 
 	if r.Method == "POST" {
-		body, err := ioutil.ReadAll(r.Body)
+	/*	body, err := ioutil.ReadAll(r.Body)
 		utils.HandleError(err)
 		if !utils.IsJSON(string(body)) {
 			resp["StatusCode"] = 400
@@ -90,9 +90,11 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 			*response = utils.EncodeJSON(resp)
 			return false
 		}
+		*/
 	}
 
 	return true
+
 }
 
 func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {

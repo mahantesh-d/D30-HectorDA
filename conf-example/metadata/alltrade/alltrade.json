@@ -6,8 +6,7 @@
 		"table": "foobar",
 		"fields": {
 			"id": {
-				"name": "id",
-				"type": "uuid"
+				"name": "id"
 			},
 			"name": {
 				"name": "name",
@@ -23,13 +22,12 @@
 			}
 		}
 	},
-
 	"alltrade_stockadjustment_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "stock_adjustment",
-		"child_table_prefix" : "ct_sa_",
+		"child_table_prefix": "ct_sa_",
 		"fields": {
 			"stock_adjustment_pk": {
 				"name": "stock_adjustment_pk",
@@ -39,7 +37,10 @@
 				"name": "adjustDateTime",
 				"type": "timestamp"
 			},
-			"adjust_detail_s":{"name":"adjustDetail","type":"set<text>"},
+			"adjust_detail_s": {
+				"name": "adjustDetail",
+				"type": "set<text>"
+			},
 			"adjust_status": {
 				"name": "adjustStatus",
 				"type": "text"
@@ -152,16 +153,14 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-
 		}
 	},
-
 	"alltrade_obtaindetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "obtain_detail",
-		"child_table_prefix" : "ct_od_",
+		"child_table_prefix": "ct_od_",
 		"fields": {
 			"obtain_detail_pk": {
 				"name": "obtain_detail_pk",
@@ -249,19 +248,17 @@
 			}
 		}
 	},
-
 	"alltrade_substockdetailtransfer_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
-		"child_table_prefix" : "ct_ssdt_",
+		"child_table_prefix": "ct_ssdt_",
 		"fields": {
 			"substock_detail_transfer_pk": {
 				"name": "substock_detail_transfer_pk",
 				"type": "uuid"
 			},
-
 			"company": {
 				"name": "company",
 				"type": "text"
@@ -334,7 +331,10 @@
 				"name": "transferSubStockDateTime",
 				"type": "timestamp"
 			},
-			"transfer_substock_detail_s":{"name":"transferSubStockDetail","type":"set<text>"},
+			"transfer_substock_detail_s": {
+				"name": "transferSubStockDetail",
+				"type": "set<text>"
+			},
 			"transfer_substock_no": {
 				"name": "transferSubStockNo",
 				"type": "text"
@@ -351,17 +351,14 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-
-
 		}
 	},
-
 	"alltrade_substockdailydetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
-		"child_table_prefix" : "ct_ssdd_",
+		"child_table_prefix": "ct_ssdd_",
 		"fields": {
 			"substock_daily_detail_pk": {
 				"name": "substock_daily_detail_pk",
@@ -419,7 +416,10 @@
 				"name": "salesFor",
 				"type": "text"
 			},
-			"substock_daily_detail_s":{"name":"subStockDailyDetail","type":"set<text>"},
+			"substock_daily_detail_s": {
+				"name": "subStockDailyDetail",
+				"type": "set<text>"
+			},
 			"substock_daily_no": {
 				"name": "subStockDailyNo",
 				"type": "text"
@@ -440,17 +440,14 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-
-
 		}
 	},
-
 	"alltrade_transferoutmismatch_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "tranfer_out_mismatch",
-		"child_table_prefix" : "ct_od_",
+		"child_table_prefix": "ct_od_",
 		"fields": {
 			"transfer_out_mismatch_pk": {
 				"name": "transfer_out_mismatch_pk",
@@ -472,7 +469,10 @@
 				"name": "dataErrorDateTime",
 				"type": "timestamp"
 			},
-			"mismatch_detail_s":{"name":"misMatchDetail","type":"set<text>"},
+			"mismatch_detail_s": {
+				"name": "misMatchDetail",
+				"type": "set<text>"
+			},
 			"request_no": {
 				"name": "requestNo",
 				"type": "text"
@@ -493,16 +493,14 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-
 		}
 	},
-
 	"alltrade_requestgoods_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "request_goods",
-		"child_table_prefix" : "",
+		"child_table_prefix": "",
 		"fields": {
 			"request_goods_pk": {
 				"name": "request_goods_pk",
@@ -608,7 +606,10 @@
 				"name": "remark",
 				"type": "text"
 			},
-			"request_detail_s":{"name":"requestDetail","type":"set<text>"},
+			"request_detail_s": {
+				"name": "requestDetail",
+				"type": "set<text>"
+			},
 			"request_no": {
 				"name": "requestNo",
 				"type": "text"
@@ -689,10 +690,8 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-
 		}
 	},
-
 	"alltrade_ordertransfer_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
@@ -704,56 +703,188 @@
 				"name": "order_transfer_pk",
 				"type": "uuid"
 			},
-		
-		"brand_key":{"name":"brand_key","type":"set<text>"},
-"cancel_by":{"name":"cancelBy","type":"text"},
-"cancel_datetime":{"name":"cancelDateTime","type":"timestamp"},
-"company":{"name":"company","type":"text"},
-"create_by":{"name":"createBy","type":"text"},
-"create_datetime":{"name":"createDateTime","type":"timestamp"},
-"distribution_channel":{"name":"distributionChannel","type":"text"},
-"do_no":{"name":"doNo","type":"text"},
-"doc_ref":{"name":"docRef","type":"text"},
-"from_location_code":{"name":"fromLocationCode","type":"text"},
-"from_location_name":{"name":"fromLocationName","type":"text"},
-"from_location_province":{"name":"fromLocationProvince","type":"text"},
-"from_location_region":{"name":"fromLocationRegion","type":"text"},
-"from_location_subtype":{"name":"fromLocationSubType","type":"text"},
-"from_location_type":{"name":"fromLocationType","type":"text"},
-"from_substock":{"name":"fromSubStock","type":"text"},
-"mat_code_key":{"name":"matCode_key","type":"set<text>"},
-"mm_doc_no":{"name":"mmDocNo","type":"text"},
-"mm_doc_year":{"name":"mmDocYear","type":"int"},
-"model_key":{"name":"model_key","type":"set<text>"},
-"movement_type":{"name":"movementType","type":"text"},
-"product_subtype_key":{"name":"productSubType_key","type":"set<text>"},
-"product_type_key":{"name":"productType_key","type":"set<text>"},
-"remark":{"name":"remark","type":"text"},
-"ship_to_address":{"name":"shipToAddress","type":"text"},
-"ship_to_code":{"name":"shipToCode","type":"text"},
-"ship_to_name":{"name":"shipToName","type":"text"},
-"ship_to_province":{"name":"shipToProvince","type":"text"},
-"to_location_code":{"name":"toLocationCode","type":"text"},
-"to_location_name":{"name":"toLocationName","type":"text"},
-"to_location_province":{"name":"toLocationProvince","type":"text"},
-"to_location_region":{"name":"toLocationRegion","type":"text"},
-"to_location_subtype":{"name":"toLocationSubType","type":"text"},
-"to_location_type":{"name":"toLocationType","type":"text"},
-"to_substock":{"name":"toSubStock","type":"text"},
-"transaction_id":{"name":"transactionId","type":"text"},
-"transaction_type":{"name":"transactionType","type":"text"},
-"transfer_datetime":{"name":"transferDateTime","type":"timestamp"},
-"transfer_detail_s":{"name":"transferDetail","type":"set<text>"},
-"transfer_no":{"name":"transferNo","type":"text"},
-"transfer_status":{"name":"transferStatus","type":"text"},
-"update_by":{"name":"updateBy","type":"text"},
-"update_datetime":{"name":"updateDateTime","type":"timestamp"},
-"vendor_code":{"name":"vendorCode","type":"text"},
-"vendor_name":{"name":"vendorName","type":"text"}
-
+			"brand_key": {
+				"name": "brand_key",
+				"type": "set<text>"
+			},
+			"cancel_by": {
+				"name": "cancelBy",
+				"type": "text"
+			},
+			"cancel_datetime": {
+				"name": "cancelDateTime",
+				"type": "timestamp"
+			},
+			"company": {
+				"name": "company",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"distribution_channel": {
+				"name": "distributionChannel",
+				"type": "text"
+			},
+			"do_no": {
+				"name": "doNo",
+				"type": "text"
+			},
+			"doc_ref": {
+				"name": "docRef",
+				"type": "text"
+			},
+			"from_location_code": {
+				"name": "fromLocationCode",
+				"type": "text"
+			},
+			"from_location_name": {
+				"name": "fromLocationName",
+				"type": "text"
+			},
+			"from_location_province": {
+				"name": "fromLocationProvince",
+				"type": "text"
+			},
+			"from_location_region": {
+				"name": "fromLocationRegion",
+				"type": "text"
+			},
+			"from_location_subtype": {
+				"name": "fromLocationSubType",
+				"type": "text"
+			},
+			"from_location_type": {
+				"name": "fromLocationType",
+				"type": "text"
+			},
+			"from_substock": {
+				"name": "fromSubStock",
+				"type": "text"
+			},
+			"mat_code_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"mm_doc_no": {
+				"name": "mmDocNo",
+				"type": "text"
+			},
+			"mm_doc_year": {
+				"name": "mmDocYear",
+				"type": "int"
+			},
+			"model_key": {
+				"name": "model_key",
+				"type": "set<text>"
+			},
+			"movement_type": {
+				"name": "movementType",
+				"type": "text"
+			},
+			"product_subtype_key": {
+				"name": "productSubType_key",
+				"type": "set<text>"
+			},
+			"product_type_key": {
+				"name": "productType_key",
+				"type": "set<text>"
+			},
+			"remark": {
+				"name": "remark",
+				"type": "text"
+			},
+			"ship_to_address": {
+				"name": "shipToAddress",
+				"type": "text"
+			},
+			"ship_to_code": {
+				"name": "shipToCode",
+				"type": "text"
+			},
+			"ship_to_name": {
+				"name": "shipToName",
+				"type": "text"
+			},
+			"ship_to_province": {
+				"name": "shipToProvince",
+				"type": "text"
+			},
+			"to_location_code": {
+				"name": "toLocationCode",
+				"type": "text"
+			},
+			"to_location_name": {
+				"name": "toLocationName",
+				"type": "text"
+			},
+			"to_location_province": {
+				"name": "toLocationProvince",
+				"type": "text"
+			},
+			"to_location_region": {
+				"name": "toLocationRegion",
+				"type": "text"
+			},
+			"to_location_subtype": {
+				"name": "toLocationSubType",
+				"type": "text"
+			},
+			"to_location_type": {
+				"name": "toLocationType",
+				"type": "text"
+			},
+			"to_substock": {
+				"name": "toSubStock",
+				"type": "text"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"transfer_datetime": {
+				"name": "transferDateTime",
+				"type": "timestamp"
+			},
+			"transfer_detail_s": {
+				"name": "transferDetail",
+				"type": "set<text>"
+			},
+			"transfer_no": {
+				"name": "transferNo",
+				"type": "text"
+			},
+			"transfer_status": {
+				"name": "transferStatus",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			},
+			"vendor_code": {
+				"name": "vendorCode",
+				"type": "text"
+			},
+			"vendor_name": {
+				"name": "vendorName",
+				"type": "text"
+			}
 		}
 	},
-
 	"alltrade_saleoutdetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
@@ -765,8 +896,6 @@
 				"name": "sale_out_detail_pk",
 				"type": "uuid"
 			},
-
-
 			"brand_key": {
 				"name": "brand_key",
 				"type": "set<text>"
@@ -859,7 +988,10 @@
 				"name": "salesCode",
 				"type": "text"
 			},
-			"salesoutdetail_s":{"name":"salesOut","type":"set<text>"},
+			"salesoutdetail_s": {
+				"name": "salesOut",
+				"type": "set<text>"
+			},
 			"serial_key": {
 				"name": "serial_key",
 				"type": "set<text>"
@@ -884,49 +1016,128 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-
-
 		}
 	},
-
-"alltrade_checkstockdetail_v1": {
-        "databaseType" : "cassandra",
-        "version" : 1,
-        "database" : "all_trade",
-        "table" : "check_stock_detail",
-	"child_table_prefix" : "",
-        "fields" : {
-                 "check_stock_detail_pk":
-                        {
-                        "name": "check_stock_detail_pk",
-                        "type" : "uuid"
-                        },
-		"brand_key":{"name":"brand_key","type":"set<text>"},
-		"check_stock_detail_s":{"name":"checkStockDetail","type":"set<text>"},
-"commercial_name_key":{"name":"commercialName_key","type":"set<text>"},
-"confirm_datetime":{"name":"confirmDateTime","type":"timestamp"},
-"confirm_no":{"name":"confirmNo","type":"text"},
-"confirm_user":{"name":"confirmUser","type":"text"},
-"create_by":{"name":"createBy","type":"text"},
-"create_datetime":{"name":"createDateTime","type":"timestamp"},
-"location_code":{"name":"locationCode","type":"text"},
-"location_name":{"name":"locationName","type":"text"},
-"mat_code_key":{"name":"matCode_key","type":"set<text>"},
-"model_key":{"name":"model_key","type":"set<text>"},
-"product_subtype_key":{"name":"productSubType_key","type":"set<text>"},
-"product_type_key":{"name":"productType_key","type":"set<text>"},
-"serial_match_key":{"name":"serialMatch_key","type":"set<text>"},
-"serial_not_found_key":{"name":"serialNotFound_key","type":"set<text>"},
-"stock_on_hand_datetime":{"name":"stockOnHandDateTime","type":"timestamp"},
-"stock_on_hand_qty":{"name":"stockOnHandQty","type":"text"},
-"transaction_id":{"name":"transactionId","type":"text"},
-"transaction_type":{"name":"transactionType","type":"text"},
-"update_by":{"name":"updateBy","type":"text"},
-"update_datetime":{"name":"updateDateTime","type":"timestamp"}
-
-
-                }
-        }
-
+	"alltrade_checkstockdetail_v1": {
+		"databaseType": "cassandra",
+		"version": 1,
+		"database": "all_trade",
+		"table": "check_stock_detail",
+		"child_table_prefix": "",
+		"fields": {
+			"check_stock_detail_pk": {
+				"name": "check_stock_detail_pk",
+				"type": "uuid"
+			},
+			"brand_key": {
+				"name": "brand_key",
+				"type": "set<text>"
+			},
+			"check_stock_detail_s": {
+				"name": "checkStockDetail",
+				"type": "set<text>"
+			},
+			"commercial_name_key": {
+				"name": "commercialName_key",
+				"type": "set<text>"
+			},
+			"confirm_datetime": {
+				"name": "confirmDateTime",
+				"type": "timestamp"
+			},
+			"confirm_no": {
+				"name": "confirmNo",
+				"type": "text"
+			},
+			"confirm_user": {
+				"name": "confirmUser",
+				"type": "text"
+			},
+			"create_by": {
+				"name": "createBy",
+				"type": "text"
+			},
+			"create_datetime": {
+				"name": "createDateTime",
+				"type": "timestamp"
+			},
+			"location_code": {
+				"name": "locationCode",
+				"type": "text"
+			},
+			"location_name": {
+				"name": "locationName",
+				"type": "text"
+			},
+			"mat_code_key": {
+				"name": "matCode_key",
+				"type": "set<text>"
+			},
+			"model_key": {
+				"name": "model_key",
+				"type": "set<text>"
+			},
+			"product_subtype_key": {
+				"name": "productSubType_key",
+				"type": "set<text>"
+			},
+			"product_type_key": {
+				"name": "productType_key",
+				"type": "set<text>"
+			},
+			"serial_match_key": {
+				"name": "serialMatch_key",
+				"type": "set<text>"
+			},
+			"serial_not_found_key": {
+				"name": "serialNotFound_key",
+				"type": "set<text>"
+			},
+			"stock_on_hand_datetime": {
+				"name": "stockOnHandDateTime",
+				"type": "timestamp"
+			},
+			"stock_on_hand_qty": {
+				"name": "stockOnHandQty",
+				"type": "text"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
+			},
+			"transaction_type": {
+				"name": "transactionType",
+				"type": "text"
+			},
+			"update_by": {
+				"name": "updateBy",
+				"type": "text"
+			},
+			"update_datetime": {
+				"name": "updateDateTime",
+				"type": "timestamp"
+			}
+		}
+	},
+	"alltrade_postgresxl":{
+		"databaseType": "postgresxl",
+		"version": 1,
+		"database": "all_trade",
+		"table": "userinfo",
+		"fields": {
+			"uid": {
+				"name": "uid",
+				"type": "int"
+			},
+			"username": {
+				"name": "username",
+				"type": "text"
+			},
+			"departname": {
+				"name": "departname",
+				"type": "text"
+			}
+		}
+	}
 }
 

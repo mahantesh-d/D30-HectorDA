@@ -4,8 +4,8 @@
 		"version": 1,
 		"database": "all_trade",
 		"table": "stock_adjustment",
-		"apiName" : "alltrade_stock_adjustment_get",
-		"child_table_prefix" : "ct_sa_",
+		"apiName": "alltrade_stock_adjustment_get",
+		"child_table_prefix": "ct_sa_",
 		"fields": {
 			"adjustStockNo": {
 				"column": "adjust_stock_no",
@@ -86,13 +86,12 @@
 			}
 		}
 	},
-
 	"alltrade_obtaindetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "obtain_detail",
-		"apiName" : "alltrade_obtain_detail_get",
+		"apiName": "alltrade_obtain_detail_get",
 		"fields": {
 			"transactionType": {
 				"column": "transaction_type",
@@ -145,13 +144,12 @@
 			}
 		}
 	},
-
 	"alltrade_substocktransferdetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
-		"apiName" : "alltrade_substock_detail_transfer_get",
+		"apiName": "alltrade_substock_detail_transfer_get",
 		"fields": {
 			"transferSubStockNo": {
 				"column": "transfer_substock_no",
@@ -197,13 +195,12 @@
 			}
 		}
 	},
-
 	"alltrade_substockdailydetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
-		"apiName" : "alltrade_substock_daily_detail_get",
+		"apiName": "alltrade_substock_daily_detail_get",
 		"fields": {
 			"subStockDailyNo": {
 				"column": "substock_daily_no",
@@ -256,13 +253,12 @@
 			}
 		}
 	},
-
 	"alltrade_transferoutmismatch_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "tranfer_out_mismatch",
-		"apiName" : "alltrade_transferout_mismatch_get",
+		"apiName": "alltrade_transferout_mismatch_get",
 		"fields": {
 			"requestNo": {
 				"column": "request_no",
@@ -314,15 +310,13 @@
 				"indexType": "sasi"
 			}
 		}
-
 	},
-
 	"alltrade_requestgoods_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "request_goods",
-		"apiName" : "alltrade_requestgoods_get",
+		"apiName": "alltrade_requestgoods_get",
 		"fields": {
 			"transactionType": {
 				"column": "transaction_type",
@@ -452,13 +446,12 @@
 			}
 		}
 	},
-
 	"alltrade_ordertransfer_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "order_transfer",
-		"apiName" : "alltrade_ordertransfer_get",
+		"apiName": "alltrade_ordertransfer_get",
 		"fields": {
 			"transactionType": {
 				"column": "transaction_type",
@@ -581,13 +574,12 @@
 			}
 		}
 	},
-
 	"alltrade_saleoutdetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sale_out_detail",
-		"apiName" : "alltrade_saleout_detail_get",
+		"apiName": "alltrade_saleout_detail_get",
 		"fields": {
 			"documentNo": {
 				"column": "document_no",
@@ -696,13 +688,12 @@
 			}
 		}
 	},
-
 	"alltrade_checkstockdetail_get_1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "check_stock_detail",
-		"apiName" : "alltrade_checkstock_detail_get",
+		"apiName": "alltrade_checkstock_detail_get",
 		"fields": {
 			"locationCode": {
 				"column": "location_code",
@@ -817,6 +808,23 @@
 				"indexType": "secondary"
 			}
 		}
+	},
+	"all_trade_userinfo": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "all_trade",
+		"table": "userinfo",
+		"fields": {
+			"uid": {
+				"column": "uid",
+				"type": "int",
+				"valueType": "single"
+			},
+			"username": {
+				"column": "username",
+				"type": "text",
+				"valueType": "single"
+			}
+		}
 	}
-
 }

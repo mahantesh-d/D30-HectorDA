@@ -4,7 +4,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/endpoint/cassandra_helper"
 	"github.com/dminGod/D30-HectorDA/endpoint/presto_helper"
 	"github.com/dminGod/D30-HectorDA/endpoint/postgresql_helper"
-	"fmt"
+
 	//"google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 )
 
@@ -22,9 +22,8 @@ func PrepareInsertQuery(metaInput map[string]interface{}) []string {
 	}else if databaseType == "postpresto" {
 
 	}else if databaseType == "postgresxl"{
-
+                query =postgresql_helper.InsertQueryBuild(metaInput)
 	}
-
 	return query
 }
 
@@ -45,7 +44,7 @@ func PrepareSelectQuery(metaInput map[string]interface{}) []string {
 	} else if databaseType == "cassandra_stratio" {
 		query = []string{cassandra_helper.StratioSelectQueryBuild(metaInput)}
 	} else if databaseType == "postgresxl"{
-
+		query =[]string{postgresql_helper.SelectQueryBuild(metaInput)}
 	}
 
 	return query
@@ -53,7 +52,6 @@ func PrepareSelectQuery(metaInput map[string]interface{}) []string {
 func PrepareUpdateQuery(metaInput map[string]interface{}) []string  {
 	//databaseType := metaInput["databaseType"].(string)
         databaseType:="postgresxl"
-	fmt.Print(databaseType)
 	var query []string
 
 	if databaseType == "cassandra" {
