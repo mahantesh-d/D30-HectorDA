@@ -10,6 +10,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"net"
+	"fmt"
 )
 
 // GRPCServer registers
@@ -120,7 +121,7 @@ func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb
 	resp.Message = respAbs.Text
 	resp.Data = respAbs.Data
 	resp.Count = *(proto.Uint64(respAbs.Count))
-	resp.ID = reqAbs.ID
+	resp.ID = reqAbs.GetID()
 	return resp
 
 }
@@ -149,6 +150,7 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 
 	// post validations
 	if req.GetMethod().String() == "POST" {
+
 		if !utils.IsJSON(req.GetApplicationPayload()) {
 			resp.StatusCode = 400
 			resp.Status = "fail"
@@ -158,6 +160,8 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 			resp.ID = req.GetID()
 			resp.Count = 0
 			return false
+
+		fmt.Println("This is the ref I got", req.GetApplicationPayload())
 		}
 	}
 
