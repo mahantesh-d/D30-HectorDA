@@ -1,6 +1,6 @@
 package alltrade
 
-import (
+import  (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/constant"
 	"github.com/dminGod/D30-HectorDA/endpoint"
@@ -12,7 +12,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"strings"
-	"fmt"
 )
 
 var conf config.Config
@@ -24,8 +23,8 @@ var jsonFileContents string = utils.ReadFile(constant.HectorConf + "/metadata/al
 
 func init() {
 	conf = config.Get()
-	metaData = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json"))
-	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+	//metaData = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json"))
+	//metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
         metaData = utils.DecodeJSON(jsonFileContents)
 	metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
 
@@ -66,7 +65,18 @@ func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstrac
 		"alltrade_reports_requestgoods_get": ReportsRequestGoodGet,
 
 		"alltrade_select_postgresxl_get": PostgresqlGet,
-		"alltrade_insert_postgresxl_post":PostgresqlPost,
+
+                "alltrade_user_location_get":UserLocationGet,
+		"alltrade_user_location_post":UserLocationPost,
+
+		"alltrade_user_group_location_get":UserGroupLocationGet,
+		"alltrade_user_group_location_post":UserGroupLocationPost,
+
+		"alltrade_user_component_get":UserComponentGet,
+		"alltrade_user_component_post":UserComponentPost,
+
+
+
 		"alltrade_update_postgresxl_post":PostgresqlUpdate,
 		// do not write route call the commonRequestProcess in get
 		"alltrade_delete_postgresxl_post":PostgresqlDelete,
@@ -106,8 +116,8 @@ func EnrichResponse(reqAbs *model.ResponseAbstract) {
 
 func StockAdjustmentPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "stock_adjustment", metaData)
-	metaResult := metadata.Interpret(metaInput, req.Payload)
-	query := queryhelper.PrepareInsertQuery(metaResult)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query := queryhelper.PrepareDeleteQuery(metaResult)
 
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
@@ -148,33 +158,23 @@ func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 func commonRequestProcess(req model.RequestAbstract, table_name string) model.DBAbstract {
 
 //	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
-
         metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
-
-
 
 	metaInput := utils.FindMap("table", table_name, metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
 
 	var query []string
-
 	var dbAbs model.DBAbstract
-
 	dbAbs.QueryType = "SELECT"
 	dbAbs.DBType = "cassandra"
-
 	if cassandra_helper.IsValidCassandraQuery(metaResult) {
-
 		query = queryhelper.PrepareSelectQuery(metaResult)
-
 	} else {
-
 		// query = queryhelper.PrepareSelectQuery(metaResult)
 		// query = []string{presto.QueryPrestoMakeCassandraInQuery(metaResult, metaInput)}
 		metaResult["databaseType"] = "cassandra_stratio"
 		query = queryhelper.PrepareSelectQuery(metaResult)
 	}
-
 	dbAbs.Query = query
 	endpoint.Process(&dbAbs)
 
@@ -381,6 +381,7 @@ func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 	}
 
 	dbAbs.QueryType = "SELECT"
+
 	dbAbs.Query = query
 	endpoint.Process(&dbAbs)
 
@@ -483,40 +484,96 @@ func ReportsRequestGoodGet(req model.RequestAbstract) model.ResponseAbstract {
 }
 
 func PostgresqlGet(req model.RequestAbstract) model.ResponseAbstract  {
-	//call the  commonRequestProcess
-	query:="SELECT * FROM userinfo"
+	metaDataOut:=utils.FindMap("table","userinfo",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "postgresxl"
 	dbAbs.QueryType = "SELECT"
-	dbAbs.Query = []string{query}
+	dbAbs.Query =query
 	endpoint.Process(&dbAbs)
-
 	return prepareResponse(dbAbs)
 }
+func UserLocationGet(req model.RequestAbstract) model.ResponseAbstract{
+	metaDataOut:=utils.FindMap("table","user_location",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
 
+}
 
-func PostgresqlPost(req model.RequestAbstract) model.ResponseAbstract {
-	//metaInput := utils.FindMap("table", "insert_postgresxl", metaData)
-	//metaResult := metadata.Interpret(metaInput, req.Payload)
-        // data coming from postgres.json do not hardcode req.Payload
-	query:="INSERT INTO USERINFO(uid,username,departname,created) VALUES(23,'unotech','tech','2012-02-02')"
+func UserLocationPost(req model.RequestAbstract) model.ResponseAbstract {
 
+	metaInput := utils.FindMap("table","user_location",metaData)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query:=queryhelper.PrepareInsertQuery(metaResult)
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "postgresxl"
 	dbAbs.QueryType = "INSERT"
-	dbAbs.Query = []string{query}
+	dbAbs.Query = query
 	endpoint.Process(&dbAbs)
-
 	return prepareResponse(dbAbs)
 }
 
-func PostgresqlUpdate(req model.RequestAbstract) model.ResponseAbstract{
-	//metaInput := utils.FindMap("table", "insert_postgresxl", metaData)
-	//metaResult := metadata.Interpret(metaInput, req.Payload)
-	// data coming from postgres.json do not hardcode req.Payload
-	query:=queryhelper.PrepareUpdateQuery(metaData)
+func UserGroupLocationGet(req model.RequestAbstract) model.ResponseAbstract  {
+	metaDataOut:=utils.FindMap("table","user_group_location",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+func UserGroupLocationPost(req model.RequestAbstract) model.ResponseAbstract  {
+	metaInput := utils.FindMap("table","user_group_location",metaData)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query:=queryhelper.PrepareInsertQuery(metaResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
 
-         fmt.Println(req)
+}
+func UserComponentGet(req model.RequestAbstract) model.ResponseAbstract{
+	metaDataOut:=utils.FindMap("table","user_component",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+
+func UserComponentPost(req model.RequestAbstract) model.ResponseAbstract  {
+	metaInput := utils.FindMap("table","user_component",metaData)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query:=queryhelper.PrepareInsertQuery(metaResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+
+
+func PostgresqlUpdate(req model.RequestAbstract) model.ResponseAbstract{
+	metaInput := utils.FindMap("table", "userinfo", metaData)
+	metaResult := metadata.Interpret(metaInput, req.Payload)
+	// data coming from postgres.json do not hardcode req.Payload
+	query:=queryhelper.PrepareUpdateQuery(metaResult)
+
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "postgresxl"
 	dbAbs.QueryType = "UPDATE"
@@ -526,9 +583,9 @@ func PostgresqlUpdate(req model.RequestAbstract) model.ResponseAbstract{
 	return prepareResponse(dbAbs)
 }
 func PostgresqlDelete(req model.RequestAbstract) model.ResponseAbstract{
-	//call the commonRequestProcess
-	query:=queryhelper.PrepareDeleteQuery(metaData)
-	fmt.Println(req)
+	metaInput := utils.FindMap("table", "userinfo", metaData)
+	metaResult := metadata.Interpret(metaInput, req.Payload)
+	query:=queryhelper.PrepareDeleteQuery(metaResult)
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "postgresxl"
 	dbAbs.QueryType = "DELETE"

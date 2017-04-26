@@ -5,6 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
 	"fmt"
+
 )
 
 // Interpret is used to cross-reference application metadata with the request metadata
@@ -32,7 +33,7 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 
 	for k, v := range metadata["fields"].(map[string]interface{}) {
-
+                fmt.Println(k)
 		f := v.(map[string]interface{})
 		val := make([]string, 2)
 		val[0] = f["name"].(string)
@@ -115,3 +116,34 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 	input["fields"] = output
 	return input
 }
+
+func InterpretPostgres(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
+	outputdatakey:=make(map[string]interface{})
+	output := make(map[string]interface{})
+	outputdatakey["databaseType"] = metadata["databaseType"]
+	outputdatakey["version"] = metadata["version"]
+	outputdatakey["database"] = metadata["database"]
+	outputdatakey["table"] = metadata["table"]
+	outputKeyValues:=make(map[string]interface{})
+	outputKeyMeta:=make(map[string]interface{})
+	    for s,v:=range metadata["fields"].(map[string]interface{}){
+		    value:=make([]string,2)
+		    k:= v.(map[string]interface{})
+		    value[0]=k["name"].(string)
+		    value[1]=k["type"].(string)
+		    switch t := value[1]; t{
+
+		    case "int":
+			    addData(&outputKeyValues, &outputKeyMeta, s, payload, value[0], t)
+		    case "text":
+			    addData(&outputKeyValues, &outputKeyMeta, s, payload, value[0], t)
+		    case "date":
+			    addData(&outputKeyValues, &outputKeyMeta, s, payload, value[0], t)
+		    }
+
+	    }
+
+	return output
+
+}
+
