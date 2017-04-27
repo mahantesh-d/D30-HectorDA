@@ -104,6 +104,7 @@ message Request {
     string ApplicationMethod           = 52;
     uint32 ApplicationVersion          = 53;
     string ApplicationPayload          = 54;
+    string SelectFields                = 55;
 }
 
 message TxRequest {

@@ -1,17 +1,10 @@
 package constant
 
-import (
-	"flag"
-	"github.com/dminGod/HowRU/utils"
-	"fmt"
-	"github.com/spf13/viper"
-)
-
-var EtcdEndpoints []string
+// var EtcdEndpoints []string
 
 
 func init_wip(){
-
+/*
 	// Load the file from where ever you can find it.
 	// Env variable : D30HECTOR_CONST_DIR
 	// Flag parameter : --D30HECTOR_CONST_DIR
@@ -80,7 +73,7 @@ func init_wip(){
 		}
 	}
 
-
+*/
 }
 
 
@@ -88,51 +81,53 @@ func init_wip(){
 
 func set_common_constants() {
 
-
-// ETCD Constants :
-	// EtcdConnectionURL is the Connection URL to fetch configuration from etcd
-	const EtcdConnectionURL string = "http://10.138.32.217:2379"
-
-	// EtcdEndpoints is the list of contact points in the etcd cluster
-	EtcdEndpoints = []string{ "http://10.138.32.217:2379","http://10.138.32.218:2379", "http://10.138.32.219:2379",
-		"http://10.138.32.220:2379","http://10.138.32.221:2379","http://10.138.32.222:2379",  }
-
-	// EtcdKey is the Key within etcd server which contains the configuration information
-	const EtcdKey string = "/hector/config/config.toml"
-
-	// EtcdConfigType is the extension of the values in etcd
-	const EtcdConfigType string = "toml"
-
-	// EtcdHeartbeatDirectory is the Key within etcd server which contains the list of active hector instances
-	const EtcdHeartbeatDirectory string = "/hector/active-servers"
-
-	// TTL of heartbeat message in seconds
-	const EtcdTTL int = 5
-
-	// EtcdMessageInterval is the interval of heartbeat
-	const EtcdMessageInterval int = 3
-
-
-// Hector Constants :
-
-	// HectorPipe is the Named pipe used to listen for graceful server shutdown
-	const HectorPipe = "/tmp/hector"
-
-	// HectorConf is the path of the configuration file
-	const HectorConf = "/etc/hector"
-	// const HectorConf = "conf-example"
-
-	// HectorGrpcMode is the GRPC server mode
-	const HectorGrpcMode string = "grpc"
-
-	// HectorProtobufMode is the native protobuf server mode
-	const HectorProtobufMode string = "protobuf"
-
-	// HTTP is the HTTP server mode
-	const HTTP string = "http"
-
-	// HectorRouteDelimiter is the delimiter used for route mapping
-	const HectorRouteDelimiter = "_"
+//
+//// ETCD Constants :
+//	// EtcdConnectionURL is the Connection URL to fetch configuration from etcd
+//	const EtcdConnectionURL string = "http://10.138.32.217:2379"
+//
+//	// EtcdEndpoints is the list of contact points in the etcd cluster
+//	EtcdEndpoints = []string{ "http://10.138.32.217:2379","http://10.138.32.218:2379", "http://10.138.32.219:2379",
+//		"http://10.138.32.220:2379","http://10.138.32.221:2379","http://10.138.32.222:2379",  }
+//
+//	// EtcdKey is the Key within etcd server which contains the configuration information
+//	const EtcdKey string = "/hector/config/config.toml"
+//
+//	// EtcdConfigType is the extension of the values in etcd
+//	const EtcdConfigType string = "toml"
+//
+//	// EtcdHeartbeatDirectory is the Key within etcd server which contains the list of active hector instances
+//	const EtcdHeartbeatDirectory string = "/hector/active-servers"
+//
+//	// TTL of heartbeat message in seconds
+//	const EtcdTTL int = 5
+//
+//	// EtcdMessageInterval is the interval of heartbeat
+//	const EtcdMessageInterval int = 3
+//
+//
+//// Hector Constants :
+//
+//	// HectorPipe is the Named pipe used to listen for graceful server shutdown
+//	const HectorPipe = "/tmp/hector"
+//
+//	// HectorConf is the path of the configuration file
+//	const HectorConf = "/etc/hector"
+//	// const HectorConf = "conf-example"
+//
+//	// HectorGrpcMode is the GRPC server mode
+//	const HectorGrpcMode string = "grpc"
+//
+//	// HectorProtobufMode is the native protobuf server mode
+//	const HectorProtobufMode string = "protobuf"
+//
+//	// HTTP is the HTTP server mode
+//	const HTTP string = "http"
+//
+//	// HectorRouteDelimiter is the delimiter used for route mapping
+//	const HectorRouteDelimiter = "_"
+//
+//
 }
 
 

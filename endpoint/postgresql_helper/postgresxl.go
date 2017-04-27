@@ -110,9 +110,10 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 }
 
 func SelectQueryBuild(metaInput map[string]interface{})  string{
-	table:=metaInput["table"].(string)
-	query:="SELECT * FROM"+" "+table
-	fields:= metaInput["fields"].(map[string]interface{})
+	table := metaInput["table"].(string)
+	query := "SELECT * FROM"+" " + table
+
+	fields := metaInput["fields"].(map[string]interface{})
           if len(fields)>0{
 		  query +=" "
 		  query +="WHERE"
@@ -121,9 +122,11 @@ func SelectQueryBuild(metaInput map[string]interface{})  string{
 			  query += endpoint_common.ReturnCondition(field) + "" + "AND"
 		  }
 	  }else {
-		  query =""
+		  query += ""
 	  }
 	query=strings.Trim(query,"AND")
-	query+=";"
+	query+=" LIMIT 200;"
+
+	fmt.Println("Postgres query on limit: ", query)
 return query
 }

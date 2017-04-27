@@ -26,6 +26,7 @@ type hector struct {
 	StartServersOfType []string
 	RequestMetrics     bool
 	QueryMetrics       bool
+	PortHTTP	   string
 }
 
 // presto struct represents the configuration parameters for the Presto endpoint
@@ -130,8 +131,31 @@ func etcdInit() error {
 }
 
 func localInit() {
+
+	configuredFileLocation := constant.HectorConf + "/config.toml"
+
+	useFolder := "/etc/hector"
+
+
+
+	if _, err := os.Stat(configuredFileLocation); err == nil {
+
+		// path/to/whatever exists
+		useFolder = constant.HectorConf
+
+	} else if _, err := os.Stat("/etc/hector/config.toml"); err == nil {
+
+
+		useFolder = "/etc/hector"
+	} else if _, err := os.Stat("conf-example/config.toml"); err == nil {
+
+		useFolder = "conf-example"
+	}
+
+	fmt.Println("Using configuration folder " + useFolder)
+
 	viper.SetConfigName("config") // path to look for the config file in
-	viper.AddConfigPath(constant.HectorConf)
+	viper.AddConfigPath(useFolder)
 	viper.SetConfigType("toml")
 	err := viper.ReadInConfig()
 
