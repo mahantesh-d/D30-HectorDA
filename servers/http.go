@@ -103,6 +103,7 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 	reqAbs.Action = applicationConfig[3]
 	reqAbs.HTTPRequestType = r.Method
 
+
 	if reqAbs.HTTPRequestType == "POST" {
 		body, err := ioutil.ReadAll(r.Body)
 		utils.HandleError(err)
@@ -111,6 +112,14 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		params := r.URL.Query()
 		if len(params["filters"]) > 0 {
 			reqAbs.Filters = utils.ParseFilter(params["filters"][0])
+		}
+		reqAbs.Limit = 0
+		reqAbs.Token = ""
+		if len(params["limit"]) > 0 {
+			reqAbs.Limit = 10
+		}
+		if len(params["token"]) > 0  {
+			reqAbs.Token = params["token"][0]
 		}
 	}
 

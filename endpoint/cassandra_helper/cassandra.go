@@ -3,6 +3,8 @@ package cassandra_helper
 import (
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"strings"
+	"strconv"
+	"fmt"
 )
 
 // IsValidCassandraQuery is used to analyze the metadata
@@ -134,10 +136,18 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 	database := metaInput["database"].(string)
 	query := "SELECT * FROM " + database + "." + table
 	fields := metaInput["fields"].(map[string]interface{})
+	limit := 100
 	if len(fields) > 0 {
 
 		query += " WHERE"
 
+		if len(metaInput["token"].(string)) > 0 {
+			query += (" token(" + table + "_pk) > token (" + metaInput["token"].(string) + ") AND")
+		}
+		if int(metaInput["limit"].(int32)) > 0 {
+			limit = int(metaInput["limit"].(int32))
+		}
+		fmt.Println(query)
 		numberOfParams := len(fields)
 		// three type of queries
 		// single condition
@@ -151,7 +161,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 			}
 
 
-				query += " LIMIT 200"
+				query += " LIMIT " + strconv.Itoa(limit)
 		} else {
 			querySorter := make([][]string, 20)
 			for _, v := range fields {
@@ -170,7 +180,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 			query = strings.Trim(query, "AND")
 
-			query += " LIMIT 200 ALLOW FILTERING"
+			query += " LIMIT " + strconv.Itoa(limit) + " ALLOW FILTERING"
 		}
 
 	} else {

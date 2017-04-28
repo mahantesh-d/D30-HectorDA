@@ -147,6 +147,10 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	metaInput := utils.FindMap("table", table_name, metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
 
+	// pagination and limit check
+	metaResult["limit"] = req.Limit
+	metaResult["token"] = req.Token
+
 	var query []string
 
 	var dbAbs model.DBAbstract
