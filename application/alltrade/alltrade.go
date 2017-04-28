@@ -1,6 +1,6 @@
 package alltrade
 
-import (
+import  (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/constant"
 	"github.com/dminGod/D30-HectorDA/endpoint"
@@ -20,21 +20,42 @@ var metaDataSelect map[string]interface{}
 var jsonFileContentsApi string = utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json")
 var jsonFileContents string = utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json")
 
+var jsonFileContentsPrivate string = utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json")
 
 func init() {
 	conf = config.Get()
-	metaData = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json"))
-	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
-        metaData = utils.DecodeJSON(jsonFileContents)
+	//metaData = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltrade.json"))
+	//metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
+
+	metaData = utils.DecodeJSON(jsonFileContents)
+
 	metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
+	// const metaDataSelectConst = utils.DecodeJSON( jsonFileContentsApi )
 
 }
+
+func returnString() string {
+
+	if len(jsonFileContentsPrivate) > 0 {
+
+		return jsonFileContentsPrivate
+	} else {
+
+		jsonFileContentsPrivate = utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json")
+		return jsonFileContentsPrivate
+	}
+}
+
+
+
+
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
 
 	routes := map[string]func(model.RequestAbstract) model.ResponseAbstract{
 
 		// All trade version 1
+		// Cassandra
 		"alltrade_stock_adjustment_post": StockAdjustmentPost,
 		"alltrade_stock_adjustment_get":  StockAdjustmentGet,
 
@@ -62,7 +83,53 @@ func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstrac
 		"alltrade_checkstock_detail_post": CheckStockDetailPost,
 		"alltrade_checkstock_detail_get":  CheckStockDetailGet,
 
-		"alltrade_reports_requestgoods_get": ReportsRequestGoodGet}
+		"alltrade_reports_requestgoods_get": ReportsRequestGoodGet,
+
+		"alltrade_select_postgresxl_get": PostgresqlGet,
+
+                "alltrade_user_location_get":UserLocationGet,
+		"alltrade_user_location_post":UserLocationPost,
+
+
+		// Postgres Methods
+		"alltrade_product_master_get" :  ProductMasterGet,
+		"alltrade_location_ship_to_get" :  LocationShipToGet,
+		"alltrade_route_master_get" :   RouteMasterGet,
+		"alltrade_location_mapping_plant_get" :   LocationMappingPlantGet,
+		"alltrade_print_history_get" :   PrintHistoryGet,
+		"alltrade_company_get" :   CompanyMasterGet,
+		"alltrade_location_get" :   LocationGet,
+		"alltrade_location_sub_stock_get" :   LocationSubStockGet,
+		"alltrade_vendor_master_get" :   VendorMasterGet,
+		"alltrade_supplier_master_get" :   SupplierMasterGet,
+		"alltrade_config_route_group_get" :  ConfigRouteGroupGet,
+		"alltrade_master_data_get" :   MasterDataGet,
+		"alltrade_device_specification_get" :   DeviceSpecificationGet,
+		"alltrade_language_get" :   LanguageGet,
+		"alltrade_running_format_get" :   RunningFormatGet,
+		"alltrade_last_running_get" :   LastRunningGet,
+		"alltrade_map_location_route_group_get" :   MapLocationRouteGroupGet,
+		"alltrade_schedule_report_get" :   ScheduleReportGet,
+		"alltrade_location_relational_get" :   LocationRelationalGet,
+		"alltrade_news_feed_get" :   NewsFeedGet,
+		"alltrade_todo_list_get" :   TodoListGet,
+		"alltrade_menu_get" :   MenuGet,
+		"alltrade_asc_master_get" :   AscMasterGet,
+		"alltrade_qty_per_time_interval_get" :   QtyPerTimeIntervalGet,
+		"alltrade_user_login_get" :   UserLoginGet,
+		"alltrade_user_authen_get" :   UserAuthenGet,
+		"alltrade_user_group_get" :   UserGroupGet,
+		"alltrade_user_component_get" :   UserComponentGet,
+		"alltrade_user_group_location_get" :   UserGroupLocationGet,
+		"alltrade_group_location_get" :  GroupLocationGet,
+
+
+		"alltrade_user_component_post":UserComponentPost,
+		"alltrade_update_postgresxl_post":PostgresqlUpdate,
+		"alltrade_user_group_location_post":UserGroupLocationPost,
+		// do not write route call the commonRequestProcess in get
+		"alltrade_delete_postgresxl_post":PostgresqlDelete,
+	}
 
 	return routes
 
@@ -98,8 +165,8 @@ func EnrichResponse(reqAbs *model.ResponseAbstract) {
 
 func StockAdjustmentPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "stock_adjustment", metaData)
-	metaResult := metadata.Interpret(metaInput, req.Payload)
-	query := queryhelper.PrepareInsertQuery(metaResult)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query := queryhelper.PrepareDeleteQuery(metaResult)
 
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
@@ -125,6 +192,7 @@ func StockAdjustmentGet(req model.RequestAbstract) model.ResponseAbstract {
 func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "obtain_detail", metaData)
 	metaResult := metadata.Interpret(metaInput, req.Payload)
+
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
 	var dbAbs model.DBAbstract
@@ -138,11 +206,7 @@ func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func commonRequestProcess(req model.RequestAbstract, table_name string) model.DBAbstract {
 
-//	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
-
         metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
-
-
 
 	metaInput := utils.FindMap("table", table_name, metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
@@ -152,24 +216,22 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	metaResult["token"] = req.Token
 
 	var query []string
-
 	var dbAbs model.DBAbstract
-
 	dbAbs.QueryType = "SELECT"
-	dbAbs.DBType = "cassandra"
 
-	if cassandra_helper.IsValidCassandraQuery(metaResult) {
+	// For cassandra if we have stratio we want to make it cassandra_stratio
+	if metaResult["databaseType"] == "cassandra" {
 
-		query = queryhelper.PrepareSelectQuery(metaResult)
+		if ! cassandra_helper.IsValidCassandraQuery(metaResult) {
 
-	} else {
+			metaResult["databaseType"] = "cassandra_stratio"
+		}
 
-		// query = queryhelper.PrepareSelectQuery(metaResult)
-		// query = []string{presto.QueryPrestoMakeCassandraInQuery(metaResult, metaInput)}
-		metaResult["databaseType"] = "cassandra_stratio"
-		query = queryhelper.PrepareSelectQuery(metaResult)
 	}
 
+	query = queryhelper.PrepareSelectQuery(metaResult)
+
+	dbAbs.DBType = metaResult["databaseType"].(string)
 	dbAbs.Query = query
 	endpoint.Process(&dbAbs)
 
@@ -312,7 +374,6 @@ func OrderTransferGet(req model.RequestAbstract) model.ResponseAbstract {
 }
 
 // SaleOutDetailPost handles SaleOutDetail POST request
-
 func SaleOutDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 	metaInput := utils.FindMap("table", "sale_out_detail", metaData)
@@ -359,8 +420,6 @@ func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
 //	metaDataSelect = utils.DecodeJSON(utils.ReadFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json"))
         metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
-
-
 	metaInput := utils.FindMap("table", "check_stock_detail", metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
 	var query []string
@@ -376,6 +435,7 @@ func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 	}
 
 	dbAbs.QueryType = "SELECT"
+
 	dbAbs.Query = query
 	endpoint.Process(&dbAbs)
 
@@ -472,6 +532,191 @@ func ReportsRequestGoodGet(req model.RequestAbstract) model.ResponseAbstract {
 	dbAbs.DBType = "presto"
 	dbAbs.QueryType = "SELECT"
 	dbAbs.Query = []string{query}
+	endpoint.Process(&dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
+func PostgresqlGet(req model.RequestAbstract) model.ResponseAbstract  {
+	metaDataOut:=utils.FindMap("table","userinfo",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+func UserLocationGet(req model.RequestAbstract) model.ResponseAbstract{
+	metaDataOut:=utils.FindMap("table","user_location",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+
+}
+
+func UserLocationPost(req model.RequestAbstract) model.ResponseAbstract {
+
+	metaInput := utils.FindMap("table","user_location",metaData)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query:=queryhelper.PrepareInsertQuery(metaResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+
+/*  // Implemented as a common function..
+func UserGroupLocationGet(req model.RequestAbstract) model.ResponseAbstract  {
+	metaDataOut:=utils.FindMap("table","user_group_location",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+} */
+
+func UserGroupLocationPost(req model.RequestAbstract) model.ResponseAbstract  {
+	metaInput := utils.FindMap("table","user_group_location",metaData)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query:=queryhelper.PrepareInsertQuery(metaResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+
+}
+/*  // Implemented as a common function..
+func UserComponentGet(req model.RequestAbstract) model.ResponseAbstract{
+	metaDataOut:=utils.FindMap("table","user_component",metaDataSelect)
+	metaDataResult := metadata.InterpretSelect(metaDataOut,req.Filters)
+	query  :=queryhelper.PrepareSelectQuery(metaDataResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query =query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+*/
+
+func UserComponentPost(req model.RequestAbstract) model.ResponseAbstract  {
+	metaInput := utils.FindMap("table","user_component",metaData)
+	metaResult := metadata.Interpret(metaInput,req.Payload)
+	query:=queryhelper.PrepareInsertQuery(metaResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+	return prepareResponse(dbAbs)
+}
+
+/*
+func ProductMasterGet(req model.RequestAbstract) model.ResponseAbstract {
+
+	// Table name gets passed
+	// Request gets passed
+	// Query is processed in dbAbstract
+	// dbAbstract returned
+
+
+	metaDataSelectFromConst := utils.DecodeJSON( returnString() )
+	metaDataOutVar := utils.FindMap("table","tmp_product_master", metaDataSelectFromConst)
+
+	fmt.Println("MetadataSelectFromConst : ", metaDataSelectFromConst)
+
+	fmt.Println("Length of the base file is : ", len(returnString()))
+	fmt.Println("Actual File : ", returnString())
+
+
+	fmt.Println("Metadata Out is : ", metaDataOutVar)
+	metaDataResult := metadata.InterpretSelect(metaDataOutVar, req.Filters)
+
+	fmt.Println("Metadata Select is : ", metaDataResult)
+
+	query  := queryhelper.PrepareSelectQuery(metaDataResult)
+
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "SELECT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+
+//	fmt.Println(dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+*/
+
+
+func ProductMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_product_master_get"); return prepareResponse(dbAbs); }
+func LocationShipToGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_ship_to_get"); return prepareResponse(dbAbs); }
+func RouteMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_route_master_get"); return prepareResponse(dbAbs); }
+func LocationMappingPlantGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_mapping_plant_get"); return prepareResponse(dbAbs); }
+func PrintHistoryGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_print_history_get"); return prepareResponse(dbAbs); }
+func CompanyMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_company_get"); return prepareResponse(dbAbs); }
+func LocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_get"); return prepareResponse(dbAbs); }
+func LocationSubStockGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_sub_stock_get"); return prepareResponse(dbAbs); }
+func VendorMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_vendor_master_get"); return prepareResponse(dbAbs); }
+func SupplierMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_supplier_master_get"); return prepareResponse(dbAbs); }
+func ConfigRouteGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_config_route_group_get"); return prepareResponse(dbAbs); }
+func MasterDataGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_master_data_get"); return prepareResponse(dbAbs); }
+func DeviceSpecificationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_device_specification_get"); return prepareResponse(dbAbs); }
+func LanguageGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_language_get"); return prepareResponse(dbAbs); }
+func RunningFormatGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_running_format_get"); return prepareResponse(dbAbs); }
+func LastRunningGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_last_running_get"); return prepareResponse(dbAbs); }
+func MapLocationRouteGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_map_location_route_group_get"); return prepareResponse(dbAbs); }
+func ScheduleReportGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_schedule_report_get"); return prepareResponse(dbAbs); }
+func LocationRelationalGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_relational_get"); return prepareResponse(dbAbs); }
+func NewsFeedGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_news_feed_get"); return prepareResponse(dbAbs); }
+func TodoListGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_todo_list_get"); return prepareResponse(dbAbs); }
+func MenuGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_menu_get"); return prepareResponse(dbAbs); }
+func AscMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_asc_master_get"); return prepareResponse(dbAbs); }
+func QtyPerTimeIntervalGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_qty_per_time_interval_get"); return prepareResponse(dbAbs); }
+func UserLoginGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_login_get"); return prepareResponse(dbAbs); }
+func UserAuthenGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_authen_get"); return prepareResponse(dbAbs); }
+func UserGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_group_get"); return prepareResponse(dbAbs); }
+func UserComponentGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_component_get"); return prepareResponse(dbAbs); }
+func UserGroupLocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_group_location_get"); return prepareResponse(dbAbs); }
+func GroupLocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_group_location_get"); return prepareResponse(dbAbs); }
+
+
+func PostgresqlUpdate(req model.RequestAbstract) model.ResponseAbstract{
+	metaInput := utils.FindMap("table", "userinfo", metaData)
+	metaResult := metadata.Interpret(metaInput, req.Payload)
+	// data coming from postgres.json do not hardcode req.Payload
+	query:=queryhelper.PrepareUpdateQuery(metaResult)
+
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "UPDATE"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+func PostgresqlDelete(req model.RequestAbstract) model.ResponseAbstract{
+	metaInput := utils.FindMap("table", "userinfo", metaData)
+	metaResult := metadata.Interpret(metaInput, req.Payload)
+	query:=queryhelper.PrepareDeleteQuery(metaResult)
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "postgresxl"
+	dbAbs.QueryType = "DELETE"
+	dbAbs.Query = query
 	endpoint.Process(&dbAbs)
 
 	return prepareResponse(dbAbs)

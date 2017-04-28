@@ -21,13 +21,13 @@ func HTTPStartServer() {
 	Conf = config.Get()
 	HttpServer = http.NewServeMux()
 	handleHTTPRoutes()
-	logger.Write("INFO", "Server Starting - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
-	err := http.ListenAndServe(Conf.Hector.Host+":"+Conf.Hector.Port, HttpServer)
+	logger.Write("INFO", "Server Starting - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.PortHTTP)
+	err := http.ListenAndServe(Conf.Hector.Host+":"+Conf.Hector.PortHTTP, HttpServer)
 	if err != nil {
-		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.PortHTTP)
 		utils.AppExit("Exiting app, configured port not available")
 	} else {
-		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.PortHTTP)
 	}
 }
 
@@ -78,7 +78,7 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 	}
 
 	if r.Method == "POST" {
-		body, err := ioutil.ReadAll(r.Body)
+	/*	body, err := ioutil.ReadAll(r.Body)
 		utils.HandleError(err)
 		if !utils.IsJSON(string(body)) {
 			resp["StatusCode"] = 400
@@ -90,9 +90,11 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 			*response = utils.EncodeJSON(resp)
 			return false
 		}
+		*/
 	}
 
 	return true
+
 }
 
 func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {

@@ -5,6 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
 	"fmt"
+
 )
 
 // Interpret is used to cross-reference application metadata with the request metadata
@@ -32,7 +33,7 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 
 	for k, v := range metadata["fields"].(map[string]interface{}) {
-
+                fmt.Println(k)
 		f := v.(map[string]interface{})
 		val := make([]string, 2)
 		val[0] = f["name"].(string)
@@ -87,6 +88,13 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 
 	output := make(map[string]interface{})
 
+	// This is the table related data
+	fmt.Println("Input sent to Interpret for select(expecting string of interface)", input)
+
+	// This is query related data
+	fmt.Println("Filters map of string to string(expecting string of interface)", filters)
+
+
 	fields := input["fields"].(map[string]interface{})
 
 	for k, v := range filters {
@@ -106,6 +114,8 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 			output = make(map[string]interface{})
 			input["fields"] = output
 
+			fmt.Println("DM : Searching for field", k, "Fields are ", fields)
+
 			// Logging this out as an error
 			logger.Write("ERROR", "Field passed in the filters '"+k+"' was not found in the JSON API filter definition. Please use the correct filter. Using wrong filters has been set to cause API to fail.")
 			return input
@@ -115,3 +125,34 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 	input["fields"] = output
 	return input
 }
+
+func InterpretPostgres(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
+	outputdatakey:=make(map[string]interface{})
+	output := make(map[string]interface{})
+	outputdatakey["databaseType"] = metadata["databaseType"]
+	outputdatakey["version"] = metadata["version"]
+	outputdatakey["database"] = metadata["database"]
+	outputdatakey["table"] = metadata["table"]
+	outputKeyValues:=make(map[string]interface{})
+	outputKeyMeta:=make(map[string]interface{})
+	    for s,v:=range metadata["fields"].(map[string]interface{}){
+		    value:=make([]string,2)
+		    k:= v.(map[string]interface{})
+		    value[0]=k["name"].(string)
+		    value[1]=k["type"].(string)
+		    switch t := value[1]; t{
+
+		    case "int":
+			    addData(&outputKeyValues, &outputKeyMeta, s, payload, value[0], t)
+		    case "text":
+			    addData(&outputKeyValues, &outputKeyMeta, s, payload, value[0], t)
+		    case "date":
+			    addData(&outputKeyValues, &outputKeyMeta, s, payload, value[0], t)
+		    }
+
+	    }
+
+	return output
+
+}
+

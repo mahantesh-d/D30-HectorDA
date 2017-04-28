@@ -10,6 +10,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"net"
+	"fmt"
 )
 
 // GRPCServer registers
@@ -79,14 +80,14 @@ func GRPCStartServer() {
 	Conf = config.Get()
 
 	// listen to the TCP port
-	logger.Write("INFO", "Server Starting - host:port - "+utils.ExecuteCommand("hostname", "-i")+" : "+Conf.Hector.Port)
-	listener, err := net.Listen(Conf.Hector.ConnectionType, utils.ExecuteCommand("hostname", "-i")+":"+Conf.Hector.Port)
+	logger.Write("INFO", "Server Starting - host:port - "+utils.ExecuteCommand("hostname", "-i")+" : "+ Conf.Hector.Port)
+	listener, err := net.Listen(Conf.Hector.ConnectionType, utils.ExecuteCommand("hostname", "-i")+":"+ Conf.Hector.Port)
 
 	if err != nil {
-		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+ Conf.Hector.Port)
 		utils.AppExit("Exiting app, configured port not available")
 	} else {
-		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.Port)
+		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+ Conf.Hector.Port)
 	}
 
 	grpcServer := grpc.NewServer()
@@ -120,7 +121,7 @@ func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb
 	resp.Message = respAbs.Text
 	resp.Data = respAbs.Data
 	resp.Count = *(proto.Uint64(respAbs.Count))
-	resp.ID = reqAbs.ID
+	resp.ID = reqAbs.GetID()
 	return resp
 
 }
@@ -132,6 +133,8 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.HTTPRequestType = req.GetMethod().String()
 	route := GetRouteName(reqAbs)
+	reqAbs.ID = req.GetID()
+
 	// check if the route exists
 	logger.Write("INFO","Route : " + route)
 	if !RouteExists(route) {
@@ -140,20 +143,25 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 		resp.StatusCodeMessage = "NOT_FOUND"
 		resp.Message = "The given route was not found"
 		resp.Data = "{}"
+		resp.ID = req.GetID()
 		resp.Count = 0
 		return false
 	}
 
 	// post validations
 	if req.GetMethod().String() == "POST" {
+
 		if !utils.IsJSON(req.GetApplicationPayload()) {
 			resp.StatusCode = 400
 			resp.Status = "fail"
 			resp.StatusCodeMessage = "INVALID_PARAMETERS"
 			resp.Message = "The parameters are invalid"
 			resp.Data = "{}"
+			resp.ID = req.GetID()
 			resp.Count = 0
 			return false
+
+		fmt.Println("This is the ref I got", req.GetApplicationPayload())
 		}
 	}
 
