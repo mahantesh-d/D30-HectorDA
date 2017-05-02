@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+	"bytes"
+	"fmt"
 )
 
 // IsJSON validates a JSON string
@@ -147,4 +149,10 @@ func HandleError(err error) {
 	if err != nil {
 		logger.Write("ERROR", err.Error())
 	}
+}
+
+func ShowJSON(byte []byte) {
+	buf := new(bytes.Buffer)
+	json.Indent(buf, byte, "", "  ")
+	fmt.Println(buf)
 }
