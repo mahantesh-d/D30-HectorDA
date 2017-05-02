@@ -47,9 +47,6 @@ func returnString() string {
 }
 
 
-
-
-
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
 
 	routes := map[string]func(model.RequestAbstract) model.ResponseAbstract{
@@ -122,7 +119,6 @@ func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstrac
 		"alltrade_user_component_get" :   UserComponentGet,
 		"alltrade_user_group_location_get" :   UserGroupLocationGet,
 		"alltrade_group_location_get" :  GroupLocationGet,
-
 
 		"alltrade_user_component_post":UserComponentPost,
 		"alltrade_update_postgresxl_post":PostgresqlUpdate,
@@ -206,7 +202,7 @@ func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 func commonRequestProcess(req model.RequestAbstract, table_name string) model.DBAbstract {
 
-        metaDataSelect = utils.DecodeJSON( jsonFileContentsApi )
+        metaDataSelect = utils.DecodeJSON( returnString() )
 
 	metaInput := utils.FindMap("table", table_name, metaDataSelect)
 	metaResult := metadata.InterpretSelect(metaInput, req.Filters)
@@ -659,36 +655,36 @@ func ProductMasterGet(req model.RequestAbstract) model.ResponseAbstract {
 */
 
 
-func ProductMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_product_master_get"); return prepareResponse(dbAbs); }
-func LocationShipToGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_ship_to_get"); return prepareResponse(dbAbs); }
-func RouteMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_route_master_get"); return prepareResponse(dbAbs); }
-func LocationMappingPlantGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_mapping_plant_get"); return prepareResponse(dbAbs); }
-func PrintHistoryGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_print_history_get"); return prepareResponse(dbAbs); }
-func CompanyMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_company_get"); return prepareResponse(dbAbs); }
-func LocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_get"); return prepareResponse(dbAbs); }
-func LocationSubStockGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_sub_stock_get"); return prepareResponse(dbAbs); }
-func VendorMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_vendor_master_get"); return prepareResponse(dbAbs); }
-func SupplierMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_supplier_master_get"); return prepareResponse(dbAbs); }
-func ConfigRouteGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_config_route_group_get"); return prepareResponse(dbAbs); }
-func MasterDataGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_master_data_get"); return prepareResponse(dbAbs); }
-func DeviceSpecificationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_device_specification_get"); return prepareResponse(dbAbs); }
-func LanguageGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_language_get"); return prepareResponse(dbAbs); }
-func RunningFormatGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_running_format_get"); return prepareResponse(dbAbs); }
-func LastRunningGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_last_running_get"); return prepareResponse(dbAbs); }
-func MapLocationRouteGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_map_location_route_group_get"); return prepareResponse(dbAbs); }
-func ScheduleReportGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_schedule_report_get"); return prepareResponse(dbAbs); }
-func LocationRelationalGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_location_relational_get"); return prepareResponse(dbAbs); }
-func NewsFeedGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_news_feed_get"); return prepareResponse(dbAbs); }
-func TodoListGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_todo_list_get"); return prepareResponse(dbAbs); }
-func MenuGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_menu_get"); return prepareResponse(dbAbs); }
-func AscMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_asc_master_get"); return prepareResponse(dbAbs); }
-func QtyPerTimeIntervalGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_qty_per_time_interval_get"); return prepareResponse(dbAbs); }
-func UserLoginGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_login_get"); return prepareResponse(dbAbs); }
-func UserAuthenGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_authen_get"); return prepareResponse(dbAbs); }
-func UserGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_group_get"); return prepareResponse(dbAbs); }
-func UserComponentGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_component_get"); return prepareResponse(dbAbs); }
-func UserGroupLocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_user_group_location_get"); return prepareResponse(dbAbs); }
-func GroupLocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "alltrade_tmp_group_location_get"); return prepareResponse(dbAbs); }
+func ProductMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_product_master"); return prepareResponse(dbAbs); }
+func LocationShipToGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_location_ship_to"); return prepareResponse(dbAbs); }
+func RouteMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_route_master"); return prepareResponse(dbAbs); }
+func LocationMappingPlantGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_location_mapping_plant"); return prepareResponse(dbAbs); }
+func PrintHistoryGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_print_history"); return prepareResponse(dbAbs); }
+func CompanyMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_company"); return prepareResponse(dbAbs); }
+func LocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_location"); return prepareResponse(dbAbs); }
+func LocationSubStockGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_location_sub_stock"); return prepareResponse(dbAbs); }
+func VendorMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_vendor_master"); return prepareResponse(dbAbs); }
+func SupplierMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_supplier_master"); return prepareResponse(dbAbs); }
+func ConfigRouteGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_config_route_group"); return prepareResponse(dbAbs); }
+func MasterDataGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_master_data"); return prepareResponse(dbAbs); }
+func DeviceSpecificationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_device_specification"); return prepareResponse(dbAbs); }
+func LanguageGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_language"); return prepareResponse(dbAbs); }
+func RunningFormatGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_running_format"); return prepareResponse(dbAbs); }
+func LastRunningGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_last_running"); return prepareResponse(dbAbs); }
+func MapLocationRouteGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_map_location_route_group"); return prepareResponse(dbAbs); }
+func ScheduleReportGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_schedule_report"); return prepareResponse(dbAbs); }
+func LocationRelationalGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_location_relational"); return prepareResponse(dbAbs); }
+func NewsFeedGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_news_feed"); return prepareResponse(dbAbs); }
+func TodoListGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_todo_list"); return prepareResponse(dbAbs); }
+func MenuGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_menu"); return prepareResponse(dbAbs); }
+func AscMasterGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_asc_master"); return prepareResponse(dbAbs); }
+func QtyPerTimeIntervalGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_qty_per_time_interval"); return prepareResponse(dbAbs); }
+func UserLoginGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_user_login"); return prepareResponse(dbAbs); }
+func UserAuthenGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_user_authen"); return prepareResponse(dbAbs); }
+func UserGroupGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_user_group"); return prepareResponse(dbAbs); }
+func UserComponentGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_user_component"); return prepareResponse(dbAbs); }
+func UserGroupLocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_user_group_location"); return prepareResponse(dbAbs); }
+func GroupLocationGet(req model.RequestAbstract) model.ResponseAbstract { dbAbs := commonRequestProcess(req, "tmp_group_location"); return prepareResponse(dbAbs); }
 
 
 func PostgresqlUpdate(req model.RequestAbstract) model.ResponseAbstract{

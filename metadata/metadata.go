@@ -15,6 +15,7 @@ func Interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 	return interpret(metadata, payload)
 }
 
+
 func interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
 
 	output := make(map[string]interface{})
@@ -81,8 +82,11 @@ func addData(outputKeyValues *map[string]interface{}, outputKeyMeta *map[string]
 	}
 }
 
+
 // InterpretSelect is used to cross-reference application metadata with the request metadata
 // and returns metadata specific to the request for further processing
+
+// InterpretSelect ( table_related_data   map[string]interface{} -- query_related_data map[string]string )
 
 func InterpretSelect(input map[string]interface{}, filters map[string]string) map[string]interface{} {
 
@@ -125,6 +129,8 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 	input["fields"] = output
 	return input
 }
+
+
 
 func InterpretPostgres(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
 	outputdatakey:=make(map[string]interface{})
