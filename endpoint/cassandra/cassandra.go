@@ -51,7 +51,10 @@ func getSession() (*gocql.Session, error) {
 		cluster.Timeout = 30 * time.Second
 		session, err := cluster.CreateSession()
 
-		utils.HandleError(err)	
+		if err != nil {
+
+			logger.Write("ERROR", "Counld not connect to cassandra, Error:" + err.Error())
+		}
 		return session, err
 	}
 }

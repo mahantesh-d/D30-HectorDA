@@ -6,7 +6,8 @@
 		"table": "foobar",
 		"fields": {
 			"id": {
-				"name": "id"
+				"name": "id",
+				"type": "uuid"
 			},
 			"name": {
 				"name": "name",
@@ -22,12 +23,13 @@
 			}
 		}
 	},
+
 	"alltrade_stockadjustment_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "stock_adjustment",
-		"child_table_prefix": "ct_sa_",
+		"child_table_prefix": "",
 		"fields": {
 			"stock_adjustment_pk": {
 				"name": "stock_adjustment_pk",
@@ -43,6 +45,18 @@
 			},
 			"adjust_status": {
 				"name": "adjustStatus",
+				"type": "text"
+			},
+			"Plant": {
+				"name": "plant",
+				"type": "text"
+			},
+			"Storage": {
+				"name": "storage",
+				"type": "text"
+			},
+			"adjust_type": {
+				"name": "adjustType",
 				"type": "text"
 			},
 			"adjust_stock_no": {
@@ -87,6 +101,10 @@
 			},
 			"location_region": {
 				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subregion": {
+				"name": "locationSubRegion",
 				"type": "text"
 			},
 			"location_subtype": {
@@ -137,6 +155,14 @@
 				"name": "serial_key",
 				"type": "set<text>"
 			},
+			"reason_key": {
+				"name": "reason_key",
+				"type": "set<text>"
+			},
+			"mat_description_key": {
+				"name": "matDescription_key",
+				"type": "set<text>"
+			},
 			"transaction_id": {
 				"name": "transactionId",
 				"type": "text"
@@ -153,14 +179,16 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
+
 		}
 	},
+
 	"alltrade_obtaindetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "obtain_detail",
-		"child_table_prefix": "ct_od_",
+		"child_table_prefix": "",
 		"fields": {
 			"obtain_detail_pk": {
 				"name": "obtain_detail_pk",
@@ -192,6 +220,14 @@
 			},
 			"location_region": {
 				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subregion": {
+				"name": "locationSubRegion",
+				"type": "text"
+			},
+			"obtain_ref": {
+				"name": "obtainRef",
 				"type": "text"
 			},
 			"location_subtype": {
@@ -248,12 +284,13 @@
 			}
 		}
 	},
+
 	"alltrade_substockdetailtransfer_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
-		"child_table_prefix": "ct_ssdt_",
+		"child_table_prefix": "",
 		"fields": {
 			"substock_detail_transfer_pk": {
 				"name": "substock_detail_transfer_pk",
@@ -293,6 +330,10 @@
 			},
 			"location_region": {
 				"name": "locationRegion",
+				"type": "text"
+			},
+			"location_subregion": {
+				"name": "locationSubRegion",
 				"type": "text"
 			},
 			"location_subtype": {
@@ -351,14 +392,17 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
+
+
 		}
 	},
+
 	"alltrade_substockdailydetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
-		"child_table_prefix": "ct_ssdd_",
+		"child_table_prefix": "",
 		"fields": {
 			"substock_daily_detail_pk": {
 				"name": "substock_daily_detail_pk",
@@ -404,6 +448,10 @@
 				"name": "locationRegion",
 				"type": "text"
 			},
+			"location_subregion": {
+				"name": "locationSubRegion",
+				"type": "text"
+			},
 			"location_subtype": {
 				"name": "locationSubType",
 				"type": "text"
@@ -440,14 +488,17 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
+
+
 		}
 	},
+
 	"alltrade_transferoutmismatch_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
 		"database": "all_trade",
 		"table": "tranfer_out_mismatch",
-		"child_table_prefix": "ct_od_",
+		"child_table_prefix": "",
 		"fields": {
 			"transfer_out_mismatch_pk": {
 				"name": "transfer_out_mismatch_pk",
@@ -466,7 +517,7 @@
 				"type": "timestamp"
 			},
 			"data_error_datetime": {
-				"name": "dataErrorDateTime",
+				"name": "transferOutDateTime",
 				"type": "timestamp"
 			},
 			"mismatch_detail_s": {
@@ -493,8 +544,10 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
+
 		}
 	},
+
 	"alltrade_requestgoods_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
@@ -578,6 +631,10 @@
 				"name": "model_key",
 				"type": "set<text>"
 			},
+			"mat_description_key": {
+				"name": "matDescription_key",
+				"type": "set<text>"
+			},
 			"movement_type": {
 				"name": "moveMentType",
 				"type": "text"
@@ -600,6 +657,10 @@
 			},
 			"receive_by": {
 				"name": "receiveBy",
+				"type": "text"
+			},
+			"contact_no": {
+				"name": "contactNo",
 				"type": "text"
 			},
 			"remark": {
@@ -650,6 +711,42 @@
 				"name": "stampDelivery",
 				"type": "text"
 			},
+			"location_code_tier2": {
+				"name": "locationCodeTier2",
+				"type": "text"
+			},
+			"sales_name": {
+				"name": "salesName",
+				"type": "text"
+			},
+			"sales_code": {
+				"name": "salesCode",
+				"type": "text"
+			},
+			"device_handset_qty": {
+				"name": "deviceHandsetQty",
+				"type": "text"
+			},
+			"device_handset_bundle_qty": {
+				"name": "deviceHandsetBundleQty",
+				"type": "text"
+			},
+			"sim_prepaid_qty": {
+				"name": "simPrepaidQty",
+				"type": "text"
+			},
+			"sim_postpaid_qty": {
+				"name": "simPostpaidQty",
+				"type": "text"
+			},
+			"premium_qty": {
+				"name": "premiumQty",
+				"type": "text"
+			},
+			"other_qty": {
+				"name": "otherQty",
+				"type": "text"
+			},
 			"to_location_code": {
 				"name": "toLocationCode",
 				"type": "text"
@@ -664,6 +761,10 @@
 			},
 			"to_location_region": {
 				"name": "toLocationRegion",
+				"type": "text"
+			},
+			"to_location_sub_region": {
+				"name": "toLocationSubRegion",
 				"type": "text"
 			},
 			"to_location_subtype": {
@@ -690,8 +791,10 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
+
 		}
 	},
+
 	"alltrade_ordertransfer_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
@@ -731,12 +834,32 @@
 				"name": "distributionChannel",
 				"type": "text"
 			},
+			"request_create_by": {
+				"name": "requestCreateBy",
+				"type": "text"
+			},
+			"request_date_time": {
+				"name": "requestDateTime",
+				"type": "text"
+			},
 			"do_no": {
 				"name": "doNo",
 				"type": "text"
 			},
-			"doc_ref": {
-				"name": "docRef",
+			"do_no_flag": {
+				"name": "doNoFlag",
+				"type": "text"
+			},
+			"request_no_ref": {
+				"name": "requestNoRef",
+				"type": "text"
+			},
+			"transfer_out_ref": {
+				"name": "transferOutRef",
+				"type": "text"
+			},
+			"transfer_in_ref": {
+				"name": "transferInRef",
 				"type": "text"
 			},
 			"from_location_code": {
@@ -755,8 +878,8 @@
 				"name": "fromLocationRegion",
 				"type": "text"
 			},
-			"from_location_subtype": {
-				"name": "fromLocationSubType",
+			"from_location_sub_region": {
+				"name": "fromLocationSubRegion",
 				"type": "text"
 			},
 			"from_location_type": {
@@ -795,6 +918,18 @@
 				"name": "productType_key",
 				"type": "set<text>"
 			},
+			"reason_key": {
+				"name": "reason_key",
+				"type": "set<text>"
+			},
+			"serial_key": {
+				"name": "serial_key",
+				"type": "set<text>"
+			},
+			"mat_description_key": {
+				"name": "matDescription_key",
+				"type": "set<text>"
+			},
 			"remark": {
 				"name": "remark",
 				"type": "text"
@@ -829,6 +964,10 @@
 			},
 			"to_location_region": {
 				"name": "toLocationRegion",
+				"type": "text"
+			},
+			"to_location_sub_region": {
+				"name": "toLocationSubRegion",
 				"type": "text"
 			},
 			"to_location_subtype": {
@@ -885,6 +1024,7 @@
 			}
 		}
 	},
+
 	"alltrade_saleoutdetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
@@ -895,6 +1035,10 @@
 			"sale_out_detail_pk": {
 				"name": "sale_out_detail_pk",
 				"type": "uuid"
+			},
+			"transaction_id": {
+				"name": "transactionId",
+				"type": "text"
 			},
 			"brand_key": {
 				"name": "brand_key",
@@ -956,6 +1100,10 @@
 				"name": "locationRegion",
 				"type": "text"
 			},
+			"location_sub_region": {
+				"name": "locationSubRegion",
+				"type": "text"
+			},
 			"location_subtype": {
 				"name": "locationSubType",
 				"type": "text"
@@ -984,24 +1132,48 @@
 				"name": "receiptRef",
 				"type": "text"
 			},
+			"mm_doc_year": {
+				"name": "mmDocYear",
+				"type": "text"
+			},
+			"mm_doc_no": {
+				"name": "mmDocNo",
+				"type": "text"
+			},
+			"movement_type": {
+				"name": "movementType",
+				"type": "text"
+			},
+			"to_sub_stock": {
+				"name": "toSubStock",
+				"type": "text"
+			},
 			"sales_code": {
 				"name": "salesCode",
 				"type": "text"
 			},
 			"salesoutdetail_s": {
-				"name": "salesOut",
+				"name": "salesOutDetail",
 				"type": "set<text>"
+			},
+			"sales_out_detail": {
+				"name": "salesOutDetail__",
+				"type": "text"
 			},
 			"serial_key": {
 				"name": "serial_key",
+				"type": "set<text>"
+			},
+			"mat_description_key": {
+				"name": "matDescription_key",
 				"type": "set<text>"
 			},
 			"shipping_address": {
 				"name": "shippingAddress",
 				"type": "text"
 			},
-			"sold_status": {
-				"name": "soldStatus",
+			"sales_status": {
+				"name": "salesStatus",
 				"type": "text"
 			},
 			"transaction_type": {
@@ -1016,8 +1188,11 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
+
+
 		}
 	},
+
 	"alltrade_checkstockdetail_v1": {
 		"databaseType": "cassandra",
 		"version": 1,
@@ -1093,6 +1268,18 @@
 				"name": "serialNotFound_key",
 				"type": "set<text>"
 			},
+			"company_key": {
+				"name": "company_key",
+				"type": "set<text>"
+			},
+			"substock_key": {
+				"name": "substock_key",
+				"type": "set<text>"
+			},
+			"mat_description_key": {
+				"name": "matDescription_key",
+				"type": "set<text>"
+			},
 			"stock_on_hand_datetime": {
 				"name": "stockOnHandDateTime",
 				"type": "timestamp"
@@ -1117,27 +1304,9 @@
 				"name": "updateDateTime",
 				"type": "timestamp"
 			}
-		}
-	},
-	"alltrade_postgresxl":{
-		"databaseType": "postgresxl",
-		"version": 1,
-		"database": "all_trade",
-		"table": "userinfo",
-		"fields": {
-			"uid": {
-				"name": "uid",
-				"type": "int"
-			},
-			"username": {
-				"name": "username",
-				"type": "text"
-			},
-			"departname": {
-				"name": "departname",
-				"type": "text"
-			}
+
+
 		}
 	}
-}
 
+}

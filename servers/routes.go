@@ -7,6 +7,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/model"
 	"strings"
+	"encoding/json"
 )
 
 // Routes store the mapping of routes to the underlying application logic
@@ -97,6 +98,10 @@ func enrichRequest(reqAbs *model.RequestAbstract) {
 	// Hector level where all the requests will pass through
 	enrichAllRequests(reqAbs)
 
+	reqObjBytes, _ := json.Marshal(reqAbs)
+
+	logger.Write("INFO", "Got Request " + string(reqObjBytes) )
+
 	// This particular application level
 	// For now we will just do a simple if conditional, later we want to move this out
 
@@ -117,6 +122,10 @@ func enrichRequest(reqAbs *model.RequestAbstract) {
 func enrichResponse(respAbs *model.ResponseAbstract) {
 
 	enrichAllResponses(respAbs)
+
+	resObjBytes, _ := json.Marshal(respAbs)
+
+	logger.Write("INFO", "Gave Response " + string(resObjBytes) )
 
 	if respAbs.RequestAbs.Application == "alltrade" {
 

@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"os"
 )
@@ -9,10 +8,7 @@ import (
 // Init triggers the initialization of config
 func Init() {
 
-	// Initialise the configuration
-	config.Init()
 
-	logger.Write("INFO", "Hector initialize called, Version : "+config.Conf.Hector.Version)
 }
 
 // AppExit causes the server to exit

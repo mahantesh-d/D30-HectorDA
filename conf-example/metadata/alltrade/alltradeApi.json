@@ -812,19 +812,2427 @@
 	"all_trade_userinfo": {
 		"databaseType":"postgresxl",
 		"version": 1,
-		"database": "all_trade",
-		"table": "userinfo",
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_product_master_get",
+		"table": "tmp_product_master",
 		"fields": {
-			"uid": {
-				"column": "uid",
-				"type": "int",
-				"valueType": "single"
+			"key": {
+				"column":"company_key0",
+				"type":"text",
+				"valueType":"single"
 			},
-			"username": {
-				"column": "username",
-				"type": "text",
-				"valueType": "single"
+			"value": {
+				"column":"commercial_name_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"company_key0": {
+				"column":"company_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"commercialName_key1": {
+				"column":"commercial_name_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"matDescription_key2": {
+				"column":"mat_description_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"productType_key3": {
+				"column":"product_type_key3",
+				"type":"text",
+				"valueType":"single"
+			},
+			"productSubType_key4": {
+				"column":"product_sub_type_key4",
+				"type":"text",
+				"valueType":"single"
+			},
+			"grade_key5": {
+				"column":"grade_key5",
+				"type":"text",
+				"valueType":"single"
+			},
+			"brand_key6": {
+				"column":"brand_key6",
+				"type":"text",
+				"valueType":"single"
+			},
+			"model_key7": {
+				"column":"model_key7",
+				"type":"text",
+				"valueType":"single"
+			},
+			"color_key8": {
+				"column":"color_key8",
+				"type":"text",
+				"valueType":"single"
+			},
+			"capacity_key9": {
+				"column":"capacity_key9",
+				"type":"text",
+				"valueType":"single"
+			},
+			"faceValue_key10": {
+				"column":"face_value_key10",
+				"type":"text",
+				"valueType":"single"
+			},
+			"expireDate_key11": {
+				"column":"expire_date_key11",
+				"type":"text",
+				"valueType":"single"
+			},
+			"network_key12": {
+				"column":"network_key12",
+				"type":"text",
+				"valueType":"single"
+			},
+			"region_key13": {
+				"column":"region_key13",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subRegion_key14": {
+				"column":"sub_region_key14",
+				"type":"text",
+				"valueType":"single"
+			},
+			"matCode_key15": {
+				"column":"matcode_key15",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key16": {
+				"column":"update_datetime_key16",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureUrl1_data": {
+				"column":"pictureurl1_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureUrl2_data": {
+				"column":"pictureurl2_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureUrl3_data": {
+				"column":"pictureurl3_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureUrl4_data": {
+				"column":"pictureurl4_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureUrl5_data": {
+				"column":"pictureurl5_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureUrl6_data": {
+				"column":"pictureurl6_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"unit_data": {
+				"column":"unit_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"matType_data": {
+				"column":"mat_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"vendorCode_data": {
+				"column":"vendor_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_data": {
+				"column":"active_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"supplierCode_data": {
+				"column":"supplier_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"defectFlag_data": {
+				"column":"defect_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"division_data": {
+				"column":"division_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"valuationClass_data": {
+				"column":"valuation_class_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"vatType_data": {
+				"column":"vat_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"effectiveDate_data": {
+				"column":"effective_date_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"launchDate_data": {
+				"column":"launch_date_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"priceAtLaunchDate_data": {
+				"column":"priceat_launch_date_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"priceUpdate_data": {
+				"column":"priceupdate_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_location_ship_to": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_location_ship_to_get",
+		"table": "tmp_location_ship_to",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key0": {
+				"column":"location_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"shipToCode_key1": {
+				"column":"shipto_code_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"shipToDefaultFlag_data": {
+				"column":"ship_to_default_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"stampDelivery_data": {
+				"column":"stampdelivery_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
 			}
 		}
+	},
+	"all_trade_route_master": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_route_master_get",
+		"table": "tmp_route_master",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"routeAbbr_key0": {
+				"column":"route_abbr_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"timestamp",
+				"valueType":"single"
+			},
+			"shipToCode_data": {
+				"column":"ship_to_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"routeName_data": {
+				"column":"route_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"estimateArriveTime_data": {
+				"column":"estimate_arrive_time_data",
+				"type":"timestamp",
+				"valueType":"single"
+			},
+			"intervalRouteTime_data": {
+				"column":"nterval_route_time_data",
+				"type":"timestamp",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_location_mapping_plant": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_location_mapping_plant_get",
+		"table": "tmp_location_mapping_plant",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"company_key1": {
+				"column":"company_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"plant_key2": {
+				"column":"plant_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"storage_key3": {
+				"column":"storage_key3",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_key4": {
+				"column":"active_flag_key4",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key5": {
+				"column":"update_datetime_key5",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key0": {
+				"column":"location_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_print_history": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_print_history_get",
+		"table": "tmp_print_history",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"documentNo_key0": {
+				"column":"document_no_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"transactionType_key1": {
+				"column":"transaction_type_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"edition_data": {
+				"column":"edition_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_company": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_company_get",
+		"table": "tmp_company",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"company_key0": {
+				"column":"company_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"companyName_data": {
+				"column":"company_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"companyAddress_data": {
+				"column":"company_address_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"saleOrganize_data": {
+				"column":"sale_organize_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"prefixCompanyName_data": {
+				"column":"prefix_company_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_data": {
+				"column":"active_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"faxNo_data": {
+				"column":"faxno_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"telNo_data": {
+				"column":"telno_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"taxNo_data": {
+				"column":"taxno_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_location": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_location_get",
+		"table": "tmp_location",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key0": {
+				"column":"location_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationName_data": {
+				"column":"location_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationProvince_data": {
+				"column":"location_province_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationDistrict_data": {
+				"column":"location_district_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationSubDistrict_data": {
+				"column":"location_subdistrict_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationRoad_data": {
+				"column":"location_road_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationSoi_data": {
+				"column":"location_soi_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationPostcode_data": {
+				"column":"location_postcode_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationAddress1_data": {
+				"column":"location_address1_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationGroup_data": {
+				"column":"location_group_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationContactNo_data": {
+				"column":"location_contactno_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"distributionChannel_data": {
+				"column":"distribution_channel_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationType_data": {
+				"column":"location_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationSubType_data": {
+				"column":"location_sub_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"region_data": {
+				"column":"region_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subRegion_data": {
+				"column":"sub_region_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subStockGroupId_data": {
+				"column":"sub_stock_groupid_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"routeGroup_data": {
+				"column":"route_group_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_data": {
+				"column":"active_flag_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_location_sub_stock": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_location_sub_stock_get",
+		"table": "tmp_location_sub_stock",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subStockGroupId_key0": {
+				"column":"sub_stock_groupid_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subStock_data": {
+				"column":"sub_stock_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_vendor_master": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_vendor_master_get",
+		"table": "tmp_vendor_master",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"vendorCode_key0": {
+				"column":"vendor_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"vendorName_data": {
+				"column":"vendor_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"vendorAddress_data": {
+				"column":"vendor_address_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+
+	"all_trade_supplier_master": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_supplier_master_get",
+		"table": "tmp_supplier_master",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"supplierCode_key0": {
+				"column":"supplier_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"supplierName_data": {
+				"column":"supplier_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"supplierAddress_data": {
+				"column":"supplier_address_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_config_route_group": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_config_route_group_get",
+		"table": "tmp_config_route_group",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"routeGroup_key0": {
+				"column":"route_group_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"dayOfWeek_key1": {
+				"column":"day_of_week_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"intervalTimeEnd_key3": {
+				"column":"interval_time_key3",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key4": {
+				"column":"update_datetime_key4",
+				"type":"text",
+				"valueType":"single"
+			},
+			"intervalTimeEnd_key2": {
+				"column":"interval_time_end_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"stampDelivery_data": {
+				"column":"stamp_delivery_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_master_data": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_master_data_get",
+		"table": "tmp_master_data",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"masterKey_key0": {
+				"column":"masterkey_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"masterValue_key1": {
+				"column":"mastervalue_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subkey1_key3": {
+				"column":"subkey1_key3",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subkey2_key4": {
+				"column":"subkey2_key4",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subkey3_key5": {
+				"column":"subkey3_key5",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_device_specification": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_device_specification_get",
+		"table": "tmp_device_specification",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"commercialName_key0": {
+				"column":"commercial_name_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"2GNetwork_data": {
+				"column":"twog_network_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"3GNetwork_data": {
+				"column":"threeg_network_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"4GNetwork_data": {
+				"column":"fourg_network_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"gprs_data": {
+				"column":"gprs_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"edge_data": {
+				"column":"edge_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"lteCa_data": {
+				"column":"lteca_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"chipset_data": {
+				"column":"chipset_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"cpu_data": {
+				"column":"cpu_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"gpu_data": {
+				"column":"gpu_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"handsetType_data": {
+				"column":"handset_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"os_data": {
+				"column":"os_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"osVersion_data": {
+				"column":"os_version_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"softwareVersion_data": {
+				"column":"software_version_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"hsdpa_data": {
+				"column":"hsdpa_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"hsupaSpeed_data": {
+				"column":"hsupa_speed_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"lteSpeed_data": {
+				"column":"lte_speed_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"Infrared_data": {
+				"column":"infrared_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"wifi_data": {
+				"column":"wifi_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"wifiMethod_data": {
+				"column":"wifi_method_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"wifiTCPIP_data": {
+				"column":"wifi_tcp_ip_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"cellularTCPIP_data": {
+				"column":"cellular_tcp_ip_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"hotspot20_data": {
+				"column":"hotspot_20_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"bluetooth_data": {
+				"column":"bluetooth_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"designType_data": {
+				"column":"design_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"fingerscan_data": {
+				"column":"finger_scan_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"stylusPen_data": {
+				"column":"stylus_pen_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"waterResistant_data": {
+				"column":"water_resistant_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"displayColor_data": {
+				"column":"display_color_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"displayResolution_data": {
+				"column":"display_resolution_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"displaySize_data": {
+				"column":"display_size_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"camera_data": {
+				"column":"camera_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"pictureResolution_data": {
+				"column":"picture_resolution_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"frontCamera_data": {
+				"column":"front_camera_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"memoryInPhone_data": {
+				"column":"memory_in_phone_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"memoryCardSlot_data": {
+				"column":"memory_card_slot_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"dualSim_data": {
+				"column":"dual_sim_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"simType_data": {
+				"column":"sim_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"sim1000_data": {
+				"column":"sim_1000_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"sms_data": {
+				"column":"sms_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"mms_data": {
+				"column":"mms_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"email_data": {
+				"column":"email_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ussdType_data": {
+				"column":"ussd_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"browser_data": {
+				"column":"browser_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"gps_data": {
+				"column":"gps_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"nfc_data": {
+				"column":"nfc_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"internetSharing_data": {
+				"column":"internet_sharing_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"wifiDirect_data": {
+				"column":"wifi_direct_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"dlna_data": {
+				"column":"dlna_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"miracast_data": {
+				"column":"miracast_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"videoCall_data": {
+				"column":"video_call_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"voiceCall_data": {
+				"column":"voice_call_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"otg_data": {
+				"column":"otg_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"radio_data": {
+				"column":"radio_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"tvTuner_data": {
+				"column":"tv_tuner_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"tvOut_data": {
+				"column":"tv_out_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisBookstore_data": {
+				"column":"ais_bookstore_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisLiveTV_data": {
+				"column":"ais_livetv_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisMovieStore_data": {
+				"column":"ais_moviestore_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisMpayRabbit_data": {
+				"column":"ais_mpay_rabbit_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisOnAir_data": {
+				"column":"ais_onair_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisSuperWifi_data": {
+				"column":"ais_super_wifi_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisPlay_data": {
+				"column":"ais_play_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"callingMelody_data": {
+				"column":"calling_melody_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"aisApp_data": {
+				"column":"ais_app_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"mpay_data": {
+				"column":"mpay_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"volte_data": {
+				"column":"volte_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"vowifi_data": {
+				"column":"vowifi_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"kkbox_data": {
+				"column":"kkbox_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"hdVoice_data": {
+				"column":"hdvoice_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"googleMap_data": {
+				"column":"googlemap_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"youtube_data": {
+				"column":"youtube_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"battery_data": {
+				"column":"battery_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"otaSetting_data": {
+				"column":"ota_setting_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"otaSim_data": {
+				"column":"ota_sim_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_language": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_language_get",
+		"table": "tmp_language",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"elementName_key0": {
+				"column":"element_name_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"language_data": {
+				"column":"language_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"elementDisplay_data": {
+				"column":"element_display_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_running_format": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_running_format_get",
+		"table": "tmp_running_format",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"Value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"module_key0": {
+				"column":"module_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"prefix_data": {
+				"column":"prefix_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"format_data": {
+				"column":"format_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"length_data": {
+				"column":"length_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_data": {
+				"column":"update_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_last_running": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_last_running_get",
+		"table": "tmp_last_running",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"module_key0": {
+				"column":"module_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key1": {
+				"column":"location_code_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"lastNo_data": {
+				"column":"lastno_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_data": {
+				"column":"update_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_map_location_route_group": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_map_location_route_group_get",
+		"table": "tmp_map_location_route_group",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"province_key0": {
+				"column":"province_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"routeGroup_data": {
+				"column":"route_group_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_schedule_report": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_schedule_report_get",
+		"table": "tmp_schedule_report",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"reportName_key0": {
+				"column":"report_name_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"reportType_key1": {
+				"column":"report_type_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"reportDate_key2": {
+				"column":"report_date_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key3": {
+				"column":"location_code_key3",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key4": {
+				"column":"update_datetime_key4",
+				"type":"text",
+				"valueType":"single"
+			},
+			"reportLinkFile_data": {
+				"column":"report_link_file_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"status_data": {
+				"column":"status_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"reason_data": {
+				"column":"reason_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+
+	"all_trade_location_relational": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_location_relational_get",
+		"table": "tmp_location_relational",
+		"fields": {
+			"Key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"Value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key0": {
+				"column":"location_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"parent_key1": {
+				"column":"parent_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_news_feed": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_news_feed_get",
+		"table": "tmp_news_feed",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsTitle_key0": {
+				"column":"news_title_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsDateTime_key1": {
+				"column":"news_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsGroup_data": {
+				"column":"news_group_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsDetail_data": {
+				"column":"news_detail_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_data": {
+				"column":"active_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsStart_data": {
+				"column":"news_start_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsEnd_data": {
+				"column":"news_end_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"newsLink_data": {
+				"column":"news_link_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"priority_data": {
+				"column":"priority_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_todo_list": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_todo_list_get",
+		"table": "tmp_todo_list",
+		"fields": {
+			"Key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"Value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"programCode_key0": {
+				"column":"program_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"toDoListModule_key1": {
+				"column":"todo_list_module_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"toDoListPicture_data": {
+				"column":"todo_list_picture_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"toDoListColor_data": {
+				"column":"todo_list_color_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"methodTotal_data": {
+				"column":"method_total_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"linkToMenu_data": {
+				"column":"link_to_menu_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_data": {
+				"column":"active_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"priority_data": {
+				"column":"priority_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_menu": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_menu_get",
+		"table": "tmp_menu",
+		"fields": {
+			"Key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"Value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"programCode_key0": {
+				"column":"program_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"mainMenu_data": {
+				"column":"main_menu_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"menuName_data": {
+				"column":"menu_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"link_data": {
+				"column":"link_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"activeFlag_data": {
+				"column":"active_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_asc_master": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_asc_master_get",
+		"table": "tmp_asc_master",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascCode_key0": {
+				"column":"asc_code_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascName_data": {
+				"column":"asc_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascType_data": {
+				"column":"asc_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascSubType_data": {
+				"column":"asc_subtype_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascClass_data": {
+				"column":"asc_class_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascStatus_data": {
+				"column":"asc_status_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"ascContactNo_data": {
+				"column":"asc_contact_no_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_data": {
+				"column":"location_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_qty_per_time_interval": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_qty_per_time_interval_get",
+		"table": "tmp_qty_per_time_interval",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"eventDate_key0": {
+				"column":"event_date_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_key1": {
+				"column":"location_code_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"subStock_key2": {
+				"column":"sub_stock_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"company_key3": {
+				"column":"company_key3",
+				"type":"text",
+				"valueType":"single"
+			},
+			"matCode_key4": {
+				"column":"mat_code_key4",
+				"type":"text",
+				"valueType":"single"
+			},
+			"eventType_key5": {
+				"column":"event_type_key5",
+				"type":"text",
+				"valueType":"single"
+			},
+			"qty_data": {
+				"column":"qty_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"timeIntervalType_data": {
+				"column":"time_interval_type_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"timeIntervalCounter_data": {
+				"column":"time_interval_counter_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_data": {
+				"column":"update_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_user_login": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_user_login_get",
+		"table": "tmp_user_login",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"userId_key0": {
+				"column":"userid_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_data": {
+				"column":"location_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupName_data": {
+				"column":"group_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+		}
+	},
+	"all_trade_user_authen": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_user_authen_get",
+		"table": "tmp_user_authen",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupName_key0": {
+				"column":"group_name_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"programCode_data": {
+				"column":"program_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_user_group": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_user_group_get",
+		"table": "tmp_user_group",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupId_key0": {
+				"column":"groupid_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupName_data": {
+				"column":"group_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_user_component": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_user_component_get",
+		"table": "tmp_user_component",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupName_key0": {
+				"column":"group_name_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"programCode_key1": {
+				"column":"program_code_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key2": {
+				"column":"update_datetime_key2",
+				"type":"text",
+				"valueType":"single"
+			},
+			"component_data": {
+				"column":"component_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"enableFlag_data": {
+				"column":"enable_flag_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_user_group_location": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_user_group_location_get",
+		"table": "tmp_user_group_location",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"userId_key0": {
+				"column":"userid_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupLocationName_data": {
+				"column":"group_location_name_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
+	},
+	"all_trade_group_location": {
+		"databaseType":"postgresxl",
+		"version": 1,
+		"database": "testschema2",
+		"apiName": "alltrade_tmp_user_location_get",
+		"table": "tmp_user_location",
+		"fields": {
+			"key": {
+				"column":"key",
+				"type":"text",
+				"valueType":"single"
+			},
+			"value": {
+				"column":"value",
+				"type":"text",
+				"valueType":"single"
+			},
+			"groupLocationName_key0": {
+				"column":"group_location_name_key0",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateDateTime_key1": {
+				"column":"update_datetime_key1",
+				"type":"text",
+				"valueType":"single"
+			},
+			"locationCode_data": {
+				"column":"location_code_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createBy_data": {
+				"column":"create_by_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"createDateTime_data": {
+				"column":"create_datetime_data",
+				"type":"text",
+				"valueType":"single"
+			},
+			"updateBy_data": {
+				"column":"update_by_data",
+				"type":"text",
+				"valueType":"single"
+			}
+
+		}
 	}
+
 }

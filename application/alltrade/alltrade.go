@@ -12,6 +12,7 @@ import  (
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"strings"
+	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 var conf config.Config
@@ -45,7 +46,6 @@ func returnString() string {
 		return jsonFileContentsPrivate
 	}
 }
-
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
 
@@ -87,6 +87,8 @@ func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstrac
                 "alltrade_user_location_get":UserLocationGet,
 		"alltrade_user_location_post":UserLocationPost,
 
+		"alltrade_local_service_requests_get" : LocalServiceRequestsGet,
+		"alltrade_local_service_requests_post" : LocalServiceRequestsPost,
 
 		// Postgres Methods
 		"alltrade_product_master_get" :  ProductMasterGet,
@@ -161,8 +163,15 @@ func EnrichResponse(reqAbs *model.ResponseAbstract) {
 
 func StockAdjustmentPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "stock_adjustment", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
 	metaResult := metadata.Interpret(metaInput,req.Payload)
-	query := queryhelper.PrepareDeleteQuery(metaResult)
+	query := queryhelper.PrepareInsertQuery(metaResult)
+
+	logger.Write("INFO", query[0])
 
 	var dbAbs model.DBAbstract
 	dbAbs.DBType = "cassandra"
@@ -187,6 +196,12 @@ func StockAdjustmentGet(req model.RequestAbstract) model.ResponseAbstract {
 
 func ObtainDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "obtain_detail", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 
 	query := queryhelper.PrepareInsertQuery(metaResult)
@@ -234,6 +249,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	return dbAbs
 }
 
+
 // ObtainDetailGet handles ObtainDetail GET request
 
 func ObtainDetailGet(req model.RequestAbstract) model.ResponseAbstract {
@@ -247,6 +263,12 @@ func ObtainDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
 func SubStockDetailTransferPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "sub_stock_detail_transfer", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -272,6 +294,11 @@ func SubStockDetailTransferGet(req model.RequestAbstract) model.ResponseAbstract
 
 func SubStockDailyDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "sub_stock_daily_detail", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -297,6 +324,11 @@ func SubStockDailyDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
 func TransferOutMismatchPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "tranfer_out_mismatch", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -322,6 +354,12 @@ func TransferOutMismatchGet(req model.RequestAbstract) model.ResponseAbstract {
 
 func RequestGoodsPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "request_goods", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -348,6 +386,12 @@ func RequestGoodsGet(req model.RequestAbstract) model.ResponseAbstract {
 func OrderTransferPost(req model.RequestAbstract) model.ResponseAbstract {
 
 	metaInput := utils.FindMap("table", "order_transfer", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -373,6 +417,12 @@ func OrderTransferGet(req model.RequestAbstract) model.ResponseAbstract {
 func SaleOutDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 
 	metaInput := utils.FindMap("table", "sale_out_detail", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -398,6 +448,12 @@ func SaleOutDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
 func CheckStockDetailPost(req model.RequestAbstract) model.ResponseAbstract {
 	metaInput := utils.FindMap("table", "check_stock_detail", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+
 	metaResult := metadata.Interpret(metaInput, req.Payload)
 	query := queryhelper.PrepareInsertQuery(metaResult)
 
@@ -437,6 +493,42 @@ func CheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
 
 	return prepareResponse(dbAbs)
 }
+
+
+// "alltrade_local_service_requests_get" :
+func LocalServiceRequestsGet(req model.RequestAbstract) model.ResponseAbstract {
+
+	dbAbs := commonRequestProcess(req, "local_service_requests")
+
+	return prepareResponse(dbAbs)
+}
+
+// "alltrade_local_service_requests_get"
+func LocalServiceRequestsPost(req model.RequestAbstract) model.ResponseAbstract {
+
+	metaInput := utils.FindMap("table", "local_service_requests", metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
+	metaResult := metadata.Interpret(metaInput, req.Payload)
+	query := queryhelper.PrepareInsertQuery(metaResult)
+
+	var dbAbs model.DBAbstract
+	dbAbs.DBType = "cassandra"
+	dbAbs.QueryType = "INSERT"
+	dbAbs.Query = query
+	endpoint.Process(&dbAbs)
+
+	return prepareResponse(dbAbs)
+}
+
+
+
+
+
+
 
 // ReportsRequestGoodGet handles ReportsRequestGood GET request
 
@@ -560,6 +652,11 @@ func UserLocationGet(req model.RequestAbstract) model.ResponseAbstract{
 func UserLocationPost(req model.RequestAbstract) model.ResponseAbstract {
 
 	metaInput := utils.FindMap("table","user_location",metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
 	metaResult := metadata.Interpret(metaInput,req.Payload)
 	query:=queryhelper.PrepareInsertQuery(metaResult)
 	var dbAbs model.DBAbstract
@@ -585,6 +682,11 @@ func UserGroupLocationGet(req model.RequestAbstract) model.ResponseAbstract  {
 
 func UserGroupLocationPost(req model.RequestAbstract) model.ResponseAbstract  {
 	metaInput := utils.FindMap("table","user_group_location",metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
 	metaResult := metadata.Interpret(metaInput,req.Payload)
 	query:=queryhelper.PrepareInsertQuery(metaResult)
 	var dbAbs model.DBAbstract
@@ -611,6 +713,11 @@ func UserComponentGet(req model.RequestAbstract) model.ResponseAbstract{
 
 func UserComponentPost(req model.RequestAbstract) model.ResponseAbstract  {
 	metaInput := utils.FindMap("table","user_component",metaData)
+
+	if len(metaInput) == 0 {
+		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route " + req.RouteName)
+	}
+
 	metaResult := metadata.Interpret(metaInput,req.Payload)
 	query:=queryhelper.PrepareInsertQuery(metaResult)
 	var dbAbs model.DBAbstract
@@ -1188,4 +1295,19 @@ func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 	responseAbstract.Count = dbAbs.Count
 
 	return responseAbstract
+}
+
+
+func returnFailResponse(messageToUser string, messageToLog string) model.ResponseAbstract {
+
+	logger.Write("ERROR", "AlltradeAPI Fail: " + messageToLog + " messageToUser : " + messageToUser)
+
+	return model.ResponseAbstract{
+
+		Status: "500",
+		StandardStatusMessage: "error",
+		Text : "There was an error" + messageToUser,
+		Data: "Error : " + messageToUser,
+		Count : 0,
+	}
 }

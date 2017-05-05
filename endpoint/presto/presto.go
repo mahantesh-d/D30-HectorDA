@@ -44,7 +44,7 @@ func getSession() (*sql.DB, error) {
 		db, err := sql.Open("prestgo", Conf.Presto.ConnectionURL)
 
 		if err != nil {
-			logger.Write("ERROR", "Could not connect: "+err.Error())
+			logger.Write("ERROR", "Could not connect to presto : " + err.Error())
 		}
 
 		defer queueSession(db)

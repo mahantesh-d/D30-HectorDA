@@ -30,9 +30,6 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 	record_uuid := ""
 
-	fmt.Println("Metadata : ", metadata, "Payload", payload)
-
-
 	for k, v := range metadata["fields"].(map[string]interface{}) {
                 fmt.Println(k)
 		f := v.(map[string]interface{})
@@ -93,10 +90,10 @@ func InterpretSelect(input map[string]interface{}, filters map[string]string) ma
 	output := make(map[string]interface{})
 
 	// This is the table related data
-	fmt.Println("Input sent to Interpret for select(expecting string of interface)", input)
+	//fmt.Println("Input sent to Interpret for select(expecting string of interface)", input)
 
 	// This is query related data
-	fmt.Println("Filters map of string to string(expecting string of interface)", filters)
+	//fmt.Println("Filters map of string to string(expecting string of interface)", filters)
 
 
 	fields := input["fields"].(map[string]interface{})

@@ -5,6 +5,10 @@ import (
 	"strings"
 	"strconv"
 	"fmt"
+	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/dminGod/D30-HectorDA/utils"
+	"reflect"
+	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 // IsValidCassandraQuery is used to analyze the metadata
@@ -38,7 +42,6 @@ func IsValidCassandraQuery(metaInput map[string]interface{}) bool {
 	}
 
 	return true
-
 }
 
 func MakeCassandraInQuery(prestoResult []map[string]interface{}, metaInput map[string]interface{}) string {
@@ -134,7 +137,25 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 	table := metaInput["table"].(string)
 	database := metaInput["database"].(string)
-	query := "SELECT * FROM " + database + "." + table
+
+//	fmt.Println( " Metadata related to Get", config.Metadata_get)
+//	fmt.Println( " Metadata related to Insert", config.Metadata_insert)
+
+	myFields := utils.FindMap("table", table, config.Metadata_insert)
+
+	var selectString string
+
+	if len(myFields) != 0 {
+
+		selectString = makeSelect(myFields)
+	} else {
+
+		logger.Write("ERROR", "Cassandra Query error, Couldn not find column information on the table from insert api file while trying to make the select query fields, is the entry put in? defaulting to *, but users will see table columns instead of expected field names.")
+		selectString = "*"
+	}
+
+
+	query := "SELECT " + selectString + " FROM " + database + "." + table
 	fields := metaInput["fields"].(map[string]interface{})
 	limit := 100
 	if len(fields) > 0 {
@@ -187,6 +208,29 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 		query = ""
 	}
 	return query
+}
+
+
+func makeSelect(fields map[string]interface{}) string {
+
+	if reflect.TypeOf(fields).String() == "map[string]interface {}" {
+
+		selects := []string{}
+
+		for k, v := range fields["fields"].(map[string]interface{}) {
+
+			// If you are taking select data
+			//fmt.Println(v.(map[string]interface{})["column"], " as ", k)
+
+			selects = append(selects, k + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
+		}
+
+		return strings.Join(selects, ", ")
+	} else {
+
+		return "*"
+	}
+
 }
 
 

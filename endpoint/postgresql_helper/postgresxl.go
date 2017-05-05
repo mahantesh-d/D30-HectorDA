@@ -5,6 +5,11 @@ import (
 	/*"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"*/
 	"strings"
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
+	"github.com/dminGod/D30-HectorDA/utils"
+	"github.com/dminGod/D30-HectorDA/config"
+	"reflect"
+	"github.com/dminGod/D30-HectorDA/logger"
+	"encoding/json"
 )
 /**
 
@@ -51,6 +56,7 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) string{
 	fmt.Println(query)
 	return query
 }
+
 func DeleteQueryBuilder(metaInput map[string]interface{})  string {
      var query string
 	   name:=""
@@ -109,9 +115,31 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 
 }
 
-func SelectQueryBuild(metaInput map[string]interface{})  string{
+func SelectQueryBuild(metaInput map[string]interface{})  string {
+
 	table := metaInput["table"].(string)
-	query := "SELECT * FROM"+" " + table
+
+	myFields := utils.FindMap("table", table, config.Metadata_insert)
+
+	var selectString string
+
+	if len(myFields) != 0 {
+
+		tempStr, _ := json.Marshal(myFields)
+
+		logger.Write("INFO", "Results from myFields" + string(tempStr) + "Length" + string(len(myFields)))
+		selectString = makeSelect(myFields)
+	} else {
+
+		selectString = "*"
+		logger.Write("ERROR", "Postgres Query error, Couldn not find column information on the table from insert api file while trying to make the select query fields, is the entry put in? defaulting to *, but users will see table columns instead of expected field names.")
+	}
+
+
+
+
+
+	query := "SELECT " + selectString  + " FROM"+" " + table
 
 	fields := metaInput["fields"].(map[string]interface{})
           if len(fields)>0{
@@ -129,4 +157,27 @@ func SelectQueryBuild(metaInput map[string]interface{})  string{
 
 	fmt.Println("Postgres query on limit: ", query)
 return query
+}
+
+
+func makeSelect(fields map[string]interface{}) string {
+
+	if reflect.TypeOf(fields).String() == "map[string]interface {}" {
+
+		selects := []string{}
+
+		for k, v := range fields["fields"].(map[string]interface{}) {
+
+			// If you are taking select data
+			//fmt.Println(v.(map[string]interface{})["column"], " as ", k)
+
+			selects = append(selects, k + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
+		}
+
+		return strings.Join(selects, ", ")
+	} else {
+
+		return "*"
+	}
+
 }

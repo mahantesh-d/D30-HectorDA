@@ -45,25 +45,18 @@ type Config struct {
 // Conf contains all the configuration information
 var Conf Config
 
-// Init initializes the configuration using viper
-/*func Init() {
+var Alltrade_get string
+var Alltrade_insert string
+var Metadata_get map[string]interface{}
+var Metadata_insert map[string]interface{}
 
-	viper.SetConfigName("config1") // path to look for the config file in
-	viper.AddConfigPath(constant.HectorConf)
-	viper.SetConfigType("toml")
 
-	err := viper.ReadInConfig()
+var ConfPathHash = map[string]string {
 
-	if err != nil {
-		fmt.Println("Config not found...")
+	"alltrade_get" : constant.HectorConf + "/metadata/alltrade/alltradeApi.json",
+	"alltrade_insert" : constant.HectorConf + "/metadata/alltrade/alltrade.json",
+}
 
-		viper.AddConfigPath("/etc/hector/")
-		viper.ReadInConfig()
-	}
-
-	viper.Unmarshal(&Conf)
-	Conf.loaded = true
-}*/
 
 func Init() {
 
@@ -71,6 +64,38 @@ func Init() {
 		fmt.Println("Getting localconfig")
 		localInit()
 	}
+
+
+	Alltrade_get = readFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json")
+	Alltrade_insert = readFile(constant.HectorConf + "/metadata/alltrade/alltrade.json")
+
+	Metadata_get = decodeJSON(Alltrade_get)
+	Metadata_insert = decodeJSON(Alltrade_insert)
+
+	fmt.Println("Size of Alltrade_get : ", len(Alltrade_get), "Size of Alltrade_insert : ", len(Alltrade_insert))
+
+	if(len(Alltrade_get) == 0 || len(Alltrade_insert) == 0 ){
+
+		fmt.Println("Could not read JSON files, exiting.")
+		os.Exit(1)
+	}
+
+	if(Metadata_get == nil || Metadata_insert == nil) {
+
+		if Metadata_get == nil {
+			fmt.Println("Something is broken with the JSON API GET File, please fix, can't parse it.")
+		}
+
+		if Metadata_insert == nil {
+			fmt.Println("Something is broken with the JSON Insert File, please fix, can't parse it.")
+		}
+
+			os.Exit(1)
+	}
+
+
+
+
 }
 
 // Get returns the populated configuration information
@@ -83,6 +108,7 @@ func Get() Config {
 
 	return Conf
 }
+
 
 // GetHectorConfig returns a specific Hector server setting
 // For example:
