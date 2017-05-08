@@ -1,0 +1,555 @@
+//func ReportsAdjustStockGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT 	adjust_date_time,
+//			adjust_stock_no,
+//			brand_key,
+//			commercial_name_key,
+//			company,
+//			location_code,
+//			location_name,
+//			mat_code_key,
+//			model_key,
+//			product_subtype_key,
+//			product_type_key,
+//			remark,
+//			serial_key,
+//	FROM stock_adjustment
+//	`
+//
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "adjustStatus" {
+//				query += (" adjust_status = '" + v + "' AND")
+//			} else if k == "createDateTimeRange" {
+//				values := strings.Split(v, ",")
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//			} else if k == "locationCode" {
+//				query += (" location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "locationSubType" {
+//				query += (" location_subtype = '" + v + "' AND")
+//			} else if k == "locationType" {
+//				query += (" location_type = '" + v + "' AND")
+//			} else if k == "matCode_key" {
+//				query += (" mat_code_key = '" + v + "' AND")
+//			} else if k == "serial_key" {
+//				query += (" serial_key = '" + v + "' AND")
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//}
+//
+//func ReportsCheckStockDetailGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT 	brand_key,
+//			commercial_name_key,
+//			confirm_datetime,
+//			confirm_no,
+//			confirm_user,
+//			location_code,
+//			location_name,
+//			mat_code_key,
+//			model_key,
+//			product_subtype_key,
+//			product_type_key,
+//			stock_on_hand_qty
+//	FROM check_stock_detail
+//	`
+//
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "createDateTimeRange" {
+//				values := strings.Split(v, ",")
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//			} else if k == "locationCode" {
+//				query += (" location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "transactionType" {
+//				query += (" transaction_type = '" + v + "' AND")
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//
+//}
+//
+//func ReportsDirectSaleDetailGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT 	commercial_name_key,
+//			company,
+//			create_by,
+//			from_substock,
+//			location_code,
+//			location_name,
+//			matcode_key,
+//			sales_code,
+//			serial_key,
+//			sold_status
+//	FROM sale_out_detail
+//	`
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "createBy" {
+//				query += (" create_by = '" + v + "' AND")
+//			} else if k == "locationCode" {
+//				query += (" location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "locationRegion" {
+//				query += (" location_region = '" + v + "' AND")
+//			} else if k == "locationSubType" {
+//				query += (" location_subtype = '" + v + "' AND")
+//			} else if k == "locationType" {
+//				query += (" location_type = '" + v + "' AND")
+//				// TODO: Sales Code BETWEEN Query  - will do after the final queries come
+//			} else if k == "salesCode" {
+//				query += (" sales_code = '" + v + "' AND")
+//			} else if k == "soldStatus" {
+//				query += (" sold_status = '" + v + "' AND")
+//			} else if k == "transactionType" {
+//				query += (" transaction_type = '" + v + "' AND")
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//
+//}
+//
+//func ReportsDirectSaleSummaryGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT  brand_key,
+//			commercial_name_key,
+//			company,
+//			location_code,
+//			location_name,
+//			matcode_key,
+//			model_key,
+//			product_subtype_key,
+//			product_type_key,
+//			sales_code
+//	FROM sale_out_detail
+//	`
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "createDateTimeRange" {
+//				values := strings.Split(v, ",")
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//			} else if k == "locationCode" {
+//				query += (" location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "locationSubType" {
+//				query += (" location_subtype = '" + v + "' AND")
+//			} else if k == "locationType" {
+//				query += (" location_type = '" + v + "' AND")
+//				// TODO: Sales Code BETWEEN Query  - will do after the final queries come
+//			} else if k == "salesCode" {
+//				query += (" sales_code = '" + v + "' AND")
+//			} else if k == "soldStatus" {
+//				query += (" sold_status = '" + v + "' AND")
+//			} else if k == "transactionType" {
+//				query += (" transaction_type = '" + v + "' AND")
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, "AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//}
+//
+//func ReportsRequestGoodsSummaryGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT 	company,
+//			create_by,
+//			create_datetime,
+//			from_location_code,
+//			mobile_no,
+//			picking_datetime,
+//			remark,
+//			request_detail,
+//			request_no,
+//			request_status,
+//			to_location_code,
+//			to_location_name
+//	FROM request_goods
+//	`
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "transactionType" {
+//				query += (" transaction_type = '" + v + "' AND")
+//			} else if k == "requestStatus" {
+//				query += (" request_status = '" + v + "' AND")
+//			} else if k == "fromLocationType" {
+//				query += (" from_location_type = '" + v + "' AND")
+//			} else if k == "fromLocationSubType" {
+//				query += (" from_location_subtype = '" + v + "' AND")
+//			} else if k == "company" {
+//				query += (" company = '" + v + "' AND")
+//			} else if k == "createDateTimeRange" {
+//				values := strings.Split(v, ",")
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//			} else if k == "fromLocationCode" {
+//
+//				query += (" from_location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//}
+//
+//func ReportsTransferDetailGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT 	request_goods.create_datetime,
+//			request_goods.request_no,
+//			request_goods.for_substock,
+//			request_goods.create_datetime
+//	FROM request_goods JOIN sub_stock_detail_transfer
+//	ON request_goods.company = sub_stock_detail_transfer.company
+//	`
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "transactionType" {
+//				query += (" sub_stock_detail_transfer.transaction_type = '" + v + "' AND")
+//			} else if k == "createDateTimeRange" {
+//				values := strings.Split(v, ",")
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//			} else if k == "locationCode" {
+//				query += (" location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "locationSubType" {
+//				query += (" sub_stock_detail_transfer.location_subtype = '" + v + "' AND")
+//			} else if k == "locationType" {
+//				query += (" sub_stock_detail_transfer.location_type = '" + v + "' AND")
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//}
+//
+//func ReportsTransferSummaryGet(req model.RequestAbstract) model.ResponseAbstract {
+//	valid := true
+//	query := `
+//	SELECT 	request_goods.create_datetime,
+//			request_goods.request_no,
+//			request_goods.for_substock,
+//			request_goods.ship_to_code,
+//			request_goods.ship_to_name,
+//			request_goods.mat_code_key,
+//			request_goods.do_no,
+//			request_goods.picking_datetime
+//	FROM request_goods JOIN sub_stock_detail_transfer
+//	ON request_goods.company = sub_stock_detail_transfer.company
+//	`
+//	if len(req.Filters) > 0 {
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//			if k == "transactionType" {
+//				query += (" sub_stock_detail_transfer.transaction_type = '" + v + "' AND")
+//			} else if k == "createDateTimeRange" {
+//				values := strings.Split(v, ",")
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//			} else if k == "locationCode" {
+//				query += (" location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "locationSubType" {
+//				query += (" sub_stock_detail_transfer.location_subtype = '" + v + "' AND")
+//			} else if k == "locationType" {
+//				query += (" sub_stock_detail_transfer.location_type = '" + v + "' AND")
+//			} else {
+//				valid = false
+//			}
+//		}
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//}
+
+
+// ReportsRequestGoodGet handles ReportsRequestGood GET request
+
+//func ReportsRequestGoodGet(req model.RequestAbstract) model.ResponseAbstract {
+//
+//	valid := true
+//
+//	query := `
+//        SELECT to_location_name,
+//        to_location_code,
+//        ship_to_province,
+//        ship_to_code,
+//        reserved_no,
+//        request_no,
+//        remark text,
+//        receive_by,
+//        picking_datetime,
+//        model_key,
+//        mobile_no,
+//        for_substock,
+//        do_no,
+//        create_datetime,
+//        company,
+//        commercial_name_key
+//        FROM request_goods
+//        `
+//	if len(req.Filters) > 0 {
+//
+//		query += " WHERE "
+//
+//		for k, v := range req.Filters {
+//
+//			if k == "transactionType" {
+//				query += (" transaction_type = '" + v + "' AND")
+//			} else if k == "fromLocationSubType" {
+//				query += (" from_location_subtype = '" + v + "' AND")
+//			} else if k == "fromLocationType" {
+//				query += (" from_location_type = '" + v + "' AND")
+//			} else if k == "requestStatus" {
+//				query += (" request_status = '" + v + "' AND")
+//			} else if k == "company" {
+//				query += (" company IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//			} else if k == "fromLocationCode" {
+//
+//				query += (" from_location_code IN (")
+//
+//				values := strings.Split(v, ",")
+//
+//				for _, val := range values {
+//
+//					query += "'" + val + "' ,"
+//				}
+//				query = strings.Trim(query, ",")
+//				query += ") AND"
+//
+//			} else if k == "createDateTimeRange" {
+//
+//				values := strings.Split(v, ",")
+//
+//				if len(values) == 2 {
+//
+//					query += (" create_datetime BETWEEN timestamp '" + values[0] + "' AND timestamp '" + values[1] + "'")
+//					query += " AND"
+//				}
+//
+//			} else {
+//				valid = false
+//			}
+//
+//		}
+//
+//	}
+//
+//	if !valid {
+//		query = ""
+//	}
+//
+//	query = strings.Trim(query, " AND")
+//	var dbAbs model.DBAbstract
+//	dbAbs.DBType = "presto"
+//	dbAbs.QueryType = "SELECT"
+//	dbAbs.Query = []string{query}
+//	endpoint.Process(&dbAbs)
+//
+//	return prepareResponse(dbAbs)
+//}

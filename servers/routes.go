@@ -8,6 +8,8 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"strings"
 	"encoding/json"
+	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/dminGod/D30-HectorDA/utils"
 )
 
 // Routes store the mapping of routes to the underlying application logic
@@ -42,19 +44,44 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 	route := GetRouteName(reqAbs)
 
-	// check if the route exists
-	if !RouteExists(route) {
-		logger.Write("ERROR", "Route for Application: "+reqAbs.Application+", Action: "+reqAbs.Action+", RequestType: "+reqAbs.HTTPRequestType+" not found")
-		return model.ResponseAbstract{}, errors.New("Route not found")
-	}
-
 	reqAbs.RouteName = route
 
 	// All the hooks for global level and applciation will be applied here for changing the requests
 	enrichRequest(&reqAbs)
 
-	// Calling the custom method defined
-	respAbs := Routes[route](reqAbs)
+	var respAbs model.ResponseAbstract
+
+	logger.Write("INFO", "Will check if RouteExists")
+
+	if RouteExists(route) {
+
+		// Calling the custom method defined
+		respAbs = Routes[route](reqAbs)
+
+	} else {
+
+		logger.Write("INFO", "Route not found in explict hardcode, checking for table entries in the JSON file")
+
+		routeDetails := utils.FindMap("apiName_" + reqAbs.HTTPRequestType, route, config.Metadata_get);
+
+		if len(routeDetails) != 0 {
+
+			logger.Write("INFO", "Calling common method for the request")
+			respAbs = alltrade.HandleUnlistedRequest(reqAbs, routeDetails["table"].(string))
+		} else {
+
+			logger.Write("ERROR", "Route for Application: "+reqAbs.Application+", Action: "+reqAbs.Action+", RequestType: "+reqAbs.HTTPRequestType+" not found")
+			return model.ResponseAbstract{
+
+				StatusCode : 404,
+				Status : "fail",
+				StandardStatusMessage : "NOT_FOUND",
+				Text : "The given route was not found",
+				Data : "{}",
+				Count : 0,
+			}, errors.New("Route not found")
+		}
+	}
 
 	// After getting a response, add the originating request with the response as well so you can use it
 	// in other places

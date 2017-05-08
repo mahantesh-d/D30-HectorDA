@@ -137,6 +137,8 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 
 	// check if the route exists
 	logger.Write("INFO","Route : " + route)
+
+	/*
 	if !RouteExists(route) {
 		resp.StatusCode = 404
 		resp.Status = "fail"
@@ -146,7 +148,7 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 		resp.ID = req.GetID()
 		resp.Count = 0
 		return false
-	}
+	} */
 
 	// post validations
 	if req.GetMethod().String() == "POST" {
