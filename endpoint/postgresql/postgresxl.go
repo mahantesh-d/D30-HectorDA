@@ -10,6 +10,7 @@ import ("github.com/dminGod/D30-HectorDA/model"
 	"strings"
 
 	"github.com/dminGod/D30-HectorDA/utils"
+	"github.com/dminGod/D30-HectorDA/config"
 )
 
 //var prestgresqlChan chan *sql.DB
@@ -29,16 +30,28 @@ func Handle(dbAbstract *model.DBAbstract) {
 }
 
 func getConnection() (*sql.DB) {
-	const (
-		DB_USER     = "serveradm"
-		DB_PASSWORD = "redhat"
-		DB_NAME     = "testschema2"
-	  )
 
-	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable host=10.138.32.212 port=30001",
-		DB_USER, DB_NAME)
+	Conf := config.Get()
 
-	db, err := sql.Open("postgres", dbinfo)
+	dbName := Conf.Postgresxl.Database
+	dbUser := Conf.Postgresxl.Username
+	dbPass := Conf.Postgresxl.Password
+	dbHost := Conf.Postgresxl.Host
+	dbPort := Conf.Postgresxl.Port
+
+	var dbInfo string
+
+	if len(dbPass) == 0 {
+
+		dbInfo = fmt.Sprintf("user=%s dbname=%s sslmode=disable host=%s port=%s",
+			dbUser, dbName, dbHost, dbPort)
+	} else {
+
+		dbInfo = fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable host=%s port=%s",
+			dbUser, dbPass, dbName, dbHost, dbPort)
+	}
+
+	db, err := sql.Open("postgres", dbInfo)
 
 	if err != nil {
 
