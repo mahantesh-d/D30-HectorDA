@@ -100,7 +100,11 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 		case "text":
 			value +=((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
 		case "timestamp":
-			value +=((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			if len((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)) > 0 {
+				value += ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			} else {
+				value += " NULL "
+			}
 		}
 		value += ","
 	}
@@ -119,7 +123,7 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 
 	table := metaInput["table"].(string)
 
-	myFields := utils.FindMap("table", table, config.Metadata_insert)
+	myFields := utils.FindMap("table", table, config.Metadata_insert())
 
 	var selectString string
 

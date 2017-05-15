@@ -12,7 +12,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 )
 
-
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
 
 	// If ther eare custom functions, then this will be called.
@@ -24,21 +23,51 @@ func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstrac
 	return routes
 }
 
-func EnrichRequest(reqAbs *model.RequestAbstract) {
+func EnrichRequest(reqAbs *model.RequestAbstract) { }
 
+func EnrichResponse(reqAbs *model.ResponseAbstract) { }
+
+func EnrichDataResponse(dbAbs *model.DBAbstract) {
+
+	var retData []map[string]interface{}
+
+	if len(dbAbs.RichData) > 0 {
+
+		// Loop through the array
+		for _, v := range dbAbs.RichData {
+
+			var curRecord = make(map[string]interface{})
+
+			// Map the values to curRecord
+			mapRecord(v, &curRecord)
+
+			// Make the time as per the format that they want..
+			manipulateData(*dbAbs, &curRecord)
+
+
+
+			retData = append(retData, curRecord)
+		}
+
+
+	}
+
+	dbAbs.Data = utils.EncodeJSON(retData)
 }
 
-func EnrichResponse(reqAbs *model.ResponseAbstract) {
 
-}
+
 
 func HandleUnlistedRequest(req model.RequestAbstract, table_name string) model.ResponseAbstract {
 
 	var dbAbs model.DBAbstract
 
+
 	if req.HTTPRequestType == "GET" || req.HTTPRequestType == "POST" {
 
 		dbAbs = commonRequestProcess(req, table_name)
+
+		EnrichDataResponse(&dbAbs)
 
 	} else {
 
@@ -52,10 +81,11 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 	var dbAbs = model.DBAbstract{}
 
+	dbAbs.TableName = table_name
+
 	if req.HTTPRequestType == "GET" {
 
-		metaInput := utils.FindMap("table", table_name, config.Metadata_get)
-		metaResult := metadata.InterpretSelect(metaInput, req.Filters)
+		metaResult := metadata.InterpretSelect(table_name, req.Filters)
 
 		// pagination and limit check
 		metaResult["limit"] = req.Limit
@@ -72,7 +102,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 				metaResult["databaseType"] = "cassandra_stratio"
 			}
-
 		}
 
 		query = queryhelper.PrepareSelectQuery(metaResult)
@@ -81,7 +110,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 	} else if req.HTTPRequestType == "POST" {
 
-		metaInputPost := utils.FindMap("table", table_name, config.Metadata_insert)
+		metaInputPost := utils.FindMap("table", table_name, config.Metadata_insert())
 
 		metaResult := metadata.Interpret(metaInputPost, req.Payload)
 		query := queryhelper.PrepareInsertQuery(metaResult)
@@ -94,6 +123,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	}
 
 	endpoint.Process(&dbAbs)
+
 	return dbAbs
 }
 
@@ -111,10 +141,9 @@ func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 
 func returnFailResponse(messageToUser string, messageToLog string) model.ResponseAbstract {
 
-	logger.Write("ERROR", "AlltradeAPI Fail: "+messageToLog+" messageToUser : "+messageToUser)
+	logger.Write("ERROR", "AlltradeAPI Fail: " + messageToLog + " messageToUser : " + messageToUser)
 
 	return model.ResponseAbstract{
-
 		Status:                "500",
 		StandardStatusMessage: "error",
 		Text:  "There was an error" + messageToUser,

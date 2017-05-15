@@ -30,7 +30,9 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 func FindIDQueryBuild(metaInput map[string]interface{}) string {
 
 	table := metaInput["table"].(string)
-	ct_prefix := metaInput["child_table_prefix"].(string)
+	// ct_prefix := metaInput["child_table_prefix"].(string)
+	ct_prefix := ""
+
 
 	pk := table + "_pk"
 
@@ -74,9 +76,9 @@ func returnConditions(input map[string]interface{}, table string, ct_prefix stri
 
 	case "set<text>":
 		fmt.Println("set<text> column", input["column"].(string))
-		ct_name := ct_prefix + input["column"].(string)
-		*q_join += " LEFT JOIN " + ct_name + " ON " + ct_name + ".parent_pk = " + table + "." + table + "_pk "
-		*q_where += " " + ct_name + ".value " + relationalOperator + " " + endpoint_common.ReturnString(input["value"].(string)) + " AND"
+		// ct_name := ct_prefix + input["column"].(string)
+		// *q_join += " LEFT JOIN " + ct_name + " ON " + ct_name + ".parent_pk = " + table + "." + table + "_pk "
+		// *q_where += " " + ct_name + ".value " + relationalOperator + " " + endpoint_common.ReturnString(input["value"].(string)) + " AND"
 
 	case "int":
 		fmt.Println("int column", input["column"].(string))

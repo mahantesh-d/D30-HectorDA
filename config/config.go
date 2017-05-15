@@ -47,8 +47,8 @@ var Conf Config
 
 var Alltrade_get string
 var Alltrade_insert string
-var Metadata_get map[string]interface{}
-var Metadata_insert map[string]interface{}
+var metadata_get map[string]interface{}
+var metadata_insert map[string]interface{}
 
 
 var ConfPathHash = map[string]string {
@@ -57,7 +57,6 @@ var ConfPathHash = map[string]string {
 	"alltrade_insert" : constant.HectorConf + "/metadata/alltrade/alltrade.json",
 }
 
-
 func Init() {
 
 	if etcdInit() != nil {
@@ -65,12 +64,11 @@ func Init() {
 		localInit()
 	}
 
+	Alltrade_get = readFile(constant.HectorConf + "/metadata/alltrade/alltrade_unified.json")
+	Alltrade_insert = readFile(constant.HectorConf + "/metadata/alltrade/alltrade_unified.json")
 
-	Alltrade_get = readFile(constant.HectorConf + "/metadata/alltrade/alltradeApi.json")
-	Alltrade_insert = readFile(constant.HectorConf + "/metadata/alltrade/alltrade.json")
-
-	Metadata_get = decodeJSON(Alltrade_get)
-	Metadata_insert = decodeJSON(Alltrade_insert)
+	metadata_get = decodeJSON(Alltrade_get)
+	metadata_insert = decodeJSON(Alltrade_insert)
 
 	fmt.Println("Size of Alltrade_get : ", len(Alltrade_get), "Size of Alltrade_insert : ", len(Alltrade_insert))
 
@@ -80,22 +78,29 @@ func Init() {
 		os.Exit(1)
 	}
 
-	if(Metadata_get == nil || Metadata_insert == nil) {
+	if(metadata_get == nil || metadata_insert == nil) {
 
-		if Metadata_get == nil {
+		if metadata_get == nil {
 			fmt.Println("Something is broken with the JSON API GET File, please fix, can't parse it.")
 		}
 
-		if Metadata_insert == nil {
+		if metadata_insert == nil {
 			fmt.Println("Something is broken with the JSON Insert File, please fix, can't parse it.")
 		}
 
 			os.Exit(1)
 	}
 
+}
 
+func Metadata_get() map[string]interface{} {
 
+	return decodeJSON(Alltrade_get)
+}
 
+func Metadata_insert() map[string]interface{} {
+
+	return decodeJSON(Alltrade_insert)
 }
 
 // Get returns the populated configuration information

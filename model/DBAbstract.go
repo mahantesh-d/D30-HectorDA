@@ -11,4 +11,5 @@ type DBAbstract struct {
 	Data              string                   // data is the response from the database endpoint
 	RichData          []map[string]interface{} // This is the data recieved in the native format from the db
 	Count             uint64                   // count of the data
+	TableName	  string
 }

@@ -46,12 +46,33 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 	reqAbs.RouteName = route
 
-	// All the hooks for global level and applciation will be applied here for changing the requests
-	enrichRequest(&reqAbs)
 
 	var respAbs model.ResponseAbstract
 
-	logger.Write("INFO", "Will check if RouteExists")
+
+	// Get details from JSON
+	routeDetails := utils.FindMap("apiName", route, config.Metadata_get());
+	doesRouteExist := len(routeDetails) > 0 || RouteExists(route)
+
+	// Route does not exist in the hardcode and in the JSON mapping.. exit.
+	if ! doesRouteExist {
+
+		logger.Write("ERROR", "Route for Application: "+reqAbs.Application+", Action: "+reqAbs.Action+", RequestType: "+reqAbs.HTTPRequestType+" not found")
+		return model.ResponseAbstract{
+
+			StatusCode : 404,
+			Status : "fail",
+			StandardStatusMessage : "NOT_FOUND",
+			Text : "The given route was not found",
+			Data : "{}",
+			Count : 0,
+		}, errors.New("Route not found")
+	}
+
+	// We know route does exist, lets enrich
+	// All the hooks for global level and applciation will be applied here for changing the requests
+	enrichRequest(&reqAbs)
+
 
 	if RouteExists(route) {
 
@@ -62,24 +83,12 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 		logger.Write("INFO", "Route not found in explict hardcode, checking for table entries in the JSON file")
 
-		routeDetails := utils.FindMap("apiName_" + reqAbs.HTTPRequestType, route, config.Metadata_get);
+		routeDetails := utils.FindMap("apiName", route, config.Metadata_get());
 
 		if len(routeDetails) != 0 {
 
 			logger.Write("INFO", "Calling common method for the request")
 			respAbs = alltrade.HandleUnlistedRequest(reqAbs, routeDetails["table"].(string))
-		} else {
-
-			logger.Write("ERROR", "Route for Application: "+reqAbs.Application+", Action: "+reqAbs.Action+", RequestType: "+reqAbs.HTTPRequestType+" not found")
-			return model.ResponseAbstract{
-
-				StatusCode : 404,
-				Status : "fail",
-				StandardStatusMessage : "NOT_FOUND",
-				Text : "The given route was not found",
-				Data : "{}",
-				Count : 0,
-			}, errors.New("Route not found")
 		}
 	}
 
@@ -163,7 +172,9 @@ func enrichResponse(respAbs *model.ResponseAbstract) {
 // GetRouteName is used to return the route mapping as per the naming convention of Hector
 func GetRouteName(reqAbs model.RequestAbstract) string {
 
-	route := strings.ToLower(reqAbs.Application + constant.HectorRouteDelimiter + reqAbs.Action + constant.HectorRouteDelimiter + reqAbs.HTTPRequestType)
+	// route := strings.ToLower(reqAbs.Application + constant.HectorRouteDelimiter + reqAbs.Action + constant.HectorRouteDelimiter + reqAbs.HTTPRequestType)
+
+	route := strings.ToLower( reqAbs.Application + constant.HectorRouteDelimiter + reqAbs.Action )
 
 	return route
 }

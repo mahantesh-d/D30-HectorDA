@@ -66,9 +66,14 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
 	// This array will hold the minor queies
 	var minor_queries []string
-	var child_table_name string
+	// var child_table_name string
 	var record_uuid string
-	var child_query string
+	// var child_query string
+
+	fmt.Println(record_uuid)
+
+
+
 	database := metaInput["database"].(string)
 	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
 
@@ -84,10 +89,10 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
 		case "set<text>":
 			value += endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
-			mValue := endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			// mValue := endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 			// Make the insert into the extra cassandra table :
 			// Table name : Table Prefix + field name
-			child_table_name = metaInput["child_table_prefix"].(string) + k
+			// child_table_name = metaInput["child_table_prefix"].(string) + k
 			record_uuid = metaInput["record_uuid"].(string)
 
 			inputs := ((metaInput["field_keyvalue"].(map[string]interface{}))[k]).([]interface{})
@@ -98,10 +103,10 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
 				case string:
 					// Only for string values we are handling inserts into external tables
-					child_query = "INSERT INTO " + database + "." + child_table_name + " (ct_pk, parent_pk, value) VALUES ("
-					child_query += "now(), "
-					child_query += record_uuid + ", " + endpoint_common.ReturnString(mValue)
-					child_query += " ) "
+					// child_query = "INSERT INTO " + database + "." + child_table_name + " (ct_pk, parent_pk, value) VALUES ("
+					// child_query += "now(), "
+					// child_query += record_uuid + ", " + endpoint_common.ReturnString(mValue)
+					// child_query += " ) "
 					//minor_queries = append(minor_queries, child_query)
 				case map[string]interface{}:
 					// Do Nothing here
@@ -141,7 +146,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 //	fmt.Println( " Metadata related to Get", config.Metadata_get)
 //	fmt.Println( " Metadata related to Insert", config.Metadata_insert)
 
-	myFields := utils.FindMap("table", table, config.Metadata_insert)
+	myFields := utils.FindMap("table", table, config.Metadata_insert())
 
 	var selectString string
 
@@ -178,11 +183,10 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 			for _, v := range fields {
 				fieldMeta := v.(map[string]interface{})
 				query += endpoint_common.ReturnCondition(fieldMeta)
-			
+
 			}
 
-
-				query += " LIMIT " + strconv.Itoa(limit)
+				query += " LIMIT " + strconv.Itoa(limit) + " ALLOW FILTERING"
 		} else {
 			querySorter := make([][]string, 20)
 			for _, v := range fields {
@@ -207,6 +211,8 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 	} else {
 		query = ""
 	}
+
+	logger.Write("INFO", "The select query being run is : " + query)
 	return query
 }
 

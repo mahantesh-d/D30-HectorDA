@@ -173,8 +173,6 @@ func Select(dbAbstract *model.DBAbstract) {
 
 	fmt.Println("Running the cassandra select query : " + dbAbstract.Query[0])
 
-
-
 	go queueSession(session)
 
 	_ = err
@@ -189,6 +187,7 @@ func Select(dbAbstract *model.DBAbstract) {
 		dbAbstract.Message = "Query successful"
 		data := utils.EncodeJSON(result)
 		dbAbstract.Data = data
+		dbAbstract.RichData = result
 		dbAbstract.Count = uint64(len(result))
 	}
 }

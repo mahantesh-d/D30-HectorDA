@@ -6,3 +6,7 @@ conf-example/server.log
 hector
 hector.exe
 hector_presto.exe
+
+
+conf-example/log/server.log
+conf-example/metadata/alltrade/alltrade.json

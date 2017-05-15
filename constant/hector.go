@@ -2,7 +2,6 @@ package constant
 
 import (
 	"os"
-	"fmt"
 )
 
 // HectorPipe is the Named pipe used to listen for graceful server shutdown
@@ -21,15 +20,17 @@ func init(){
 
 	if _, err := os.Stat("/etc/hector"); os.IsNotExist(err) {
 
-		if _, err := os.Stat("../conf-example"); os.IsNotExist(err) {
+		HectorConf = "conf-example"
 
-			HectorConf = "conf-example"
-			fmt.Println("Standard director, /etc/hector does not exist, using conf-example")
-		} else {
-
-			HectorConf = "../conf-example"
-			fmt.Println("Standard director, /etc/hector does not exist, using conf-example")
-		}
+		//if _, err := os.Stat("../conf-example"); os.IsNotExist(err) {
+		//
+		//	HectorConf = "conf-example"
+		//	fmt.Println("Standard director, /etc/hector does not exist, using conf-example")
+		//} else {
+		//
+		//	HectorConf = "../conf-example"
+		//	fmt.Println("Standard director, /etc/hector does not exist, using conf-example")
+		//}
 
 	}
 }

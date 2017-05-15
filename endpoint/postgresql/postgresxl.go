@@ -30,14 +30,21 @@ func Handle(dbAbstract *model.DBAbstract) {
 
 func getConnection() (*sql.DB) {
 	const (
-		DB_USER     = "postgres"
+		DB_USER     = "serveradm"
 		DB_PASSWORD = "redhat"
-		DB_NAME     = "all_trade"
+		DB_NAME     = "testschema2"
 	  )
 
-	dbinfo:= fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		DB_USER, DB_PASSWORD, DB_NAME)
-	db,_:=sql.Open("postgres", dbinfo)
+	dbinfo := fmt.Sprintf("user=%s dbname=%s sslmode=disable host=10.138.32.212 port=30001",
+		DB_USER, DB_NAME)
+
+	db, err := sql.Open("postgres", dbinfo)
+
+	if err != nil {
+
+		logger.Write("ERROR", "Trouble connecting to database Postgres Error : " + err.Error())
+	}
+
 	return db
 }
 
@@ -86,12 +93,25 @@ func Insert(dbAbstract *model.DBAbstract) {
 }
 func Select(dbAbstract *model.DBAbstract) {
 	var prestoResult []map[string]interface{}
-	db:=getConnection()
-	   db.Begin()
-	   fmt.Println(dbAbstract.Query[0])
-	   rows,err:=db.Query(dbAbstract.Query[0])
 
+	db := getConnection()
+	db.Begin()
+	logger.Write("INFO", "Running Postgres Query" + dbAbstract.Query[0])
+	rows, err := db.Query(dbAbstract.Query[0])
+
+	if err != nil {
+
+		fmt.Println(err)
+	}
+
+	fmt.Println("Rows is ", rows)
 	cols, err := rows.Columns()
+
+	if err != nil {
+
+		logger.Write("ERROR", "Postgresxl select query problem after trying to get columns. -->" + err.Error())
+	}
+
 
 	data := make([]interface{}, len(cols))
 	args := make([]interface{}, len(data))
@@ -102,14 +122,19 @@ func Select(dbAbstract *model.DBAbstract) {
 
 	for rows.Next() {
 
+		var rowData = make(map[string]interface{})
+
 		if err := rows.Scan(args...); err != nil {
 			logger.Write("ERROR", "An Error occurred while scanning results : " + err.Error())
 		}
 
 		for i := range data {
 
-			prestoResult = append(prestoResult, map[string]interface{}{cols[i]: data[i]})
+			rowData[ cols[i] ] = data[i]
 		}
+
+		prestoResult = append(prestoResult, rowData)
+
 	}
 	 if err!=nil {
 		 dbAbstract.Status = "fail"
@@ -121,6 +146,7 @@ func Select(dbAbstract *model.DBAbstract) {
 		 dbAbstract.Status = "success"
 		 dbAbstract.Message = "Select successful"
 		 dbAbstract.Data = utils.EncodeJSON(prestoResult)
+		 dbAbstract.RichData = prestoResult
 		 dbAbstract.Count = uint64(len(prestoResult))
 
 	}

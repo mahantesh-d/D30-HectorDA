@@ -6,6 +6,7 @@ import (
 	"github.com/gocql/gocql"
 	"fmt"
 
+	"github.com/dminGod/D30-HectorDA/config"
 )
 
 // Interpret is used to cross-reference application metadata with the request metadata
@@ -19,11 +20,13 @@ func Interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 func interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
 
 	output := make(map[string]interface{})
+
+	// Get the details of the object
 	output["databaseType"] = metadata["databaseType"]
 	output["version"] = metadata["version"]
 	output["database"] = metadata["database"]
 	output["table"] = metadata["table"]
-	output["child_table_prefix"] = metadata["child_table_prefix"]
+	// output["child_table_prefix"] = metadata["child_table_prefix"]
 
 	outputKeyValues := make(map[string]interface{})
 	outputKeyMeta := make(map[string]interface{})
@@ -33,42 +36,47 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 	for k, v := range metadata["fields"].(map[string]interface{}) {
                 fmt.Println(k)
 		f := v.(map[string]interface{})
+
+		fmt.Println("Metadata Debug f object: ", f)
+
 		val := make([]string, 2)
 		val[0] = f["name"].(string)
 		val[1] = f["type"].(string)
+		curKey := f["column"].(string)
+
 
 		switch t := val[1]; t {
 
 		case "uuid":
 			record_uuid_u, _ := gocql.RandomUUID()
 			record_uuid = record_uuid_u.String()
-			outputKeyValues[k] = record_uuid
-			outputKeyMeta[k] = t
+			outputKeyValues[curKey] = record_uuid
+			outputKeyMeta[curKey] = t
 
 		case "text":
-			addData(&outputKeyValues, &outputKeyMeta, k, payload, val[0], t)
+			addData(&outputKeyValues, &outputKeyMeta, curKey, payload, val[0], t)
 
 		case "set<text>":
-			addData(&outputKeyValues, &outputKeyMeta, k, payload, val[0], t)
+			addData(&outputKeyValues, &outputKeyMeta, curKey, payload, val[0], t)
 
 		case "map<text,text>":
-			addData(&outputKeyValues, &outputKeyMeta, k, payload, val[0], t)
+			addData(&outputKeyValues, &outputKeyMeta, curKey, payload, val[0], t)
 
 		case "int":
-			addData(&outputKeyValues, &outputKeyMeta, k, payload, val[0], t)
+			addData(&outputKeyValues, &outputKeyMeta, curKey, payload, val[0], t)
 
 		case "timestamp":
-			addData(&outputKeyValues, &outputKeyMeta, k, payload, val[0], t)
+			addData(&outputKeyValues, &outputKeyMeta, curKey, payload, val[0], t)
 		}
 
 	}
+
 
 	output["field_keyvalue"] = outputKeyValues
 	output["field_keymeta"] = outputKeyMeta
 	output["record_uuid"] = record_uuid
 
 	return output
-
 }
 
 func addData(outputKeyValues *map[string]interface{}, outputKeyMeta *map[string]interface{}, key string, payload map[string]interface{}, value interface{}, dataType string) {
@@ -85,24 +93,32 @@ func addData(outputKeyValues *map[string]interface{}, outputKeyMeta *map[string]
 
 // InterpretSelect ( table_related_data   map[string]interface{} -- query_related_data map[string]string )
 
-func InterpretSelect(input map[string]interface{}, filters map[string]string) map[string]interface{} {
+func InterpretSelect(table_name string, filters map[string]string) map[string]interface{} {
 
 	output := make(map[string]interface{})
 
+	input := utils.FindMap("table", table_name, config.Metadata_get())
+
 	// This is the table related data
-	//fmt.Println("Input sent to Interpret for select(expecting string of interface)", input)
+	fmt.Println("Input sent to Interpret for select(expecting string of interface)", input)
 
 	// This is query related data
 	//fmt.Println("Filters map of string to string(expecting string of interface)", filters)
 
+	if len(input) == 0 {
+
+		logger.Write("ERROR", "Input values not found, something is breaking..")
+		fmt.Println("Input values: ", input)
+		return map[string]interface{}{}
+	}
 
 	fields := input["fields"].(map[string]interface{})
 
 	for k, v := range filters {
 
-		if utils.KeyInMap(k, fields) {
+		if utils.ValueInMapSelect(k, fields) {
 
-			fieldrecord := fields[k].(map[string]interface{})
+			fieldrecord := utils.GetSelectMap(k, fields)
 			fieldrecord["value"] = v
 			output[k] = fieldrecord
 

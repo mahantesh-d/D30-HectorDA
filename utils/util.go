@@ -10,6 +10,8 @@ import (
 	"strings"
 	"bytes"
 	"fmt"
+
+	"github.com/dminGod/D30-HectorDA/config"
 )
 
 // IsJSON validates a JSON string
@@ -32,7 +34,6 @@ func DecodeJSON(input interface{}) map[string]interface{} {
 	HandleError(err)
 
 	return payload
-
 }
 
 // EncodeJSON converts a map of string and interface to a JSON string
@@ -57,14 +58,67 @@ func KeyInMap(key string, attributes map[string]interface{}) bool {
 	return false
 }
 
+
+// KeyInMap checks if a given key exists in a map of string and interface
+func ValueInMapSelect(key string, attributes map[string]interface{}) bool {
+
+	// iterate over each route
+	for _, v := range attributes {
+
+		vv := v.(map[string]interface{})
+
+		for kkk, vvv := range vv {
+
+			if kkk == "name" && vvv == key {
+
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+// KeyInMap checks if a given key exists in a map of string and interface
+func GetSelectMap(key string, attributes map[string]interface{}) map[string]interface{} {
+
+	var retVal map[string]interface{}
+
+	// iterate over each route
+	for _, v := range attributes {
+
+		vv := v.(map[string]interface{})
+
+		for kkk, vvv := range vv {
+
+			if kkk == "name" && vvv == key {
+
+				retVal = vv
+			}
+		}
+	}
+
+	return retVal
+}
+
+
 // FindMap checks if a given key matches a given value and returns the entire map
 func FindMap(key string, value interface{}, input map[string]interface{}) map[string]interface{} {
 
 	output := make(map[string]interface{})
+
+//	fmt.Println("Input passed to me is ....", input)
+
+//	fmt.Println("Iterating over all the maps in the util.go")
+
 	// iterate over each map
 	for _, v := range input {
+
 		meta := v.(map[string]interface{})
+
 		if meta[key] == value {
+
+//			fmt.Println("we hve a match, ", meta)
 			output = meta
 		}
 	}
@@ -95,10 +149,11 @@ func ParseFilter(input string) map[string]string {
 	var validID = regexp.MustCompile(pattern)
 	input = (validID.FindStringSubmatch(input))[2]
 
-	/*if len(input) == 0 {
+	if len(input) == 0 {
 		return output
 	}
 
+	/*
 	input = input[1:]
 	input = strings.Trim(input,")")
 	if string(input[0]) == "&" {
@@ -113,12 +168,105 @@ func ParseFilter(input string) map[string]string {
 		v = strings.Replace(v, ")", "", 1)
 
 		keyval := strings.Split(v, "=")
-		output[keyval[0]] = keyval[1]
+		output[ keyval[0] ] = keyval[1]
 	}
 
 	return output
 
 }
+
+
+// Given a fieldname and table name return the type of data type the column is.
+func GetColumnDetails( table_name string, field_name string) map[string]interface{} {
+
+	jsonData := config.Metadata_insert()
+	var retType map[string]interface{}
+
+	for _, v := range jsonData {
+
+		fields := v.(map[string]interface{})
+
+		if( fields["table"] == table_name) {
+
+			// Looping over the fields block
+			for _, vv := range fields["fields"].(map[string]interface{}) {
+
+				curFieldBlock := vv.(map[string]interface{})
+
+				if(curFieldBlock["name"] == field_name) {
+
+					retType = curFieldBlock
+				}
+			}
+		}
+	}
+
+
+	return retType
+}
+
+// Given a qualifier for JSON loop through the fields and get the corresponding field level data
+
+func GetColumnDetailsGeneric( field_ouside_tag string, field_outside_value string, field_name string) map[string]interface{} {
+
+	jsonData := config.Metadata_insert()
+	var retType map[string]interface{}
+
+	for _, v := range jsonData {
+
+		fields := v.(map[string]interface{})
+
+		if( fields[field_ouside_tag] == field_outside_value) {
+
+			// Looping over the fields block
+			for _, vv := range fields["fields"].(map[string]interface{}) {
+
+				curFieldBlock := vv.(map[string]interface{})
+
+				if(curFieldBlock["name"] == field_name) {
+
+					retType = curFieldBlock
+				}
+			}
+		}
+	}
+
+
+	return retType
+}
+
+
+
+
+
+// Given a fieldname and table name return the type of data type the column is.
+func GetColumnType( table_name string, field_name string) string {
+
+	jsonData := config.Metadata_insert()
+	retType := ""
+
+	for _, v := range jsonData {
+
+		fields := v.(map[string]interface{})
+
+		if( fields["table"] == table_name) {
+
+			// Looping over the fields block
+			for _, vv := range fields["fields"].(map[string]interface{}) {
+
+				curFieldBlock := vv.(map[string]interface{})
+
+				if(curFieldBlock["name"] == field_name) {
+
+					retType = curFieldBlock["type"].(string)
+ 						}
+			}
+		}
+	}
+
+	return retType
+}
+
 
 // RegexMatch is used to match an input string with a regex pattern
 func RegexMatch(input string, pattern string) bool {

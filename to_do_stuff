@@ -1,0 +1,26 @@
+
+
+
+
+	1. Commit local code
+	2. Get code to work on local instance
+	3. Test local code with simple script
+	4. Move the configuration for Postgres to Config
+	5. Commit the postgres file
+
+
+	Features
+	5. Reporting Module
+	6. Pagination
+	7. Filters on select fields
+	8. Parameterised Queries
+	9. Mandatory checks for passed requests
+	10. Dont show PK in the return result
+
+
+
+
+	4. Log Rotation
+
+    Bugs:
+    -

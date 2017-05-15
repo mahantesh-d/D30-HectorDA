@@ -103,12 +103,14 @@ func Select(dbAbstract *model.DBAbstract) {
 		dbAbstract.Status = "fail"
 		dbAbstract.Message = err.Error()
 		dbAbstract.Data = "{}"
+		dbAbstract.RichData = []map[string]interface{}{}
 		dbAbstract.Count = 0
 	} else {
 
 		dbAbstract.Status = "success"
 		dbAbstract.Message = "Select successful"
 		dbAbstract.Data = utils.EncodeJSON(prestoResult)
+		dbAbstract.RichData = prestoResult
 		dbAbstract.Count = uint64(len(prestoResult))
 		dbAbstract.RichData = prestoResult
 	}
