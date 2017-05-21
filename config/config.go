@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+
 // cassandra struct represents the configuration parameters for the Cassandra endpoint
 type cassandra struct {
 	Host []string
@@ -17,16 +18,25 @@ type cassandra struct {
 
 // hector struct represents the configuration parameters for the hector server
 type hector struct {
-	ConnectionType     string
-	Version            string
-	Host               string
-	Port               string
-	Log                string
-	LogDirectory       string
+	ConnectionType string
+	Version string
+	Host string
+	Port string
+	Log string
+	LogDirectory string
 	StartServersOfType []string
-	RequestMetrics     bool
-	QueryMetrics       bool
-	PortHTTP	   string
+	RequestMetrics bool
+	QueryMetrics bool
+	PortHTTP string
+}
+
+type postgresxl struct {
+
+	Username string
+	Password string
+	Database string
+	Port string
+	Host string
 }
 
 // presto struct represents the configuration parameters for the Presto endpoint
@@ -39,6 +49,7 @@ type Config struct {
 	Cassandra cassandra
 	Presto    presto
 	Hector    hector
+	Postgresxl  postgresxl
 	loaded    bool
 }
 
