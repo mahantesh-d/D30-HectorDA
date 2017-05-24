@@ -29,7 +29,7 @@ func Handle(dbAbstract *model.DBAbstract) {
 
 }
 
-func getConnection() (*sql.DB) {
+func getConnection() (*sql.DB, error) {
 
 	Conf := config.Get()
 
@@ -56,26 +56,48 @@ func getConnection() (*sql.DB) {
 	if err != nil {
 
 		logger.Write("ERROR", "Trouble connecting to database Postgres Error : " + err.Error())
+
 	}
 
-	return db
+	return db, err
 }
 
 func closeConnection(sql *sql.DB)  {
        sql.Close()
 }
 func Insert(dbAbstract *model.DBAbstract) {
-	connection:= getConnection()
+
+	connection, err := getConnection()
+
+	if err != nil {
+
+		logger.Write("ERROR", err.Error())
+
+		if err != nil {
+
+			logger.Write("ERROR", err.Error())
+
+			dbAbstract.Status = "fail"
+			dbAbstract.Message = err.Error()
+			dbAbstract.Data = "{}"
+			return
+
+		}
+	}
+
 	connection.Begin()
 	 var error_messages []string
-	 row,err:= connection.Query(dbAbstract.Query[0])
+	 row, err := connection.Query(dbAbstract.Query[0])
+
+	 fmt.Println(row)
+
 	 var success_count uint64
 	 logger.Write("DEBUG", "Running Queries for insert start : num of queries to run "+string(len(dbAbstract.Query)))
 	 logger.Write("DEBUG","Insert Record successfully")
-	 fmt.Print(row)
+
 	if err != nil {
-		//logger.Write("ERROR", "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
-		//error_messages = append(error_messages, "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
+		logger.Write("ERROR", "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : " + err.Error())
+		error_messages = append(error_messages, "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : "+err.Error())
 	        // logger.Write("INFO","Execution Query"+","+ single_query)
 	} else {
 		success_count += 1
@@ -107,22 +129,50 @@ func Insert(dbAbstract *model.DBAbstract) {
 func Select(dbAbstract *model.DBAbstract) {
 	var prestoResult []map[string]interface{}
 
-	db := getConnection()
+
+	db, err := getConnection()
 	db.Begin()
+
+	defer db.Close()
+
+	if err != nil {
+
+		logger.Write("ERROR", "Error in got connection, " + err.Error())
+
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Error at in getting connection"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+
+		return
+		return
+	}
+
 	logger.Write("INFO", "Running Postgres Query" + dbAbstract.Query[0])
 	rows, err := db.Query(dbAbstract.Query[0])
 
 	if err != nil {
 
-		fmt.Println(err)
+		logger.Write("ERROR", "Error in running query, PG" + err.Error())
+
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Error at in running query"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+
+		return
 	}
 
-	fmt.Println("Rows is ", rows)
 	cols, err := rows.Columns()
 
 	if err != nil {
 
 		logger.Write("ERROR", "Postgresxl select query problem after trying to get columns. -->" + err.Error())
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Error at retriving data"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+		return
 	}
 
 
@@ -139,6 +189,7 @@ func Select(dbAbstract *model.DBAbstract) {
 
 		if err := rows.Scan(args...); err != nil {
 			logger.Write("ERROR", "An Error occurred while scanning results : " + err.Error())
+			return
 		}
 
 		for i := range data {
@@ -154,8 +205,8 @@ func Select(dbAbstract *model.DBAbstract) {
 		 dbAbstract.Message = "Error connecting to endpoint"
 		 dbAbstract.Data = "{}"
 		 dbAbstract.Count = 0
-
-	   }else{
+		 return
+	 }else{
 		 dbAbstract.Status = "success"
 		 dbAbstract.Message = "Select successful"
 		 dbAbstract.Data = utils.EncodeJSON(prestoResult)
@@ -163,22 +214,42 @@ func Select(dbAbstract *model.DBAbstract) {
 		 dbAbstract.Count = uint64(len(prestoResult))
 
 	}
+
+
 	checkErros(err)
-	defer db.Close()
 
 }
+
+
 func Update(dbAbstract *model.DBAbstract)  {
-	db:=getConnection()
+
+	db, err := getConnection()
+
+	if err != nil {
+
+		logger.Write("ERROR", err.Error())
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
+
+		return
+	}
+
 	db.Begin()
 	data,err:=db.Query(dbAbstract.Query[0])
 	var success_count uint64
 	error_messages:=[]string{}
-	checkErros(err)
+
 	defer db.Close()
 	if err != nil {
-		//logger.Write("ERROR", "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
-		//error_messages = append(error_messages, "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
-		// logger.Write("INFO","Execution Query"+","+ single_query)
+
+		logger.Write("ERROR", err.Error())
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
+
+		return
+
 	} else {
 		success_count += 1
 	}
@@ -194,9 +265,9 @@ func Update(dbAbstract *model.DBAbstract)  {
 		dbAbstract.Message = response_text
 		dbAbstract.Data = "{}"
 	} else {
-		logger.Write("INFO", "Inserted successfully")
+		logger.Write("INFO", "Update successful")
 		dbAbstract.Status = "success"
-		dbAbstract.Message = "Inserted successfully"
+		dbAbstract.Message = "Update successful"
 		dbAbstract.Data = "{}"
 		dbAbstract.Count=success_count
 
@@ -209,16 +280,40 @@ func Update(dbAbstract *model.DBAbstract)  {
 		var created time.Time
 		err:= data.Scan(&uid, &username, &department, &created)
 		checkErros(err)
-		fmt.Println("uid | username | department | created ")
-		fmt.Printf("%3v | %8v | %6v | %6v\n", uid, username, department, created)
 	}
 }
+
 func Delete(dbAbstract *model.DBAbstract)  {
-	db:=getConnection()
+
+	db, err := getConnection()
+
+	if err != nil {
+
+		logger.Write("ERROR", err.Error())
+
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
+		return
+
+	}
+
 	db.Begin()
-	data,err:=db.Query(dbAbstract.Query[0])
-	fmt.Println(data)
-	checkErros(err)
+	data, err := db.Query(dbAbstract.Query[0])
+
+
+	if err != nil {
+
+		logger.Write("ERROR", err.Error())
+
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
+		return
+
+	}
+
+
 	defer db.Close()
 	for data.Next() {
 		var uid int
@@ -227,11 +322,11 @@ func Delete(dbAbstract *model.DBAbstract)  {
 		var created time.Time
 		err:= data.Scan(&uid, &username, &department, &created)
 		checkErros(err)
-		fmt.Println("uid | username | department | created ")
-		fmt.Printf("%3v | %8v | %6v | %6v\n", uid, username, department, created)
 	}
 
 }
+
+
 func checkErros(err error)  {
      if err!=nil {
 	     panic(err)

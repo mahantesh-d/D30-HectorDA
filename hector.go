@@ -30,7 +30,6 @@ func main() {
 
 		fmt.Println("Calling server start for ", server)
 		servers.Server(server)
-		fmt.Println("This is getting called..")
 	}
 
 

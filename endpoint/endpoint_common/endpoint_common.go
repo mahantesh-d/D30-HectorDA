@@ -47,7 +47,7 @@ func ReturnMap(input interface{}) string {
 	return ReturnString(value)
 }
 
-func ReturnCondition(input map[string]interface{}) string {
+func ReturnCondition(input map[string]interface{}, whereCondition string) string {
 
 	condition := ""
 	relationalOperator := ""
@@ -60,10 +60,28 @@ func ReturnCondition(input map[string]interface{}) string {
 	switch dataType := input["type"]; dataType {
 
 	case "text", "timestamp", "set<text>":
-		condition += " " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(input["value"].(string))
+
+		for _, value := range input["value"].([]string) {
+
+			if len(value) > 0 {
+
+				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + whereCondition
+			}
+		}
+
 	case "int":
-		condition += " " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string))
+
+		for _, value := range input["value"].([]string) {
+
+			if len(value) > 0 {
+				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + whereCondition
+			}
+
+		}
+
 	}
+
+	condition = strings.Trim(condition, whereCondition)
 
 	return condition
 }

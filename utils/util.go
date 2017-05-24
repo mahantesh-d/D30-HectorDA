@@ -12,6 +12,8 @@ import (
 	"fmt"
 
 	"github.com/dminGod/D30-HectorDA/config"
+	"math/rand"
+	"strconv"
 )
 
 // IsJSON validates a JSON string
@@ -80,9 +82,9 @@ func ValueInMapSelect(key string, attributes map[string]interface{}) bool {
 }
 
 // KeyInMap checks if a given key exists in a map of string and interface
-func GetSelectMap(key string, attributes map[string]interface{}) map[string]interface{} {
+func GetSelectMap(key string, attributes map[string]interface{}, v string) map[string]interface{} {
 
-	var retVal map[string]interface{}
+	retVal := map[string]interface{}{}
 
 	// iterate over each route
 	for _, v := range attributes {
@@ -96,6 +98,19 @@ func GetSelectMap(key string, attributes map[string]interface{}) map[string]inte
 				retVal = vv
 			}
 		}
+	}
+
+
+	// Bhagawan janta hai yeh aisa kyun kar raha hai.
+	// Tumhe samjhe tao muje batana.
+	// Bahut deep aur weird behaviour hai.
+
+	if _, ok := retVal["value"].([]string); ok && len(retVal["value"].([]string)) > 0 {
+
+		retVal["value"] = append(retVal["value"].([]string), v)
+	} else {
+		retVal["value"] = make([]string, 20)
+		retVal["value"].([]string)[0] = v
 	}
 
 	return retVal
@@ -136,21 +151,30 @@ func ReadFile(path string) string {
 }
 
 // ParseFilter is used to convert an LDAP type query filter to a map of string and interface
-func ParseFilter(input string) map[string]string {
+func ParseFilter(input string) (map[string]interface{}, bool) {
 
-	output := make(map[string]string)
+	output := make(map[string]interface{})
+	isOrCondition := false
 
-	pattern := `(^\(*\&?\(*)(.*)(\)?\)$)`
+	pattern := `(^\(*\&?\|?\(*)(.*)(\)?\)$)`
 
 	if !RegexMatch(input, pattern) {
-		return output
+
+		return output, false
 	}
 
 	var validID = regexp.MustCompile(pattern)
-	input = (validID.FindStringSubmatch(input))[2]
+
+	inputArr := (validID.FindStringSubmatch(input))
+
+	if len(inputArr) > 2 {
+
+	isOrCondition = strings.Contains(inputArr[1], "|")
+
+	input = inputArr[2]
 
 	if len(input) == 0 {
-		return output
+		return output, false
 	}
 
 	/*
@@ -162,17 +186,29 @@ func ParseFilter(input string) map[string]string {
 
 	filters := strings.Split(input, ")(")
 
+	// Passed Filters
 	for _, v := range filters {
 
+		// Clean
 		v = strings.Replace(v, "(", "", 1)
 		v = strings.Replace(v, ")", "", 1)
 
 		keyval := strings.Split(v, "=")
-		output[ keyval[0] ] = keyval[1]
+		rand_num := strconv.Itoa(rand.Intn(9000) + 1);
+
+		// Key is throwaway, not using slice cause it was causing
+		// wierd stuff to happen later..
+		k := map[string]string{
+			"key" : keyval[0],
+			"value" : keyval[1],
+		}
+
+		output[ keyval[0] + rand_num ] = k
 	}
 
-	return output
+	}
 
+	return output, isOrCondition
 }
 
 
@@ -196,8 +232,11 @@ func GetColumnDetails( table_name string, field_name string) map[string]interfac
 				if(curFieldBlock["name"] == field_name) {
 
 					retType = curFieldBlock
+
 				}
+
 			}
+
 		}
 	}
 

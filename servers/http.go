@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"encoding/json"
 )
 
 // HttpServer is the http server handler
@@ -38,18 +39,26 @@ func handleHTTPRoutes() {
 		if validHTTPRequest(r, &response) {
 			RequestAbstract = mapHTTPAbstractRequest(r)
 			resp, _ := HandleRoutes(RequestAbstract)
+
+			json.Unmarshal([]byte(resp.Data), &resp.DataHTTP)
+
+			resp.Data = ""
 			response = utils.EncodeJSON(resp)
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, response)
 
 	})
 }
 
 func validHTTPRequest(r *http.Request, response *string) bool {
+
 	applicationConfig := strings.Split(r.URL.Path, "/")
+
 	var reqAbs model.RequestAbstract
 	resp := make(map[string]interface{})
+
 	if len(applicationConfig) != 4 {
 		resp["StatusCode"] = 404
 		resp["Status"] = "fail"
@@ -65,7 +74,9 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 	reqAbs.Application = applicationConfig[2]
 	reqAbs.Action = applicationConfig[3]
 	reqAbs.HTTPRequestType = r.Method
-	route := GetRouteName(reqAbs)
+	//route := GetRouteName(reqAbs)
+
+	/*
 	if !RouteExists(route) {
 		resp["StatusCode"] = 404
 		resp["Status"] = "fail"
@@ -76,6 +87,7 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 		*response = utils.EncodeJSON(resp)
 		return false
 	}
+	*/
 
 	if r.Method == "POST" {
 	/*	body, err := ioutil.ReadAll(r.Body)
@@ -94,7 +106,6 @@ func validHTTPRequest(r *http.Request, response *string) bool {
 	}
 
 	return true
-
 }
 
 func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
@@ -105,27 +116,51 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 	reqAbs.Action = applicationConfig[3]
 	reqAbs.HTTPRequestType = r.Method
 
-
 	if reqAbs.HTTPRequestType == "POST" {
+
 		body, err := ioutil.ReadAll(r.Body)
 		utils.HandleError(err)
 		reqAbs.Payload = utils.DecodeJSON(string(body))
+
 	} else if reqAbs.HTTPRequestType == "GET" {
-		params := r.URL.Query()
-		if len(params["filters"]) > 0 {
-			reqAbs.Filters = utils.ParseFilter(params["filters"][0])
+
+//		var params map[string]interface{}
+
+		paramsURI := strings.Split(r.RequestURI, "filter=")
+
+		if len(paramsURI) > 1 {
+
+			reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(paramsURI[1])
 		}
+
 		reqAbs.Limit = 0
 		reqAbs.Token = ""
+
+		/*
 		if len(params["limit"]) > 0 {
 			reqAbs.Limit = 10
 		}
 		if len(params["token"]) > 0  {
 			reqAbs.Token = params["token"][0]
+		} */
+	} else if reqAbs.HTTPRequestType == "PUT" {
+
+		body, err := ioutil.ReadAll(r.Body)
+		utils.HandleError(err)
+		reqAbs.Payload = utils.DecodeJSON(string(body))
+
+		paramsURI := strings.Split(r.RequestURI, "filter=")
+
+		if len(paramsURI) > 1 {
+
+			reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(paramsURI[1])
 		}
 	}
 
-	return reqAbs
+
+
+
+		return reqAbs
 }
 
 func parseAPIVersion(verStr string) uint32 {

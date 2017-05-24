@@ -40,23 +40,74 @@ func convertIncomingTimes(reqAbs **model.RequestAbstract){
 
 				if len(parsedTime) > 6 {
 
-					fmt.Println("Time got parsed from native format : ", vv, "to ", parsedTime)
+					logger.Write("INFO", "Time got parsed from native format : " + vv.(string) + "to " + parsedTime )
 					(**reqAbs).Payload[kk] = parsedTime
 				} else {
 
 					(**reqAbs).Payload[kk] = ""
 				}
-
 			}
-
 			}
 		}
 
-
 	} else if (**reqAbs).HTTPRequestType == "GET" {
 
+		// Filters are [rand_value] --> {key: key, value:value}
+		for kkk, vvv := range (**reqAbs).Filters {
 
+			tmpVal := vvv.(map[string]string)
+
+			kk := tmpVal["key"]
+			vv := tmpVal["value"]
+
+			columnDetails := utils.GetColumnDetailsGeneric("apiName", (**reqAbs).RouteName, kk)
+
+			if len(columnDetails) > 0 {
+				columnType := columnDetails["type"].(string)
+
+				if columnType == "timestamp" {
+
+					parsedTime := matchTimeFromStringGet( vv )
+
+					if len(parsedTime) > 6 {
+
+						logger.Write("INFO", "Time got parsed from native format : " + vv + "to " + parsedTime)
+
+						setVal := map[string]string{
+							"key" : kk,
+							"value" : parsedTime,
+						}
+
+						(**reqAbs).Filters[kkk] = setVal
+
+					} else {
+
+						setVal := map[string]string{}
+						(**reqAbs).Filters[kk] = setVal
+					}
+				}
+
+			}
+		}
 	}
+}
+
+
+func matchTimeFromStringGet(timePassed string) string {
+
+	var retString = ""
+
+
+	re := regexp.MustCompile(`(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\+?(\d{4})?`)
+	segs := re.FindAllStringSubmatch(timePassed, -1)
+
+
+	if len(segs) > 0 {
+
+		retString = segs[0][1] + "-" + segs[0][2] + "-" + segs[0][3] + " " + segs[0][4] + ":" + segs[0][5] + ":" + segs[0][6] + "+0700"
+	}
+
+	return retString
 }
 
 

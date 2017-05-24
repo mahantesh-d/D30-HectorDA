@@ -12,4 +12,6 @@ type DBAbstract struct {
 	RichData          []map[string]interface{} // This is the data recieved in the native format from the db
 	Count             uint64                   // count of the data
 	TableName	  string
+	IsOrCondition	  bool
+	UpdateCondition	  map[string][]string
 }

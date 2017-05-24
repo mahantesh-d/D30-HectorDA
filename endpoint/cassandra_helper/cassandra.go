@@ -4,11 +4,13 @@ import (
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"strings"
 	"strconv"
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"reflect"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"fmt"
+	"github.com/dminGod/D30-HectorDA/model"
+	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
 )
 
 // IsValidCassandraQuery is used to analyze the metadata
@@ -18,6 +20,13 @@ import (
 func IsValidCassandraQuery(metaInput map[string]interface{}) bool {
 
 	fields := metaInput["fields"].(map[string]interface{})
+
+	if metaInput["isOrCondition"].(bool) {
+
+		// For cassandra OR conditions will be handled by stratio
+		return false;
+	}
+
 
 	// if no fields are passed, return false ( cannot query all data )
 	if len(fields) == 0 {
@@ -67,11 +76,8 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 	// This array will hold the minor queies
 	var minor_queries []string
 	// var child_table_name string
-	var record_uuid string
+	//var record_uuid string
 	// var child_query string
-
-	fmt.Println(record_uuid)
-
 
 
 	database := metaInput["database"].(string)
@@ -93,7 +99,7 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 			// Make the insert into the extra cassandra table :
 			// Table name : Table Prefix + field name
 			// child_table_name = metaInput["child_table_prefix"].(string) + k
-			record_uuid = metaInput["record_uuid"].(string)
+			//record_uuid := metaInput["record_uuid"].(string)
 
 			inputs := ((metaInput["field_keyvalue"].(map[string]interface{}))[k]).([]interface{})
 
@@ -138,10 +144,115 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 	return queries
 }
 
+func UpdateQueryBuilder(metaInput map[string]interface{}) []string {
+
+	name := ""
+	value := ""
+	where := ""
+
+	// This array will hold the minor queies
+	var minor_queries []string
+	// var child_table_name string
+	//var record_uuid string
+	// var child_query string
+
+
+	database := metaInput["database"].(string)
+
+	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
+
+
+		switch dataType := v.(string); v {
+		case "uuid":
+			//name += (", " + k + " = ")
+			//value += " "
+//			name += ((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))
+//			value += ((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))
+
+		case "text", "timestamp":
+			name += (", " + k + " = ")
+			value += " "
+			name += endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			value += endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+		case "set<text>":
+			name += (", " + k + " = ")
+			value += " "
+			name += endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			value += endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			// mValue := endpoint_common.ReturnSetText((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			// Make the insert into the extra cassandra table :
+			// Table name : Table Prefix + field name
+			// child_table_name = metaInput["child_table_prefix"].(string) + k
+			//record_uuid := metaInput["record_uuid"].(string)
+
+			inputs := ((metaInput["field_keyvalue"].(map[string]interface{}))[k]).([]interface{})
+
+			for _, v := range inputs {
+
+				switch vType := v.(type) {
+
+				case string:
+				// Only for string values we are handling inserts into external tables
+				// child_query = "INSERT INTO " + database + "." + child_table_name + " (ct_pk, parent_pk, value) VALUES ("
+				// child_query += "now(), "
+				// child_query += record_uuid + ", " + endpoint_common.ReturnString(mValue)
+				// child_query += " ) "
+				//minor_queries = append(minor_queries, child_query)
+				case map[string]interface{}:
+				// Do Nothing here
+				default:
+					_ = vType
+				}
+			}
+
+		case "map<text,text>":
+			name += (", " + k + " = ")
+			value += " "
+			name += endpoint_common.ReturnMap((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+			// value += endpoint_common.ReturnMap((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+		case "int":
+			name += (", " + k + " = ")
+			value += " "
+			name += endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+//			value += endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+		default:
+			_ = dataType
+		}
+
+		value += ","
+	}
+
+	for curKey, curVal := range metaInput["updateCondition"].(map[string][]string) {
+
+		where += " " + curKey + " = '" + curVal[0] + "'  AND";
+	}
+
+	name = strings.Trim(name, ",")
+	where = strings.Trim(where, "AND")
+	value = strings.Trim(value, ",")
+
+	if len(where) > 0 {
+
+		where = "WHERE " + where + " "
+	}
+
+	main_query := "UPDATE  " + database + "." + metaInput["table"].(string) + " SET " + name + " " + where + " "
+
+	queries := append(minor_queries, main_query)
+
+
+	fmt.Println("This is the update queries", queries)
+	return queries
+}
+
 func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 	table := metaInput["table"].(string)
 	database := metaInput["database"].(string)
+	whereCondition := "AND"
 
 //	fmt.Println( " Metadata related to Get", config.Metadata_get)
 //	fmt.Println( " Metadata related to Insert", config.Metadata_insert)
@@ -161,8 +272,10 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 
 	query := "SELECT " + selectString + " FROM " + database + "." + table
+
+	// Data is packed metaInput["fields"][random_key] -> 'object from json' with extra param 'value'
 	fields := metaInput["fields"].(map[string]interface{})
-	limit := 100
+	limit := 20
 	if len(fields) > 0 {
 
 		query += " WHERE"
@@ -173,27 +286,62 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 		if int(metaInput["limit"].(int32)) > 0 {
 			limit = int(metaInput["limit"].(int32))
 		}
-		fmt.Println(query)
+//		fmt.Println(query)
 		numberOfParams := len(fields)
+
+
+		if metaInput["isOrCondition"].(bool) {
+			whereCondition = "OR"
+		}
+
 		// three type of queries
 		// single condition
 		// multiple conditions in a specific predictable order
 		// multiple conditions in a non-related order
 		if numberOfParams == 1 {
+
+			// Throwing away key
 			for _, v := range fields {
+
 				fieldMeta := v.(map[string]interface{})
-				query += endpoint_common.ReturnCondition(fieldMeta)
+				query += endpoint_common.ReturnCondition(fieldMeta, whereCondition)
 
 			}
 
-				query += " LIMIT " + strconv.Itoa(limit) + " ALLOW FILTERING"
+			query += " LIMIT " + strconv.Itoa(limit) + " ALLOW FILTERING"
+
 		} else {
-			querySorter := make([][]string, 20)
+			querySorter := make(map[int][]string, 20)
+
+			if metaInput["isOrCondition"].(bool) {
+				whereCondition = "OR"
+			}
+
+
 			for _, v := range fields {
 				fieldMeta := v.(map[string]interface{})
-				priority := int(fieldMeta["priority"].(float64))
-				//query += endpoint_common.ReturnCondition(fieldMeta) + " AND"
-				querySorter[priority] = append(querySorter[priority], endpoint_common.ReturnCondition(fieldMeta)+" AND")
+
+				if _, ok := fieldMeta["priority"].(float64); ok {
+
+					priority := int(fieldMeta["priority"].(float64))
+					//query += endpoint_common.ReturnCondition(fieldMeta) + " AND"
+
+					if _, ok := querySorter[priority]; ok {
+
+						querySorter[priority] = append(querySorter[priority], endpoint_common.ReturnCondition(fieldMeta, whereCondition) + " " + whereCondition)
+					} else {
+
+						querySorter[priority] = append([]string{}, endpoint_common.ReturnCondition(fieldMeta, whereCondition) + " " + whereCondition)
+					}
+
+
+				} else {
+
+					logger.Write("ERROR", "Priority not set on the field" + fieldMeta["name"].(string))
+					// Buddy din't bother to add priority.... passing 5
+					querySorter[5] = append(querySorter[5], endpoint_common.ReturnCondition(fieldMeta, whereCondition)+ " " + whereCondition)
+				}
+
 			}
 
 			for _, v := range querySorter {
@@ -203,7 +351,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 				}
 			}
 
-			query = strings.Trim(query, "AND")
+			query = strings.Trim(query, whereCondition)
 
 			query += " LIMIT " + strconv.Itoa(limit) + " ALLOW FILTERING"
 		}
@@ -244,19 +392,48 @@ func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
 
         table := metaInput["table"].(string)
 	database := metaInput["database"].(string)
-        query := "SELECT * FROM " + database + "." + table + " WHERE lucene= '"
+
         fields := metaInput["fields"].(map[string]interface{})
 
 
-        filter := "{ filter : {  type: \"boolean\" , must: ["
+	myFields := utils.FindMap("table", table, config.Metadata_insert())
+
+	var selectString string
+
+	if len(myFields) != 0 {
+
+		selectString = makeSelect(myFields)
+	} else {
+
+		logger.Write("ERROR", "Cassandra Query error, Couldn not find column information on the table from insert api file while trying to make the select query fields, is the entry put in? defaulting to *, but users will see table columns instead of expected field names.")
+		selectString = "*"
+	}
+
+	query := "SELECT " + selectString + " FROM " + database + "." + table + " WHERE lucene= '"
+
+
+	whereCondition := "must" // This is AND
+
+	if _, ok := metaInput["isOrCondition"].(bool); ok && metaInput["isOrCondition"].(bool) {
+		whereCondition = "should" 	//
+	}
+
+        filter := "{ filter : {  type: \"boolean\" , " + whereCondition + ": ["
 
         typeTemplate := "{ type: \"phrase\", field: \"|1\", value: \"|2\" }"
 
         for _,v := range fields {
                 fieldInfo := v.(map[string]interface{})
-		condition := strings.Replace(typeTemplate,"|1",fieldInfo["column"].(string),-1)
-                condition = strings.Replace(condition,"|2",fieldInfo["value"].(string),-1)
-                filter += condition + ","
+
+		for _, tmpVal := range fieldInfo["value"].([]string) {
+
+			if len( tmpVal ) == 0 { continue }
+
+			condition := strings.Replace(typeTemplate,"|1", fieldInfo["column"].(string),-1)
+			condition = strings.Replace(condition,"|2", tmpVal,-1)
+
+			filter += condition + ","
+		}
         }
 
         filter = strings.Trim(filter,",")
@@ -264,8 +441,69 @@ func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
 
         query += (filter + "'")
 
+
+	logger.Write("INFO", "Returning Stratio query : " + query)
         return query
 }
+
+
+func getPKForUpdate(table string, whereCondition map[string]string){
+
+	// Get the Primary key to use for select
+	// Do a count first and check how many records are getting found for this condition
+	// If you have more than one record then return error
+	// If one record is found:
+	// select primary_key from table where
+	// whereCondition = 'whereValue' and whereCondition2 = 'whereValue2'
+	// limit 1 -- Return the primary key for the result
+
+//	endpoint_common.ReturnCondition(fieldMeta, whereCondition)
+
+
+
+
+}
+
+
+// Pass databasename.tablename here
+func getCountForUpdate(db_table string, whereConditions map[string]string) int {
+
+	query := []string{ "SELECT COUNT(*) AS count FROM " + db_table + " WHERE " }
+	var where string
+
+	for k, v := range whereConditions {
+
+		where += " " + k + " = " + v + " AND"
+	}
+
+	where = strings.Trim(where, "AND")
+
+	dbAbs := model.DBAbstract{ Query: query }
+
+	cassandra.Select(&dbAbs)
+
+	fmt.Println("Result from the query is : ", dbAbs)
+
+	return 42
+}
+
+
+func TestSelectQuery(){
+
+	dbAbs := model.DBAbstract{ Query: []string{ "select * from all_trade.stock_adjustment limit 1"},
+		QueryType: "SELECT",
+	}
+
+//	cassandra.Handle( &dbAbs )
+
+	fmt.Println("Result from the query", dbAbs)
+}
+
+
+
+
+
+
 
 
 func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) string {

@@ -10,7 +10,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"net"
-	"fmt"
 )
 
 // GRPCServer registers
@@ -104,11 +103,15 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 	reqAbs.ID = req.GetID()
 
 	reqAbs.HTTPRequestType = req.GetMethod().String()
-	if reqAbs.HTTPRequestType == "POST" {
+	if reqAbs.HTTPRequestType == "POST" || reqAbs.HTTPRequestType == "PUT" {
+
 		reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
+		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
 	} else if reqAbs.HTTPRequestType == "GET" {
-		reqAbs.Filters = utils.ParseFilter(req.GetFilter())
+
+		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
 	}
+
 	return reqAbs
 }
 
@@ -163,7 +166,6 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 			resp.Count = 0
 			return false
 
-		fmt.Println("This is the ref I got", req.GetApplicationPayload())
 		}
 	}
 

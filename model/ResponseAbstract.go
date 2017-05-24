@@ -11,4 +11,5 @@ type ResponseAbstract struct {
 	RequestAbs            RequestAbstract // embed the request object in the response, so if need something we have it here.
 	ResponseTime	      int64	      // capture the time when the response is prepated
 	RequestTotalTime      int64           // capture the total time taken by request
+	DataHTTP	      interface{}
 }

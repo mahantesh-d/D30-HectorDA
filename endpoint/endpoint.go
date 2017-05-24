@@ -12,7 +12,7 @@ func Process(DBAbstract *model.DBAbstract) {
 
 	endpoint := DBAbstract.DBType
 
-	if endpoint == "cassandra" {
+	if endpoint == "cassandra" || endpoint == "cassandra_stratio" {
 
 		cassandra.Handle(DBAbstract)
 	} else if endpoint == "presto" {

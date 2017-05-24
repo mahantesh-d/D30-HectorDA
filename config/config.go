@@ -62,11 +62,10 @@ var metadata_get map[string]interface{}
 var metadata_insert map[string]interface{}
 
 
-var ConfPathHash = map[string]string {
-
-	"alltrade_get" : constant.HectorConf + "/metadata/alltrade/alltradeApi.json",
-	"alltrade_insert" : constant.HectorConf + "/metadata/alltrade/alltrade.json",
-}
+//var ConfPathHash = map[string]string {
+//	//"alltrade_get" : constant.HectorConf + "alltrade_unified.json",
+//	//"alltrade_insert" : constant.HectorConf + "alltrade_unified.json",
+//}
 
 func Init() {
 
@@ -75,8 +74,8 @@ func Init() {
 		localInit()
 	}
 
-	Alltrade_get = readFile(constant.HectorConf + "/metadata/alltrade/alltrade_unified.json")
-	Alltrade_insert = readFile(constant.HectorConf + "/metadata/alltrade/alltrade_unified.json")
+	Alltrade_get = readFile(constant.HectorConf + "/alltrade_unified.json")
+	Alltrade_insert = readFile(constant.HectorConf + "/alltrade_unified.json")
 
 	metadata_get = decodeJSON(Alltrade_get)
 	metadata_insert = decodeJSON(Alltrade_insert)

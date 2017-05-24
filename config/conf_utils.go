@@ -17,6 +17,7 @@ func decodeJSON(input interface{}) map[string]interface{} {
 	err := json.Unmarshal([]byte(input.(string)), &payload)
 
 	if err != nil {
+		// Dont put logger here, import cycle issue hoga..
 		fmt.Println("Error when decoding JSON", err)
 	}
 

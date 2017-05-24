@@ -49,6 +49,8 @@
 		"database": "all_trade",
 		"table": "stock_adjustment",
 		"apiName": "alltrade_stock_adjustment",
+		"updateCondition" : "&~transactionType=adjuststock",
+		"updateKeys" : "adjustStockNo|adjust_stock_no",
 		"child_table_prefix": "",
 		"fields": {
 			"stock_adjustment_pk": {
@@ -77,7 +79,7 @@
 				"column": "adjust_detail_s",
 				"valueType": "multi",
 				"indexType": "secondary",
-				"priority": 2 ,
+				"priority": 2,
 				"tags": ["json_array"],
 				"is_get_field": "true"
 			},
@@ -431,6 +433,8 @@
 		"database": "all_trade",
 		"table": "obtain_detail",
 		"apiName": "alltrade_obtain_detail",
+		"updateCondition" : "|~transactionType=obtainpickup,transactionType=obtainreturn",
+		"updateKeys" : "obtainNo|obtain_no",
 		"child_table_prefix": "",
 		"fields": {
 			"obtain_detail_pk": {
@@ -670,6 +674,8 @@
 		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
 		"apiName": "alltrade_substock_detail_transfer",
+		"updateCondition" : "&~transactionType=transfersubstock",
+		"updateKeys" : "transferSubStockNo|transfer_substock_no",
 		"child_table_prefix": "",
 		"fields": {
 			"substock_detail_transfer_pk": {
@@ -807,7 +813,7 @@
 				"valueType": "multi",
 				"priority": 4,
 				"indexType": "secondary",
-				"tags": ["json_array"],
+				"tags": [],
 				"is_get_field": "true"
 			},
 			"serial_key": {
@@ -877,7 +883,7 @@
 				"valueType": "multi",
 				"indexType": "secondary",
 				"tags": ["json_array"],
-				"is_get_field": "false"
+				"is_get_field": "true"
 			},
 			"transfer_substock_no": {
 				"name": "transferSubStockNo",
@@ -929,6 +935,8 @@
 		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
 		"apiName": "alltrade_substock_daily_detail",
+		"updateCondition" : "&~transactionType=substockdaily",
+		"updateKeys" : "subStockDailyNo|substock_daily_no",
 		"child_table_prefix": "",
 		"fields": {
 			"substock_daily_detail_pk": {
@@ -1149,6 +1157,8 @@
 		"database": "all_trade",
 		"table": "tranfer_out_mismatch",
 		"apiName": "alltrade_transferout_mismatch",
+		"updateCondition" : "&~transactionType=transferoutmismatch",
+		"updateKeys" : "requestNo|request_no",
 		"child_table_prefix": "",
 		"fields": {
 			"transfer_out_mismatch_pk": {
@@ -1269,6 +1279,8 @@
 		"database": "all_trade",
 		"table": "request_goods",
 		"apiName": "alltrade_requestgoods",
+		"updateCondition" : "&~transactionType=requestgoods",
+		"updateKeys" : "requestNo|request_no",
 		"child_table_prefix": "",
 		"fields": {
 			"request_goods_pk": {
@@ -1868,6 +1880,8 @@
 		"database": "all_trade",
 		"table": "order_transfer",
 		"apiName": "alltrade_ordertransfer",
+		"updateCondition" : "|~transactionType=transferin,transactionType=transferout",
+		"updateKeys" : "transferNo|transfer_no",
 		"child_table_prefix": "",
 		"fields": {
 			"order_transfer_pk": {
@@ -2073,6 +2087,16 @@
 				"column": "from_location_type",
 				"valueType": "single",
 				"priority": 5,
+				"indexType": "sasi",
+				"tags": [],
+				"is_get_field": "true"
+			},
+			"from_location_subtype": {
+				"name": "fromLocationSubType",
+				"type": "text",
+				"column": "from_location_subtype",
+				"valueType": "single",
+				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
 				"is_get_field": "true"
@@ -2422,6 +2446,8 @@
 		"database": "all_trade",
 		"table": "sale_out_detail",
 		"apiName": "alltrade_salesout_detail",
+		"updateCondition" : "|~transactionType=salesout,transactionType=goodsreplace,transactionType=goodsreturn",
+		"updateKeys" : "documentNo|document_no",
 		"child_table_prefix": "",
 		"fields": {
 			"sale_out_detail_pk": {
@@ -2812,6 +2838,8 @@
 		"database": "all_trade",
 		"table": "check_stock_detail",
 		"apiName": "alltrade_checkstock_detail",
+		"updateCondition" : "&~transactionType=checkstock",
+		"updateKeys" : "locationCode|location_code,confirmDateTime|confirm_datetime",
 		"child_table_prefix": "",
 		"fields": {
 			"check_stock_detail_pk": {
@@ -3083,6 +3111,28 @@
 		"table": "local_service_requests",
 		"apiName": "alltrade_local_service_requests",
 		"child_table_prefix": "",
+		"update_list_array" : [
+			{
+				"updateCondition" : "&~Actor=PHOENIX",
+				"updateKeys" : "OrderRef|order_ref"
+			},
+			{
+				"updateCondition" : "&~Actor=HORIZON",
+				"updateKeys" : "OrderRef|order_ref"
+			},
+			{
+				"updateCondition" : "&~Actor=PEGAZUS,PgzRecordType=0,BwoId^contains,UserSys^contains",
+				"updateKeys" : "BwoId|bwo_id,UserSys|user_sys"
+			},
+			{
+				"updateCondition" : "&~Actor=PEGAZUS,PgzRecordType=0",
+				"updateKeys" : "RequestId|request_id"
+			},
+			{
+				"updateCondition" : "&~Actor=PEGAZUS,RequestId^contains",
+				"updateKeys" : "PgzTaskId|pgz_task_id"
+			}
+		],
 		"fields": {
 			"local_service_requests_pk": {
 				"name": "local_service_requests_pk",
@@ -3552,6 +3602,56 @@
 				"indexType": "secondary",
 				"tags": [],
 				"is_get_field": "true"
+			},
+			"wo_header_status_key": {
+				"name": "WoHeaderStatusKey",
+				"type": "set<text>",
+				"column": "wo_header_status_key",
+				"valueType": "multi",
+				"priority": 15,
+				"indexType": "secondary",
+				"tags": [],
+				"is_get_field": "true"
+			},
+			"wo_header_error_message_key": {
+				"name": "WoHeaderErrorMessageKey",
+				"type": "set<text>",
+				"column": "wo_header_error_message_key",
+				"valueType": "multi",
+				"priority": 16,
+				"indexType": "secondary",
+				"tags": [],
+				"is_get_field": "true"
+			},
+			"order_item_error_date_key": {
+				"name": "OrderItemErrorDateKey",
+				"type": "set<text>",
+				"column": "order_item_error_date_key",
+				"valueType": "multi",
+				"priority": 17,
+				"indexType": "secondary",
+				"tags": [],
+				"is_get_field": "true"
+			},
+			"wo_header_error_date_key": {
+				"name": "WoHeaderErrorDateKey",
+				"type": "set<text>",
+				"column": "wo_header_error_date_key",
+				"valueType": "multi",
+				"priority": 18,
+				"indexType": "secondary",
+				"tags": [],
+				"is_get_field": "true"
+			},
+			"bso_error_date_key": {
+				"name": "BSOErrorMessageKey",
+				"type": "set<text>",
+				"column": "bso_error_date_key",
+				"valueType": "multi",
+				"priority": 14,
+				"indexType": "secondary",
+				"tags": [],
+				"is_get_field": "true"
 			}
 
 		}
@@ -3563,6 +3663,8 @@
 		"database": "all_trade",
 		"table": "print_history_detail",
 		"apiName": "alltrade_print_history_detail",
+		"updateCondition" : "&~transactionType=printhistory",
+		"updateKeys" : "documentNo|document_no,printTransactionType|print_transaction_type,edition|edition",
 		"child_table_prefix": "",
 		"fields": {
 			"print_history_detail_pk": {
@@ -3682,7 +3784,7 @@
 	"tmp_product_master": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "product_master",
 		"apiName": "alltrade_product_master",
 		"child_table_prefix": "",
@@ -4006,7 +4108,7 @@
 	"location_ship_to": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "location_ship_to",
 		"apiName": "alltrade_location_ship_to",
 		"child_table_prefix": "",
@@ -4082,7 +4184,7 @@
 	"location_mapping_plant": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "location_mapping_plant",
 		"apiName": "alltrade_location_mapping_plant",
 		"child_table_prefix": "",
@@ -4166,7 +4268,7 @@
 	"tmp_print_history": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "print_history",
 		"apiName": "alltrade_print_history",
 		"child_table_prefix": "",
@@ -4234,7 +4336,7 @@
 	"route_master": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "route_master",
 		"apiName": "alltrade_route_master",
 		"child_table_prefix": "",
@@ -4318,7 +4420,7 @@
 	"company": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "company",
 		"apiName": "alltrade_company",
 		"child_table_prefix": "",
@@ -4434,7 +4536,7 @@
 	"location": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "location",
 		"apiName": "alltrade_location",
 		"child_table_prefix": "",
@@ -4630,7 +4732,7 @@
 	"location_sub_stock": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "location_sub_stock",
 		"apiName": "alltrade_location_sub_stock",
 		"child_table_prefix": "",
@@ -4690,7 +4792,7 @@
 	"vendor_master": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "vendor_master",
 		"apiName": "alltrade_vendor_master",
 		"child_table_prefix": "",
@@ -4758,7 +4860,7 @@
 	"supplier_master": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "supplier_master",
 		"apiName": "alltrade_supplier_master",
 		"child_table_prefix": "",
@@ -4826,7 +4928,7 @@
 	"config_route_group": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "config_route_group",
 		"apiName": "alltrade_config_route_group",
 		"child_table_prefix": "",
@@ -4910,7 +5012,7 @@
 	"master_data": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "master_data",
 		"apiName": "alltrade_master_data",
 		"child_table_prefix": "",
@@ -4994,7 +5096,7 @@
 	"device_specification": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "device_specification",
 		"apiName": "alltrade_device_specification",
 		"child_table_prefix": "",
@@ -5638,7 +5740,7 @@
 	"language": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "language",
 		"apiName": "alltrade_language",
 		"child_table_prefix": "",
@@ -5697,7 +5799,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field":"true"
+				"is_get_field": "true"
 			}
 
 		}
@@ -5706,7 +5808,7 @@
 	"running_format": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "running_format",
 		"apiName": "alltrade_running_format",
 		"child_table_prefix": "",
@@ -5782,7 +5884,7 @@
 	"last_running": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "last_running",
 		"apiName": "alltrade_last_running",
 		"child_table_prefix": "",
@@ -5850,7 +5952,7 @@
 	"map_location_route_group": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "map_location_route_group",
 		"apiName": "alltrade_map_location_route_group",
 		"child_table_prefix": "",
@@ -5910,7 +6012,7 @@
 	"schedule_report": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "schedule_report",
 		"apiName": "alltrade_schedule_report",
 		"child_table_prefix": "",
@@ -6010,7 +6112,7 @@
 	"location_relational": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "location_relational",
 		"apiName": "alltrade_location_relational",
 		"child_table_prefix": "",
@@ -6070,7 +6172,7 @@
 	"news_feed": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "news_feed",
 		"apiName": "alltrade_news_feed",
 		"child_table_prefix": "",
@@ -6186,7 +6288,7 @@
 	"todo_list": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "todo_list",
 		"apiName": "alltrade_todo_list",
 		"child_table_prefix": "",
@@ -6294,7 +6396,7 @@
 	"menu": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "menu",
 		"apiName": "alltrade_menu",
 		"child_table_prefix": "",
@@ -6378,7 +6480,7 @@
 	"asc_master": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "asc_master",
 		"apiName": "alltrade_asc_master",
 		"child_table_prefix": "",
@@ -6486,7 +6588,7 @@
 	"qty_per_time_interval": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "qty_per_time_interval",
 		"apiName": "alltrade_qty_per_time_interval",
 		"child_table_prefix": "",
@@ -6602,7 +6704,7 @@
 	"user_login": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "user_login",
 		"apiName": "alltrade_user_login",
 		"child_table_prefix": "",
@@ -6670,7 +6772,7 @@
 	"user_authen": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "user_authen",
 		"apiName": "alltrade_user_authen",
 		"child_table_prefix": "",
@@ -6730,7 +6832,7 @@
 	"user_group": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "user_group",
 		"apiName": "alltrade_user_group",
 		"child_table_prefix": "",
@@ -6790,7 +6892,7 @@
 	"user_component": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "user_component",
 		"apiName": "alltrade_user_component",
 		"child_table_prefix": "",
@@ -6866,7 +6968,7 @@
 	"user_group_location": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "user_group_location",
 		"apiName": "alltrade_user_group_location",
 		"child_table_prefix": "",
@@ -6926,7 +7028,7 @@
 	"user_location": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "user_location",
 		"apiName": "alltrade_group_location",
 		"child_table_prefix": "",
@@ -6986,7 +7088,7 @@
 	"config_route_group_detail": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "config_route_group_detail",
 		"apiName": "alltrade_config_route_group_detail",
 		"child_table_prefix": "",
@@ -7045,7 +7147,7 @@
 	"locationShipToDetail": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "locationshiptodetail",
 		"apiName": "alltrade_locationshiptodetail",
 		"child_table_prefix": "",
@@ -7175,7 +7277,7 @@
 	"mapping_plant": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "mapping_plant",
 		"apiName": "alltrade_mapping_plant",
 		"child_table_prefix": "",
@@ -7265,7 +7367,7 @@
 	"substock": {
 		"databaseType": "postgresxl",
 		"version": 1,
-		"database": "testschema2",
+		"database": "all_trade",
 		"table": "substock",
 		"apiName": "alltrade_substock",
 		"child_table_prefix": "",
@@ -7295,6 +7397,137 @@
 				"is_get_field": "true"
 			}
 		}
+	},
+	"stamp_delivery": {
+		"databaseType": "postgresxl",
+		"version": 1,
+		"database": "all_trade",
+		"table": "stamp_delivery",
+		"apiName": "alltrade_stamp_delivery",
+		"child_table_prefix": "",
+		"put_supported" : "true",
+		"fields": {
+			"ship_to_code_key0": {
+				"name": "shipToCode_key0",
+				"type": "text",
+				"column": "ship_to_code_key0",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true",
+				"is_put_filter_field": "true"
+			},
+			"day_of_week_key1": {
+				"name": "dayOfWeek_key1",
+				"type": "text",
+				"column": "day_of_week_key1",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true",
+				"is_put_filter_field": "true"
+			},
+			"interval_time_start_key2": {
+				"name": "intervalTimeStart_key2",
+				"type": "text",
+				"column": "interval_time_start_key2",
+				"valueType": "single",
+				"tags": [""],
+				"is_get_field": "true",
+				"is_put_field": "true",
+				"is_put_filter_field": "true"
+			},
+			"interval_time_end_key3": {
+				"name": "intervalTimeEnd_key3",
+				"type": "text",
+				"column": "interval_time_end_key3",
+				"valueType": "single",
+				"tags": [""],
+				"is_get_field": "true",
+				"is_put_field": "true",
+				"is_put_filter_field": "true"
+			},
+			"delivery_type_data": {
+				"name": "deliveryType_data",
+				"type": "text",
+				"column": "delivery_type_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"distribution_channel_data": {
+				"name": "distributionChannel_data",
+				"type": "text",
+				"column": "distribution_channel_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"customer_group_data": {
+				"name": "customerGroup_data",
+				"type": "text",
+				"column": "customer_group_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"route_data": {
+				"name": "route_data",
+				"type": "text",
+				"column": "route_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"stamp_delivery_data": {
+				"name": "stampDelivery_data",
+				"type": "text",
+				"column": "stamp_delivery_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"create_by_data": {
+				"name": "createBy_data",
+				"type": "text",
+				"column": "create_by_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"create_datetime_data": {
+				"name": "createDateTime_data",
+				"type": "timestamp",
+				"column": "create_datetime_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"update_by_data": {
+				"name": "updateBy_data",
+				"type": "text",
+				"column": "update_by_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			},
+			"update_datetime_data": {
+				"name": "updateDateTime_data",
+				"type": "timestamp",
+				"column": "update_datetime_data",
+				"valueType": "single",
+				"tags": [],
+				"is_get_field": "true",
+				"is_put_field": "true"
+			}
+		}
 	}
-
 }

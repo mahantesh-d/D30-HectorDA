@@ -1,7 +1,6 @@
 package cassandra
 
 import (
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/model"
@@ -32,6 +31,13 @@ func Handle(dbAbstract *model.DBAbstract) {
 	} else if dbAbstract.QueryType == "SELECT" {
 
 		Select(dbAbstract)
+
+	} else if dbAbstract.QueryType == "UPDATE" {
+
+		Update(dbAbstract)
+	} else {
+
+		logger.Write("ERROR", "Query reached cassandra without INSERT, SELECT, UPDATE")
 	}
 }
 
@@ -80,16 +86,23 @@ func Insert(dbAbstract *model.DBAbstract) {
 	for _, single_query := range dbAbstract.Query {
 
 		logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
-		err := session.Query(single_query).Consistency(gocql.Any).Exec()
 
-		if err != nil {
+		if len(single_query) > 0 {
 
-			logger.Write("ERROR", "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
-			error_messages = append(error_messages, "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
-		} else {
+			err := session.Query(single_query).Consistency(gocql.Any).Exec()
 
-			success_count += 1
+			if err != nil {
+
+				logger.Write("ERROR", "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
+				error_messages = append(error_messages, "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
+			} else {
+
+				success_count += 1
+			}
+
 		}
+
+
 	}
 
 	if len(error_messages) > 0 {
@@ -115,6 +128,73 @@ func Insert(dbAbstract *model.DBAbstract) {
 	go queueSession(session)
 
 }
+
+
+// Insert is used to make an Insert into Cassandra
+func Update(dbAbstract *model.DBAbstract) {
+
+	session, err := getSession()
+	if err != nil {
+		logger.Write("ERROR", err.Error())
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Error connecting to endpoint"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+		return
+	}
+	logger.Write("DEBUG", "Running Queries for update start : num of queries to run "+string(len(dbAbstract.Query)))
+
+	success_count := 0
+	var error_messages []string
+
+	// Loop over all the queries and execute the insert queries
+	for _, single_query := range dbAbstract.Query {
+
+		logger.Write("DEBUG", "QUERY : "+dbAbstract.Query[0])
+
+		if len(single_query) > 0 {
+
+			err := session.Query(single_query).Consistency(gocql.Any).Exec()
+
+			if err != nil {
+
+				logger.Write("ERROR", "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
+				error_messages = append(error_messages, "Query from set failed - Query : '"+single_query+"' - Error : "+err.Error())
+			} else {
+
+				success_count += 1
+			}
+
+		}
+
+
+	}
+
+	if len(error_messages) > 0 {
+
+		// Error response text
+		response_text := string(len(error_messages)) + " Out of " + string(len(dbAbstract.Query)) + " Had the following errors \n"
+		response_text += strings.Join(error_messages, " \n")
+
+		logger.Write("ERROR", response_text)
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = response_text
+		dbAbstract.Data = "{}"
+	} else {
+
+		logger.Write("INFO", "Updated successfully")
+		dbAbstract.Status = "success"
+		dbAbstract.Message = "Updated successfully"
+		dbAbstract.Data = "{}"
+	}
+
+	dbAbstract.Count = 0
+
+	go queueSession(session)
+
+}
+
+
 
 // Select is used to query data from Cassandra
 func Select(dbAbstract *model.DBAbstract) {
@@ -159,23 +239,27 @@ func Select(dbAbstract *model.DBAbstract) {
 	iter := session.Query(dbAbstract.Query[0]).Consistency(gocql.LocalOne).Iter()
 	result, err := iter.SliceMap()
 
-//	 iter.Close()
 	defer  closeSession(iter)
-/*
-	if err != nil {
-		logger.Write("ERROR", "Iter error!!!!")
-		logger.Write("ERROR",err2.Error())
-	}else {
-	        logger.Write("INFO", "Closing----------------------")
-			
-	}
-*/
 
-	fmt.Println("Running the cassandra select query : " + dbAbstract.Query[0])
+	if err != nil {
+
+		logger.Write("ERROR", err.Error())
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = err.Error()
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+
+		return
+	}
+
+
+
+	logger.Write("INFO", "Running the cassandra select query : " + dbAbstract.Query[0])
 
 	go queueSession(session)
 
 	_ = err
+
 	if err != nil {
 		logger.Write("ERROR", err.Error())
 		dbAbstract.Status = "fail"
@@ -199,7 +283,6 @@ func closeSession(iter *gocql.Iter){
 
    if err != nil {
 
-
     logger.Write("ERROR", err.Error())
     logger.Write("INFO", "Calling Iter after 2 secs")
     time.Sleep(2 * time.Second)  
@@ -210,14 +293,7 @@ func closeSession(iter *gocql.Iter){
       logger.Write("ERROR", "Tried 2 times to close the iter... faaaaail")
    }
   }
- 
-
-
-
 }
-
-
-
 
 
 func queueSession(session *gocql.Session) {

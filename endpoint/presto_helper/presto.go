@@ -1,10 +1,10 @@
 package presto_helper
 
 import (
-	"fmt"
 	_ "github.com/avct/prestgo"
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"strings"
+	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 func SelectQueryBuild(metaInput map[string]interface{}) string {
@@ -13,13 +13,18 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 	query := "SELECT * from " + table
 
-	// joins will come here..
+
+	whereCondition := "AND"
+
+	if metaInput["isOrCondition"].(bool) {
+		whereCondition = "OR"
+	}
 
 	fields := metaInput["fields"].(map[string]interface{})
 
 	for _, v := range fields {
 		fieldMeta := v.(map[string]interface{})
-		query += endpoint_common.ReturnCondition(fieldMeta) + " AND"
+		query += endpoint_common.ReturnCondition(fieldMeta, whereCondition) + " AND"
 	}
 
 	query = strings.Trim(query, "AND")
@@ -71,23 +76,25 @@ func returnConditions(input map[string]interface{}, table string, ct_prefix stri
 	switch dataType := input["type"]; dataType {
 
 	case "text", "timestamp":
-		fmt.Println("Text or timestamp column", input["column"].(string))
-		*q_where += " " + input["column"].(string) + " " + relationalOperator + " " + endpoint_common.ReturnString(input["value"].(string)) + " AND"
+
+		for _, vv := range input["value"].([]string) {
+
+			*q_where += " " + input["column"].(string) + " " + relationalOperator + " " + endpoint_common.ReturnString(vv) + " AND"
+		}
+
 
 	case "set<text>":
-		fmt.Println("set<text> column", input["column"].(string))
+
 		// ct_name := ct_prefix + input["column"].(string)
 		// *q_join += " LEFT JOIN " + ct_name + " ON " + ct_name + ".parent_pk = " + table + "." + table + "_pk "
 		// *q_where += " " + ct_name + ".value " + relationalOperator + " " + endpoint_common.ReturnString(input["value"].(string)) + " AND"
 
 	case "int":
-		fmt.Println("int column", input["column"].(string))
+
 		*q_where += " " + input["column"].(string) + " " + relationalOperator + " " + endpoint_common.ReturnInt(input["value"].(string)) + " AND"
 
 	default:
-		fmt.Println("This is a problem, this datatype is not getting captured....")
-		fmt.Println(dataType)
-
+		logger.Write("ERROR", "This is a problem, this datatype is not getting captured...." + dataType.(string))
 	}
 
 }
