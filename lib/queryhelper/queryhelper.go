@@ -62,6 +62,7 @@ func PrepareUpdateQuery(metaInput map[string]interface{}) []string  {
 
 	var query []string
 
+
 	if databaseType == "cassandra" {
 
 		query = cassandra_helper.UpdateQueryBuilder(metaInput)

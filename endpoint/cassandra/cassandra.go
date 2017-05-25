@@ -241,6 +241,9 @@ func Select(dbAbstract *model.DBAbstract) {
 
 	defer  closeSession(iter)
 
+
+
+
 	if err != nil {
 
 		logger.Write("ERROR", err.Error())

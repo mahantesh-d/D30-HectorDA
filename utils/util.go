@@ -169,20 +169,14 @@ func ParseFilter(input string) (map[string]interface{}, bool) {
 
 	if len(inputArr) > 2 {
 
-	isOrCondition = strings.Contains(inputArr[1], "|")
+		isOrCondition = strings.Contains(inputArr[1], "|")
 
-	input = inputArr[2]
+		input = inputArr[2]
 
 	if len(input) == 0 {
 		return output, false
 	}
 
-	/*
-	input = input[1:]
-	input = strings.Trim(input,")")
-	if string(input[0]) == "&" {
-		input = input[1:]
-	}*/
 
 	filters := strings.Split(input, ")(")
 
@@ -337,6 +331,43 @@ func HandleError(err error) {
 		logger.Write("ERROR", err.Error())
 	}
 }
+
+func ReturnMapStringVal(k map[string]interface{}, key string) string {
+
+	if _, ok := k[key].(string); ok {
+
+		return k[key].(string)
+	} else {
+
+		return ""
+	}
+}
+
+func ReturnMapBoolVal(k map[string]interface{}, key string) bool {
+
+	if _, ok := k[key].(string); ok {
+
+		return k[key].(string) == "true"
+	} else {
+
+		return false
+	}
+}
+
+func ReturnMapSliceStringVal(k map[string]interface{}, key string) []string {
+
+	if _, ok := k[key].(string); ok {
+
+		return k[key].([]string)
+	} else {
+
+		return []string{}
+	}
+}
+
+
+
+
 
 func ShowJSON(byte []byte) {
 	buf := new(bytes.Buffer)

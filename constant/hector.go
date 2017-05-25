@@ -9,16 +9,13 @@ const HectorPipe = "/tmp/hector"
 
 // TODO: 1) Change this to a better folder name -- 2) All the configuration should be outside the binary and in one place
 
-// HectorConf is the path of the configuration file
-// const HectorConf = "/etc/hector"
-// const HectorConf = "conf-example"
-
-var HectorConf string = "/etc/hector"
+// HectorConf is the path of the configuration file without trailing slash
+var HectorConf string = "/opt/damocles/conf"
 
 
 func init(){
 
-	if _, err := os.Stat("/etc/hector"); os.IsNotExist(err) {
+	if _, err := os.Stat("/opt/damocles/conf"); os.IsNotExist(err) {
 
 		HectorConf = "conf-example"
 

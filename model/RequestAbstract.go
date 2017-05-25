@@ -16,4 +16,60 @@ type RequestAbstract struct {
 	Limit 		int32
 	Token		string
 	IsOrCondition	bool
+
+	DatabaseType	string
+	DatabaseName	string
+	Table		string
+	ApiName		string
+	TableFields	[]Field
+	IsPutSupported	bool
+//	RequestFilters 	[]RequestFilter
+
+	SearchFilter	[]Field
+	SelectFields	[]Field
+	BodyFields	[]Field
 }
+
+
+type Field struct {
+
+	FieldName 		string
+	ColumnType		string
+	ColumnName		string
+	IsMultiValue		bool 	// single or multi
+	Tags            	[]string
+	IsGetField		bool
+	IsPutField		bool
+	IsPutFilterField	bool
+
+	Value 			interface{}
+	Role			string	// search_filter : will have a value and a value type,
+					// select : will have a key and value type(no value),
+					// body_field : will have key, value and value type
+
+	ValueGoType 		string
+}
+
+
+/*
+type RequestFilter struct {
+
+	FilterUID	string
+	FilterType 	string
+	Key		string
+	Value		string
+	FieldData	map[string]string
+	FieldTags	[]string
+}
+
+type FilterCondition struct {
+
+	FilterType	string
+	FilterFields	[]RequestFilter
+	FilterCondition	[]*FilterCondition
+}
+
+*/
+
+
+

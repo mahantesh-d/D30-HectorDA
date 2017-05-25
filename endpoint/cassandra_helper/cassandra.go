@@ -439,7 +439,7 @@ func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
         filter = strings.Trim(filter,",")
         filter += "]}}"
 
-        query += (filter + "'")
+        query += (filter + "' LIMIT 20")
 
 
 	logger.Write("INFO", "Returning Stratio query : " + query)

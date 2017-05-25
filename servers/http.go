@@ -157,10 +157,7 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		}
 	}
 
-
-
-
-		return reqAbs
+	return reqAbs
 }
 
 func parseAPIVersion(verStr string) uint32 {

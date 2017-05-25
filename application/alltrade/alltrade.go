@@ -19,7 +19,7 @@ import (
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
 
-	// If ther eare custom functions, then this will be called.
+	// If there are custom functions, then this will be called.
 	routes := map[string]func(model.RequestAbstract) model.ResponseAbstract{
 	// Example
 	//"alltrade_product_master_post" :  ProductMasterPost,
@@ -73,7 +73,6 @@ func HandleUnlistedRequest(req model.RequestAbstract, table_name string) model.R
 
 		dbAbs = commonRequestProcess(req, table_name)
 		EnrichDataResponse(&dbAbs)
-
 	} else {
 
 		return returnFailResponse("There was an error procesing your request", "REQUEST FAILED! Mapping data not found for route "+req.RouteName)
@@ -89,7 +88,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	dbAbs.TableName = table_name
 
 	if req.HTTPRequestType == "GET" {
-
 
 		metaResult := metadata.InterpretSelect(table_name, req.Filters)
 
@@ -181,28 +179,36 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 			metaResult["updateCondition"] = map[string][]string{}
 		}
 
-		isUpdateRequest, updateKeyVals := getUpdateQueryConditions(metaInputPost, metaResult["updateCondition"].(map[string][]string))
+		//isUpdateRequest, updateKeyVals := getUpdateQueryConditions(metaInputPost, metaResult["updateCondition"].(map[string][]string))
 
-
-		fmt.Println("Allow update query", isUpdateRequest, " Filter for where by query", updateKeyVals)
 
 		// metaResult["updateCondition"] = updateKeyVals
 
 		dbAbs.DBType = metaInputPost["databaseType"].(string)
 
 		fmt.Println(metaResult)
-		fmt.Println("Update condition", metaResult["updateCondition"])
+
 
 //		if metaResult["put_supported"] == true {
 
-			dbAbs.QueryType = "UPDATE"
-			query := queryhelper.PrepareUpdateQuery( metaResult )
-			logger.Write("INFO", string(query[0]))
+			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
 
-		dbAbs.Query = query
+				fmt.Println("Update condition 198.", metaResult["updateCondition"])
+				dbAbs.QueryType = "UPDATE"
+				query := queryhelper.PrepareUpdateQuery( metaResult )
+				logger.Write("INFO", string(query[0]))
+
+				dbAbs.Query = query
+			} else {
+
+				dbAbs.Message = "Error: Filters not passed in query"
+				dbAbs.Count = 0
+				dbAbs.Status = "fail"
+
+				return dbAbs
+			}
 //		}
 	}
-
 
 
 	fmt.Println("Running query ", dbAbs)
@@ -226,18 +232,41 @@ func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 
 func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondition map[string][]string) (bool, map[string][]string) {
 
-	if _, ok := metaInputPost["database"].(string); !ok { return false, map[string][]string{}}
-	if _, ok := metaInputPost["databaseType"]; !ok { return false, map[string][]string{}}
-	if _, ok := metaInputPost["table"].(string); !ok { return false, map[string][]string{}}
+	if _, ok := metaInputPost["database"].(string); !ok {
+
+		logger.Write("ERROR", "Metainput database not set");
+		return false, map[string][]string{} }
+
+
+	if _, ok := metaInputPost["databaseType"]; !ok {
+
+		logger.Write("ERROR", "Metainput databaseType not set");
+		return false, map[string][]string{}}
+
+
+	if _, ok := metaInputPost["table"].(string); !ok {
+
+		logger.Write("ERROR", "Metainput table not set");
+		return false, map[string][]string{}}
+
 
 	dbType := metaInputPost["databaseType"].(string)
 	table_name := metaInputPost["table"].(string);
 	primaryKey := ""
 
+	if len(updateCondition) == 0 {
+
+		logger.Write("ERROR", "getUpdateQueryConditions for cassandra did not have updateCondition returning.")
+		return false, map[string][]string{}
+	}
+
+
 	if dbType == "cassandra" {
 
 		dbName := metaInputPost["database"].(string)
-		primaryKey = dbName + "." + table_name + "_pk"
+		primaryKey =  table_name + "_pk"
+		table_name = dbName + "." + table_name
+
 	} else {
 
 		primaryKey = table_name + "_pk"

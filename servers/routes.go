@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
+	"fmt"
 )
 
 // Routes store the mapping of routes to the underlying application logic
@@ -36,7 +37,6 @@ func init() {
 			Routes[key] = value
 		}
 	}
-
 }
 
 // HandleRoutes is used resolve incoming routes and execute the corresponding application logic
@@ -76,6 +76,8 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 	if RouteExists(route) {
 
+		reqAbs.ApiName = route
+
 		// Calling the custom method defined
 		respAbs = Routes[route](reqAbs)
 
@@ -88,6 +90,11 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 		if len(routeDetails) != 0 {
 
 			logger.Write("INFO", "Calling common method for the request")
+
+			mapRequestFields(&reqAbs, routeDetails)
+
+			fmt.Println(reqAbs)
+
 			respAbs = alltrade.HandleUnlistedRequest(reqAbs, routeDetails["table"].(string))
 		}
 	}
@@ -101,6 +108,40 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 	return respAbs, nil
 }
+
+
+func mapRequestFields(reqqAbs *model.RequestAbstract, routeDetails map[string]interface{}) {
+
+	(*reqqAbs).DatabaseType = utils.ReturnMapStringVal(routeDetails, "databaseType")
+
+
+	(*reqqAbs).DatabaseName = utils.ReturnMapStringVal(routeDetails, "database")
+
+	(*reqqAbs).Table = utils.ReturnMapStringVal(routeDetails, "table")
+	(*reqqAbs).ApiName = utils.ReturnMapStringVal(routeDetails, "apiName")
+	(*reqqAbs).IsPutSupported = utils.ReturnMapBoolVal(routeDetails, "put_supported")
+
+	if _, ok := routeDetails["fields"].(map[string]interface{}); ok {
+
+		for _, curField := range routeDetails["fields"].(map[string]interface{}) {
+
+			f := model.Field{}
+			allFields := curField.(map[string]interface{})
+
+			f.FieldName = utils.ReturnMapStringVal(allFields, "name")
+			f.ColumnType =  utils.ReturnMapStringVal(allFields, "type")
+			f.ColumnName =  utils.ReturnMapStringVal(allFields, "column")
+			f.IsMultiValue =  utils.ReturnMapBoolVal(allFields, "valueType")
+			f.Tags =  utils.ReturnMapSliceStringVal(allFields, "tags")
+			f.IsGetField =  utils.ReturnMapBoolVal(allFields, "is_get_field")
+			f.IsPutField =  utils.ReturnMapBoolVal(allFields, "is_put_field")
+			f.IsPutFilterField =  utils.ReturnMapBoolVal(allFields, "is_put_filter_field")
+
+			(*reqqAbs).TableFields = append(reqqAbs.TableFields, f)
+		}
+	}
+}
+
 
 // RouteExists is used to check if a given route exists
 // For example:

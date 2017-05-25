@@ -107,6 +107,8 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 		reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
+
+		logger.Write("INFO", "GRPC, got filters " + req.GetFilter() )
 	} else if reqAbs.HTTPRequestType == "GET" {
 
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())

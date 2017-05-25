@@ -5,6 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
 	"github.com/dminGod/D30-HectorDA/config"
+	"fmt"
 )
 
 // Interpret is used to cross-reference application metadata with the request metadata
@@ -205,14 +206,15 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 			// removing everything so that the response goes back as invalid filter to the user
 			// The API is strict and will not respond if the user is using any wrong filter
 
-			output := []map[string]interface{}{}
-			input["fields"] = output
+			kkk := map[string]interface{}{}
+			kkk["fields"] = map[string]interface{}{}
 
 			//			fmt.Println("DM : Searching for field", k, "Fields are ", fields)
 
 			// Logging this out as an error
 			logger.Write("ERROR", "Field passed in the filters '"+ k +"' was not found in the JSON API filter definition. Please use the correct filter. Using wrong filters has been set to cause API to fail.")
-			return input, false
+			fmt.Println("Fields are : ", fields)
+			return kkk, false
 		}
 	}
 
