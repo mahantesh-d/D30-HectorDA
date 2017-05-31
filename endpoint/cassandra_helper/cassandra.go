@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
+	"github.com/gocql/gocql"
 )
 
 // IsValidCassandraQuery is used to analyze the metadata
@@ -39,14 +40,19 @@ func IsValidCassandraQuery(metaInput map[string]interface{}) bool {
 	}
 
 	uniqueIndex := ""
+
 	count := 0
+
 	for _, v := range fields {
 		metaData := v.(map[string]interface{})
 		if count == 0 {
+
 			uniqueIndex = metaData["indexType"].(string)
 		} else if uniqueIndex != "" && metaData["indexType"].(string) != uniqueIndex {
+
 			return false
 		}
+
 		count++
 	}
 
@@ -225,9 +231,20 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string {
 		value += ","
 	}
 
+
+
 	for curKey, curVal := range metaInput["updateCondition"].(map[string][]string) {
 
-		where += " " + curKey + " = '" + curVal[0] + "'  AND";
+		_, err := gocql.ParseUUID(curVal[0])
+
+		if err == nil {
+
+			where += " " + curKey + " = " + curVal[0] + "  AND";
+		} else {
+
+			where += " " + curKey + " = '" + curVal[0] + "'  AND";
+		}
+
 	}
 
 	name = strings.Trim(name, ",")
@@ -291,6 +308,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 
 		if metaInput["isOrCondition"].(bool) {
+
 			whereCondition = "OR"
 		}
 
@@ -304,7 +322,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 			for _, v := range fields {
 
 				fieldMeta := v.(map[string]interface{})
-				query += endpoint_common.ReturnCondition(fieldMeta, whereCondition)
+				query += endpoint_common.ReturnCondition(fieldMeta, whereCondition, "cassandra")
 
 			}
 
@@ -328,10 +346,10 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 					if _, ok := querySorter[priority]; ok {
 
-						querySorter[priority] = append(querySorter[priority], endpoint_common.ReturnCondition(fieldMeta, whereCondition) + " " + whereCondition)
+						querySorter[priority] = append(querySorter[priority], endpoint_common.ReturnCondition(fieldMeta, whereCondition, "cassandra") + " " + whereCondition)
 					} else {
 
-						querySorter[priority] = append([]string{}, endpoint_common.ReturnCondition(fieldMeta, whereCondition) + " " + whereCondition)
+						querySorter[priority] = append([]string{}, endpoint_common.ReturnCondition(fieldMeta, whereCondition, "cassandra") + " " + whereCondition)
 					}
 
 
@@ -339,7 +357,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 					logger.Write("ERROR", "Priority not set on the field" + fieldMeta["name"].(string))
 					// Buddy din't bother to add priority.... passing 5
-					querySorter[5] = append(querySorter[5], endpoint_common.ReturnCondition(fieldMeta, whereCondition)+ " " + whereCondition)
+					querySorter[5] = append(querySorter[5], endpoint_common.ReturnCondition(fieldMeta, whereCondition, "cassandra")+ " " + whereCondition)
 				}
 
 			}
@@ -371,12 +389,28 @@ func makeSelect(fields map[string]interface{}) string {
 
 		selects := []string{}
 
-		for k, v := range fields["fields"].(map[string]interface{}) {
+
+		for _, v := range fields["fields"].(map[string]interface{}) {
+
+
+			isNotionalField := false
+
+			if _, ok := v.(map[string]interface{})["is_notional_field"].(string); ok {
+
+				if v.(map[string]interface{})["is_notional_field"].(string) == "true" {
+
+					isNotionalField = true
+				}
+
+			}
+
+			// Dont select notional fields...
+			if isNotionalField { continue }
 
 			// If you are taking select data
 			//fmt.Println(v.(map[string]interface{})["column"], " as ", k)
 
-			selects = append(selects, k + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
+			selects = append(selects, v.(map[string]interface{})["column"].(string) + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
 		}
 
 		return strings.Join(selects, ", ")
@@ -420,17 +454,52 @@ func StratioSelectQueryBuild(metaInput map[string]interface{}) string {
 
         filter := "{ filter : {  type: \"boolean\" , " + whereCondition + ": ["
 
-        typeTemplate := "{ type: \"phrase\", field: \"|1\", value: \"|2\" }"
 
         for _,v := range fields {
                 fieldInfo := v.(map[string]interface{})
+
+		typeTemplate := "{ type: \"phrase\", field: \"|1\", value: \"|2\" }"
+
+		if _, ok := fieldInfo["type"].(string); ok {
+
+			if fieldInfo["type"].(string) == "timestamp"  {
+
+				typeTemplate = "{ type: \"range\", field: \"|1\", upper: \"|2\", lower: \"|2\", include_lower: true, include_upper: true }"
+			}
+
+		} else {
+
+			logger.Write("ERROR", "Field type not defined for field in stratio")
+		}
+
+		// isNotionalField := false
+
+
+		if _, ok := fieldInfo["is_notional_field"].(string); ok {
+
+			if fieldInfo["is_notional_field"].(string) == "true" {
+
+		//		isNotionalField = true
+
+				if fieldInfo["notional_operator"] == ">" {
+
+					typeTemplate = "{ type: \"range\", field: \"|1\", lower: \"|2\" }"
+				}
+
+				if fieldInfo["notional_operator"] == "<" {
+
+					typeTemplate = "{ type: \"range\", field: \"|1\", upper: \"|2\" }"
+				}
+			}
+		}
+
 
 		for _, tmpVal := range fieldInfo["value"].([]string) {
 
 			if len( tmpVal ) == 0 { continue }
 
-			condition := strings.Replace(typeTemplate,"|1", fieldInfo["column"].(string),-1)
-			condition = strings.Replace(condition,"|2", tmpVal,-1)
+			condition := strings.Replace(typeTemplate,"|1", fieldInfo["column"].(string), -1)
+			condition = strings.Replace(condition,"|2", tmpVal, -1)
 
 			filter += condition + ","
 		}

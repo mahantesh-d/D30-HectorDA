@@ -49,8 +49,6 @@ func EnrichDataResponse(dbAbs *model.DBAbstract) {
 			// Make the time as per the format that they want..
 			manipulateData(*dbAbs, &curRecord)
 
-
-
 			retData = append(retData, curRecord)
 		}
 
@@ -286,6 +284,13 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 
 	query += " LIMIT 1"
 
+	if dbType == "cassandra" {
+
+		query += " ALLOW FILTERING"
+
+	}
+
+
 	dbAbs := model.DBAbstract{ Query: []string{ query },
 		DBType: dbType,
 		QueryType: "SELECT",
@@ -309,10 +314,14 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 		case "string" :
 			updateKeyStr = dbAbs.RichData[0]["key"].(string)
 
-		case "uuid" :
+		case "gocql.UUID" :
 			updateKeyStr = dbAbs.RichData[0]["key"].(gocql.UUID).String()
 		}
 
+
+		fmt.Println(reflect.TypeOf( dbAbs.RichData[0]["key"] ).String())
+
+		logger.Write("INFO", "From update query Returning " + primaryKey + " : " + updateKeyStr)
 		return true, map[string][]string{ primaryKey : []string{ updateKeyStr } }
 		}
 	} else {

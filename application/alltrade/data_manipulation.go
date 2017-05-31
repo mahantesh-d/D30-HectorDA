@@ -4,6 +4,9 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"time"
 	"github.com/dminGod/D30-HectorDA/model"
+	"encoding/json"
+	"fmt"
+	"strings"
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -39,24 +42,75 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 							(*curRecord)[kk] = vv
 						}
 					}
+				}
 
+
+				if dbAbs.DBType == "postgresxl" && columnType == "set<text>" {
+
+					if vv != nil {
+
+							var payload interface{}
+
+							err := json.Unmarshal(vv.([]byte), &payload)
+
+							if err == nil {
+
+								(*curRecord)[kk] =  payload
+							}
+
+					} else {
+
+						(*curRecord)[kk] = []string{}
+					}
 				}
 
 
 				if len(columnTags) > 0 && columnTags[0] == "json_array" {
 
-
 					var jsonArray []map[string]interface{}
 
-
 					if _, ok := vv.([]string); ok {
-					for _, vvv := range vv.([]string) {
 
-						jsonArray = append(jsonArray, utils.DecodeJSON(vvv))
-					}
+						for _, vvv := range vv.([]string) {
+
+							var payload map[string]interface{}
+
+							err := json.Unmarshal([]byte(vvv), &payload)
+
+							if err == nil {
+
+								jsonArray = append(jsonArray, payload)
+							}
+						}
 					
-					(*curRecord)[kk] = jsonArray
+						(*curRecord)[kk] = jsonArray
 					}
+
+					if _, ok := vv.([]uint8); ok {
+
+						var payload interface{}
+
+						tmpStr := strings.Trim(string(vv.([]uint8)), `[`)
+						tmpStr = strings.Trim(tmpStr, `]`)
+						tmpStr = strings.Trim(tmpStr, `"`)
+
+						tmpStr = strings.Replace(tmpStr, `\`, "", -1)
+
+						fmt.Println("tmpStr", tmpStr)
+
+						err2 := json.Unmarshal([]byte(tmpStr), &payload)
+
+						if err2 != nil { fmt.Println("Error is...", err2.Error()) }
+
+						fmt.Println("payload", payload)
+
+						(*curRecord)[kk] = payload
+
+						fmt.Println(*curRecord)
+
+
+					}
+
 				}
 			}
 		}

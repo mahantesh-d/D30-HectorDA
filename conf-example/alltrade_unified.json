@@ -1,13 +1,13 @@
 {
 	"foobar": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "foobar",
 		"fields": {
 			"id": {
 				"name": "id",
-				"type": "uuid",
+				"type": "int",
 				"column": "id",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -44,18 +44,18 @@
 		}
 	},
 	"stock_adjustment": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "stock_adjustment",
 		"apiName": "alltrade_stock_adjustment",
-		"updateCondition" : "&~transactionType=adjuststock",
-		"updateKeys" : "adjustStockNo|adjust_stock_no",
+		"updateCondition": "&~transactionType=adjuststock",
+		"updateKeys": "adjustStockNo|adjust_stock_no",
 		"child_table_prefix": "",
 		"fields": {
 			"stock_adjustment_pk": {
 				"name": "stock_adjustment_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "stock_adjustment_pk",
 				"valueType": "single",
 				"priority": 1,
@@ -73,6 +73,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"adjust_date_time_start": {
+				"name": "adjustDateTime_start",
+				"type": "timestamp",
+				"column": "adjust_date_time",
+				"valueType": "single",
+				"priority": 10,
+				"indexType": "sasi",
+				"tags": [""],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"adjust_date_time_end": {
+				"name": "adjustDateTime_end",
+				"type": "timestamp",
+				"column": "adjust_date_time",
+				"valueType": "single",
+				"priority": 10,
+				"indexType": "sasi",
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"tags": [],
+				"is_get_field": "true"
+			},
 			"adjust_detail_s": {
 				"name": "adjustDetail",
 				"type": "set<text>",
@@ -81,7 +105,7 @@
 				"indexType": "secondary",
 				"priority": 2,
 				"tags": ["json_array"],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"adjust_status": {
 				"name": "adjustStatus",
@@ -91,7 +115,7 @@
 				"priority": 26,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"plant": {
 				"name": "Plant",
@@ -101,7 +125,7 @@
 				"priority": 27,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"storage": {
 				"name": "Storage",
@@ -111,7 +135,7 @@
 				"priority": 28,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"adjust_type": {
 				"name": "adjustType",
@@ -121,7 +145,7 @@
 				"priority": 14,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"adjust_stock_no": {
 				"name": "adjustStockNo",
@@ -131,7 +155,7 @@
 				"priority": 11,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"brand_key": {
 				"name": "brand_key",
@@ -141,7 +165,7 @@
 				"priority": 5,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"commercial_name_key": {
 				"name": "commercialName_key",
@@ -151,7 +175,7 @@
 				"priority": 8,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"company": {
 				"name": "company",
@@ -161,7 +185,7 @@
 				"priority": 1,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_by": {
 				"name": "createBy",
@@ -171,7 +195,7 @@
 				"priority": 29,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -181,7 +205,31 @@
 				"priority": 30,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_date_time_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 30,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_date_time_end": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 30,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"doc_ref": {
 				"name": "docRef",
@@ -211,7 +259,7 @@
 				"priority": 20,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_province": {
 				"name": "locationProvince",
@@ -221,7 +269,7 @@
 				"priority": 25,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_region": {
 				"name": "locationRegion",
@@ -231,7 +279,7 @@
 				"priority": 23,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_sub_region": {
 				"name": "locationSubRegion",
@@ -241,7 +289,7 @@
 				"priority": 24,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_subtype": {
 				"name": "locationSubType",
@@ -251,7 +299,7 @@
 				"priority": 22,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_type": {
 				"name": "locationType",
@@ -261,7 +309,7 @@
 				"priority": 21,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_code_key": {
 				"name": "matCode_key",
@@ -281,7 +329,7 @@
 				"priority": 15,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mm_doc_no": {
 				"name": "mmDocNo",
@@ -291,7 +339,7 @@
 				"priority": 18,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mm_doc_year": {
 				"name": "mmDocYear",
@@ -301,7 +349,7 @@
 				"priority": 17,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"model_key": {
 				"name": "model_key",
@@ -311,7 +359,7 @@
 				"priority": 6,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"movement_type": {
 				"name": "moveMentType",
@@ -321,7 +369,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_subtype_key": {
 				"name": "productSubType_key",
@@ -331,7 +379,7 @@
 				"priority": 4,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_type_key": {
 				"name": "productType_key",
@@ -341,7 +389,7 @@
 				"priority": 3,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"remark": {
 				"name": "remark",
@@ -351,7 +399,7 @@
 				"priority": 16,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"serial_key": {
 				"name": "serial_key",
@@ -361,7 +409,7 @@
 				"priority": 9,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"reason_key": {
 				"name": "reason_key",
@@ -371,7 +419,7 @@
 				"priority": 33,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_description_key": {
 				"name": "matDescription_key",
@@ -381,7 +429,7 @@
 				"priority": 34,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_id": {
 				"name": "transactionId",
@@ -391,7 +439,7 @@
 				"priority": 12,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_type": {
 				"name": "transactionType",
@@ -401,7 +449,7 @@
 				"priority": 13,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_by": {
 				"name": "updateBy",
@@ -411,7 +459,7 @@
 				"priority": 31,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -421,25 +469,49 @@
 				"priority": 32,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 32,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 32,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			}
 
 		}
 
 	},
 	"obtain_detail": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "obtain_detail",
 		"apiName": "alltrade_obtain_detail",
-		"updateCondition" : "|~transactionType=obtainpickup,transactionType=obtainreturn",
-		"updateKeys" : "obtainNo|obtain_no",
+		"updateCondition": "|~transactionType=obtainpickup,transactionType=obtainreturn",
+		"updateKeys": "obtainNo|obtain_no",
 		"child_table_prefix": "",
 		"fields": {
 			"obtain_detail_pk": {
 				"name": "obtain_detail_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "obtain_detail_pk",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -454,7 +526,7 @@
 				"priority": 17,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -464,7 +536,31 @@
 				"priority": 18,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 18,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 18,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"doc_ref": {
 				"name": "docRef",
@@ -493,7 +589,7 @@
 				"priority": 10,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_province": {
 				"name": "locationProvince",
@@ -503,7 +599,7 @@
 				"priority": 15,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_region": {
 				"name": "locationRegion",
@@ -513,7 +609,7 @@
 				"priority": 13,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_sub_region": {
 				"name": "locationSubRegion",
@@ -523,7 +619,7 @@
 				"priority": 14,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"obtain_ref": {
 				"name": "obtainRef",
@@ -533,7 +629,7 @@
 				"priority": 16,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_subtype": {
 				"name": "locationSubType",
@@ -543,7 +639,7 @@
 				"priority": 12,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_type": {
 				"name": "locationType",
@@ -553,7 +649,7 @@
 				"priority": 11,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_code_key": {
 				"name": "matCode_key",
@@ -563,7 +659,7 @@
 				"priority": 6,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"obtain_datetime": {
 				"name": "obtainDateTime",
@@ -573,7 +669,31 @@
 				"priority": 4,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"obtain_datetime_start": {
+				"name": "obtainDateTime_start",
+				"type": "timestamp",
+				"column": "obtain_datetime",
+				"valueType": "single",
+				"priority": 4,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"obtain_datetime_end": {
+				"name": "obtainDateTime_end",
+				"type": "timestamp",
+				"column": "obtain_datetime",
+				"valueType": "single",
+				"priority": 4,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"obtain_no": {
 				"name": "obtainNo",
@@ -583,7 +703,7 @@
 				"priority": 2,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"obtain_status": {
 				"name": "obtainStatus",
@@ -596,7 +716,7 @@
 				"is_get_field": "true"
 			},
 			"obtaindetail_s": {
-				"name": "obtainDetail",
+				"name": "obtainBySalesCodeList",
 				"type": "set<text>",
 				"column": "obtaindetail_s",
 				"valueType": "multi",
@@ -622,7 +742,7 @@
 				"priority": 7,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_id": {
 				"name": "transactionId",
@@ -632,7 +752,7 @@
 				"priority": 8,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_type": {
 				"name": "transactionType",
@@ -652,7 +772,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -662,26 +782,50 @@
 				"priority": 20,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 20,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 20,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			}
 
 		}
 
 	},
 	"sub_stock_detail_transfer": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_detail_transfer",
 		"apiName": "alltrade_substock_detail_transfer",
-		"updateCondition" : "&~transactionType=transfersubstock",
-		"updateKeys" : "transferSubStockNo|transfer_substock_no",
+		"updateCondition": "&~transactionType=transfersubstock",
+		"updateKeys": "transferSubStockNo|transfer_substock_no",
 		"child_table_prefix": "",
 		"fields": {
-			"substock_detail_transfer_pk": {
-				"name": "substock_detail_transfer_pk",
-				"type": "uuid",
-				"column": "substock_detail_transfer_pk",
+			"sub_stock_detail_transfer_pk": {
+				"name": "sub_stock_detail_transfer_pk",
+				"type": "int",
+				"column": "sub_stock_detail_transfer_pk",
 				"valueType": "single",
 				"indexType": "sasi",
 				"tags": [],
@@ -695,7 +839,7 @@
 				"priority": 9,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_by": {
 				"name": "createBy",
@@ -705,7 +849,7 @@
 				"priority": 17,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -715,7 +859,31 @@
 				"priority": 18,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 18,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 18,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"doc_ref": {
 				"name": "docRef",
@@ -734,7 +902,7 @@
 				"priority": 6,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_code": {
 				"name": "locationCode",
@@ -754,7 +922,7 @@
 				"priority": 11,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_province": {
 				"name": "locationProvince",
@@ -764,7 +932,7 @@
 				"priority": 16,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_region": {
 				"name": "locationRegion",
@@ -774,7 +942,7 @@
 				"priority": 14,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_sub_region": {
 				"name": "locationSubRegion",
@@ -784,7 +952,7 @@
 				"priority": 15,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_subtype": {
 				"name": "locationSubType",
@@ -794,7 +962,7 @@
 				"priority": 13,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_type": {
 				"name": "locationType",
@@ -804,7 +972,7 @@
 				"priority": 12,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_code_key": {
 				"name": "matCode_key",
@@ -814,7 +982,7 @@
 				"priority": 4,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"serial_key": {
 				"name": "serial_key",
@@ -824,7 +992,7 @@
 				"priority": 5,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_substock": {
 				"name": "toSubStock",
@@ -834,7 +1002,7 @@
 				"priority": 2,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"total_qty": {
 				"name": "totalQty",
@@ -844,7 +1012,7 @@
 				"priority": 21,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_id": {
 				"name": "transactionId",
@@ -854,7 +1022,7 @@
 				"priority": 7,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_type": {
 				"name": "transactionType",
@@ -864,7 +1032,7 @@
 				"priority": 8,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transfer_substock_datetime": {
 				"name": "transferSubStockDateTime",
@@ -876,6 +1044,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"transfer_substock_datetime_start": {
+				"name": "transferSubStockDateTime_start",
+				"type": "timestamp",
+				"column": "transfer_substock_datetime",
+				"valueType": "single",
+				"priority": 3,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"transfer_substock_datetime_end": {
+				"name": "transferSubStockDateTime_end",
+				"type": "timestamp",
+				"column": "transfer_substock_datetime",
+				"valueType": "single",
+				"priority": 3,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
+			},
 			"transfer_substock_detail_s": {
 				"name": "transferSubStockDetail",
 				"type": "set<text>",
@@ -883,7 +1075,7 @@
 				"valueType": "multi",
 				"indexType": "secondary",
 				"tags": ["json_array"],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transfer_substock_no": {
 				"name": "transferSubStockNo",
@@ -903,7 +1095,7 @@
 				"priority": 22,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_by": {
 				"name": "updateBy",
@@ -913,7 +1105,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -923,26 +1115,50 @@
 				"priority": 20,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 20,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 20,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			}
 
 		}
 
 	},
 	"sub_stock_daily_detail": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sub_stock_daily_detail",
 		"apiName": "alltrade_substock_daily_detail",
-		"updateCondition" : "&~transactionType=substockdaily",
-		"updateKeys" : "subStockDailyNo|substock_daily_no",
+		"updateCondition": "&~transactionType=substockdaily",
+		"updateKeys": "subStockDailyNo|substock_daily_no",
 		"child_table_prefix": "",
 		"fields": {
-			"substock_daily_detail_pk": {
-				"name": "substock_daily_detail_pk",
-				"type": "uuid",
-				"column": "substock_daily_detail_pk",
+			"sub_stock_daily_detail_pk": {
+				"name": "sub_stock_daily_detail_pk",
+				"type": "int",
+				"column": "sub_stock_daily_detail_pk",
 				"valueType": "single",
 				"indexType": "sasi",
 				"tags": [],
@@ -956,7 +1172,7 @@
 				"priority": 5,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_by": {
 				"name": "createBy",
@@ -966,7 +1182,7 @@
 				"priority": 17,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -976,7 +1192,31 @@
 				"priority": 7,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 7,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 7,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"daily_status": {
 				"name": "dailyStatus",
@@ -986,7 +1226,7 @@
 				"priority": 4,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"date_for_sales": {
 				"name": "dateForSales",
@@ -998,6 +1238,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"date_for_sales_start": {
+				"name": "dateForSales_start",
+				"type": "timestamp",
+				"column": "date_for_sales",
+				"valueType": "single",
+				"priority": 2,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"date_for_sales_end": {
+				"name": "dateForSales_end",
+				"type": "timestamp",
+				"column": "date_for_sales",
+				"valueType": "single",
+				"priority": 2,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
+			},
 			"device_payment_name": {
 				"name": "devicePaymentName",
 				"type": "text",
@@ -1006,7 +1270,7 @@
 				"priority": 6,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_code": {
 				"name": "locationCode",
@@ -1026,7 +1290,7 @@
 				"priority": 11,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_province": {
 				"name": "locationProvince",
@@ -1036,7 +1300,7 @@
 				"priority": 16,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_region": {
 				"name": "locationRegion",
@@ -1046,7 +1310,7 @@
 				"priority": 14,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_sub_region": {
 				"name": "locationSubRegion",
@@ -1056,7 +1320,7 @@
 				"priority": 15,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_subtype": {
 				"name": "locationSubType",
@@ -1066,7 +1330,7 @@
 				"priority": 13,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_type": {
 				"name": "locationType",
@@ -1076,7 +1340,7 @@
 				"priority": 12,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"sales_for": {
 				"name": "salesFor",
@@ -1105,7 +1369,7 @@
 				"priority": 1,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_id": {
 				"name": "transactionId",
@@ -1115,7 +1379,7 @@
 				"priority": 8,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_type": {
 				"name": "transactionType",
@@ -1125,7 +1389,7 @@
 				"priority": 9,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_by": {
 				"name": "updateBy",
@@ -1135,7 +1399,7 @@
 				"priority": 18,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -1145,25 +1409,49 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 19,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 19,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			}
 
 		}
 
 	},
-	"tranfer_out_mismatch": {
-		"databaseType": "cassandra",
+	"transfer_out_mismatch": {
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
-		"table": "tranfer_out_mismatch",
+		"table": "transfer_out_mismatch",
 		"apiName": "alltrade_transferout_mismatch",
-		"updateCondition" : "&~transactionType=transferoutmismatch",
-		"updateKeys" : "requestNo|request_no",
+		"updateCondition": "&~transactionType=transferoutmismatch",
+		"updateKeys": "requestNo|request_no",
 		"child_table_prefix": "",
 		"fields": {
 			"transfer_out_mismatch_pk": {
 				"name": "transfer_out_mismatch_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "transfer_out_mismatch_pk",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -1200,6 +1488,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 5,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 5,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
+			},
 			"transfer_out_datetime": {
 				"name": "transferOutDateTime",
 				"type": "timestamp",
@@ -1208,6 +1520,30 @@
 				"priority": 10,
 				"indexType": "sasi",
 				"tags": [],
+				"is_get_field": "true"
+			},
+			"transfer_out_datetime_start": {
+				"name": "transferOutDateTime_stat",
+				"type": "timestamp",
+				"column": "transfer_out_datetime",
+				"valueType": "single",
+				"priority": 10,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"transfer_out_datetime_end": {
+				"name": "transferOutDateTime_end",
+				"type": "timestamp",
+				"column": "transfer_out_datetime",
+				"valueType": "single",
+				"priority": 10,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
 				"is_get_field": "true"
 			},
 			"mismatch_detail_s": {
@@ -1268,24 +1604,48 @@
 				"indexType": "sasi",
 				"tags": [],
 				"is_get_field": "true"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 7,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 7,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
 			}
 
 		}
 
 	},
 	"request_goods": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "request_goods",
 		"apiName": "alltrade_requestgoods",
-		"updateCondition" : "&~transactionType=requestgoods",
-		"updateKeys" : "requestNo|request_no",
+		"updateCondition": "&~transactionType=requestgoods",
+		"updateKeys": "requestNo|request_no",
 		"child_table_prefix": "",
 		"fields": {
 			"request_goods_pk": {
 				"name": "request_goods_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "request_goods_pk",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -1300,7 +1660,7 @@
 				"priority": 14,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"cancel_by": {
 				"name": "cancelBy",
@@ -1310,7 +1670,7 @@
 				"priority": 36,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"cancel_datetime": {
 				"name": "cancelDateTime",
@@ -1320,7 +1680,31 @@
 				"priority": 37,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"cancel_datetime_start": {
+				"name": "cancelDateTime_start",
+				"type": "timestamp",
+				"column": "cancel_datetime",
+				"valueType": "single",
+				"priority": 37,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"cancel_datetime_end": {
+				"name": "cancelDateTime_end",
+				"type": "timestamp",
+				"column": "cancel_datetime",
+				"valueType": "single",
+				"priority": 37,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"commercial_name_key": {
 				"name": "commercialName_key",
@@ -1330,7 +1714,7 @@
 				"priority": 18,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"company": {
 				"name": "company",
@@ -1340,7 +1724,7 @@
 				"priority": 20,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_by": {
 				"name": "createBy",
@@ -1350,7 +1734,7 @@
 				"priority": 35,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -1360,7 +1744,31 @@
 				"priority": 9,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 9,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 9,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"do_no": {
 				"name": "doNo",
@@ -1370,7 +1778,7 @@
 				"priority": 33,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"for_substock": {
 				"name": "forSubStock",
@@ -1380,7 +1788,7 @@
 				"priority": 21,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_code": {
 				"name": "fromLocationCode",
@@ -1400,7 +1808,7 @@
 				"priority": 23,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_province": {
 				"name": "fromLocationProvince",
@@ -1410,7 +1818,7 @@
 				"priority": 28,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_region": {
 				"name": "fromLocationRegion",
@@ -1420,7 +1828,7 @@
 				"priority": 26,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_subtype": {
 				"name": "fromLocationSubType",
@@ -1430,7 +1838,7 @@
 				"priority": 27,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_type": {
 				"name": "fromLocationType",
@@ -1440,7 +1848,7 @@
 				"priority": 24,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_code_key": {
 				"name": "matCode_key",
@@ -1450,7 +1858,7 @@
 				"priority": 13,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mobile_no": {
 				"name": "mobileNo",
@@ -1469,7 +1877,7 @@
 				"priority": 15,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_description_key": {
 				"name": "matDescription_key",
@@ -1479,7 +1887,7 @@
 				"priority": 57,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"movement_type": {
 				"name": "moveMentType",
@@ -1489,7 +1897,7 @@
 				"priority": 34,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"picking_datetime": {
 				"name": "pickingDateTime",
@@ -1499,7 +1907,31 @@
 				"priority": 31,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"picking_datetime_start": {
+				"name": "pickingDateTime_start",
+				"type": "timestamp",
+				"column": "picking_datetime",
+				"valueType": "single",
+				"priority": 31,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"picking_datetime_end": {
+				"name": "pickingDateTime_end",
+				"type": "timestamp",
+				"column": "picking_datetime",
+				"valueType": "single",
+				"priority": 31,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"product_subtype_key": {
 				"name": "productSubType_key",
@@ -1509,7 +1941,7 @@
 				"priority": 17,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_type_key": {
 				"name": "productType_key",
@@ -1519,7 +1951,7 @@
 				"priority": 16,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"reason": {
 				"name": "reason",
@@ -1529,7 +1961,7 @@
 				"priority": 46,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"receive_by": {
 				"name": "receiveBy",
@@ -1539,7 +1971,7 @@
 				"priority": 43,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"contact_no": {
 				"name": "contactNo",
@@ -1549,7 +1981,7 @@
 				"priority": 44,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"remark": {
 				"name": "remark",
@@ -1559,7 +1991,7 @@
 				"priority": 45,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"request_detail_s": {
 				"name": "requestDetail",
@@ -1598,7 +2030,7 @@
 				"priority": 32,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"route_group": {
 				"name": "routeGroup",
@@ -1608,7 +2040,7 @@
 				"priority": 12,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_address": {
 				"name": "shipToAddress",
@@ -1618,7 +2050,7 @@
 				"priority": 41,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_code": {
 				"name": "shipToCode",
@@ -1628,7 +2060,7 @@
 				"priority": 38,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_distribution_channel": {
 				"name": "shipToDistributionChannel",
@@ -1638,7 +2070,7 @@
 				"priority": 42,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_name": {
 				"name": "shipToName",
@@ -1648,7 +2080,7 @@
 				"priority": 39,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_province": {
 				"name": "shipToProvince",
@@ -1658,7 +2090,7 @@
 				"priority": 40,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"stamp_delivery": {
 				"name": "stampDelivery",
@@ -1668,7 +2100,7 @@
 				"priority": 47,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"location_code_tier_2": {
 				"name": "locationCodeTier2",
@@ -1678,7 +2110,7 @@
 				"priority": 48,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"sales_name": {
 				"name": "salesName",
@@ -1688,7 +2120,7 @@
 				"priority": 50,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"sales_code": {
 				"name": "salesCode",
@@ -1698,7 +2130,7 @@
 				"priority": 49,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"device_handset_qty": {
 				"name": "deviceHandsetQty",
@@ -1708,7 +2140,7 @@
 				"priority": 51,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"device_handset_bundle_qty": {
 				"name": "deviceHandsetBundleQty",
@@ -1718,7 +2150,7 @@
 				"priority": 52,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"sim_prepaid_qty": {
 				"name": "simPrepaidQty",
@@ -1728,7 +2160,7 @@
 				"priority": 53,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"sim_postpaid_qty": {
 				"name": "simPostpaidQty",
@@ -1738,7 +2170,7 @@
 				"priority": 54,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"premium_qty": {
 				"name": "premiumQty",
@@ -1748,7 +2180,7 @@
 				"priority": 55,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"other_qty": {
 				"name": "otherQty",
@@ -1758,7 +2190,7 @@
 				"priority": 56,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_code": {
 				"name": "toLocationCode",
@@ -1778,7 +2210,7 @@
 				"priority": 29,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_province": {
 				"name": "toLocationProvince",
@@ -1788,7 +2220,7 @@
 				"priority": 8,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_region": {
 				"name": "toLocationRegion",
@@ -1798,7 +2230,7 @@
 				"priority": 6,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_sub_region": {
 				"name": "toLocationSubRegion",
@@ -1808,7 +2240,7 @@
 				"priority": 30,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_subtype": {
 				"name": "toLocationSubType",
@@ -1818,7 +2250,7 @@
 				"priority": 7,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_type": {
 				"name": "toLocationType",
@@ -1828,7 +2260,7 @@
 				"priority": 5,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_id": {
 				"name": "transactionId",
@@ -1838,7 +2270,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_type": {
 				"name": "transactionType",
@@ -1848,7 +2280,7 @@
 				"priority": 1,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_by": {
 				"name": "updateBy",
@@ -1858,7 +2290,7 @@
 				"priority": 10,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -1868,25 +2300,48 @@
 				"priority": 11,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 11,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 11,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			}
-
 		}
 
 	},
 	"order_transfer": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "order_transfer",
 		"apiName": "alltrade_ordertransfer",
-		"updateCondition" : "|~transactionType=transferin,transactionType=transferout",
-		"updateKeys" : "transferNo|transfer_no",
+		"updateCondition": "|~transactionType=transferin,transactionType=transferout",
+		"updateKeys": "transferNo|transfer_no",
 		"child_table_prefix": "",
 		"fields": {
 			"order_transfer_pk": {
 				"name": "order_transfer_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "order_transfer_pk",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -1901,7 +2356,7 @@
 				"priority": 14,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"cancel_by": {
 				"name": "cancelBy",
@@ -1911,7 +2366,7 @@
 				"priority": 37,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"cancel_datetime": {
 				"name": "cancelDateTime",
@@ -1921,7 +2376,31 @@
 				"priority": 38,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"cancel_datetime_start": {
+				"name": "cancelDateTime_start",
+				"type": "timestamp",
+				"column": "cancel_datetime",
+				"valueType": "single",
+				"priority": 38,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"cancel_datetime_end": {
+				"name": "cancelDateTime_end",
+				"type": "timestamp",
+				"column": "cancel_datetime",
+				"valueType": "single",
+				"priority": 38,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"company": {
 				"name": "company",
@@ -1940,7 +2419,7 @@
 				"priority": 35,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -1950,7 +2429,31 @@
 				"priority": 36,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 36,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 36,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"distribution_channel": {
 				"name": "distributionChannel",
@@ -1960,7 +2463,7 @@
 				"priority": 32,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"request_create_by": {
 				"name": "requestCreateBy",
@@ -1970,7 +2473,7 @@
 				"priority": 33,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"request_date_time": {
 				"name": "requestDateTime",
@@ -1980,7 +2483,31 @@
 				"priority": 34,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"request_date_time_start": {
+				"name": "requestDateTime_start",
+				"type": "timestamp",
+				"column": "request_date_time",
+				"valueType": "single",
+				"priority": 34,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"request_date_time_end": {
+				"name": "requestDateTime_end",
+				"type": "timestamp",
+				"column": "request_date_time",
+				"valueType": "single",
+				"priority": 34,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"do_no": {
 				"name": "doNo",
@@ -1999,7 +2526,7 @@
 				"priority": 30,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"request_no_ref": {
 				"name": "requestNoRef",
@@ -2009,7 +2536,7 @@
 				"priority": 25,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transfer_out_ref": {
 				"name": "transferOutRef",
@@ -2019,7 +2546,7 @@
 				"priority": 26,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transfer_in_ref": {
 				"name": "transferInRef",
@@ -2029,7 +2556,7 @@
 				"priority": 27,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_code": {
 				"name": "fromLocationCode",
@@ -2049,7 +2576,7 @@
 				"priority": 48,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_province": {
 				"name": "fromLocationProvince",
@@ -2059,7 +2586,7 @@
 				"priority": 8,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_region": {
 				"name": "fromLocationRegion",
@@ -2069,7 +2596,7 @@
 				"priority": 7,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_sub_region": {
 				"name": "fromLocationSubRegion",
@@ -2079,7 +2606,7 @@
 				"priority": 18,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_type": {
 				"name": "fromLocationType",
@@ -2089,7 +2616,7 @@
 				"priority": 5,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_location_subtype": {
 				"name": "fromLocationSubType",
@@ -2099,7 +2626,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"from_substock": {
 				"name": "fromSubStock",
@@ -2118,7 +2645,7 @@
 				"priority": 13,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mm_doc_no": {
 				"name": "mmDocNo",
@@ -2128,7 +2655,7 @@
 				"priority": 29,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mm_doc_year": {
 				"name": "mmDocYear",
@@ -2138,7 +2665,7 @@
 				"priority": 28,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"model_key": {
 				"name": "model_key",
@@ -2148,7 +2675,7 @@
 				"priority": 15,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"movement_type": {
 				"name": "movementType",
@@ -2158,7 +2685,7 @@
 				"priority": 31,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_subtype_key": {
 				"name": "productSubType_key",
@@ -2168,7 +2695,7 @@
 				"priority": 17,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_type_key": {
 				"name": "productType_key",
@@ -2178,7 +2705,7 @@
 				"priority": 16,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"reason_key": {
 				"name": "reason_key",
@@ -2188,7 +2715,7 @@
 				"priority": 45,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"serial_key": {
 				"name": "serial_key",
@@ -2198,7 +2725,7 @@
 				"priority": 46,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_description_key": {
 				"name": "matDescription_key",
@@ -2208,7 +2735,7 @@
 				"priority": 47,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"remark": {
 				"name": "remark",
@@ -2218,7 +2745,7 @@
 				"priority": 44,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_address": {
 				"name": "shipToAddress",
@@ -2228,7 +2755,7 @@
 				"priority": 41,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_code": {
 				"name": "shipToCode",
@@ -2247,7 +2774,7 @@
 				"priority": 39,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"ship_to_province": {
 				"name": "shipToProvince",
@@ -2257,7 +2784,7 @@
 				"priority": 40,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_code": {
 				"name": "toLocationCode",
@@ -2277,7 +2804,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_province": {
 				"name": "toLocationProvince",
@@ -2287,7 +2814,7 @@
 				"priority": 24,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_region": {
 				"name": "toLocationRegion",
@@ -2297,7 +2824,7 @@
 				"priority": 22,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_sub_region": {
 				"name": "toLocationSubRegion",
@@ -2307,7 +2834,7 @@
 				"priority": 23,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_subtype": {
 				"name": "toLocationSubType",
@@ -2317,7 +2844,7 @@
 				"priority": 21,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_location_type": {
 				"name": "toLocationType",
@@ -2327,7 +2854,7 @@
 				"priority": 20,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"to_substock": {
 				"name": "toSubStock",
@@ -2365,7 +2892,31 @@
 				"priority": 10,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"transfer_datetime_start": {
+				"name": "transferDateTime_start",
+				"type": "timestamp",
+				"column": "transfer_datetime",
+				"valueType": "single",
+				"priority": 10,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"transfer_datetime_end": {
+				"name": "transferDateTime_end",
+				"type": "timestamp",
+				"column": "transfer_datetime",
+				"valueType": "single",
+				"priority": 10,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"transfer_detail_s": {
 				"name": "transferDetail",
@@ -2404,7 +2955,7 @@
 				"priority": 11,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -2414,7 +2965,31 @@
 				"priority": 12,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 12,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 12,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"vendor_code": {
 				"name": "vendorCode",
@@ -2424,7 +2999,7 @@
 				"priority": 42,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"vendor_name": {
 				"name": "vendorName",
@@ -2434,25 +3009,25 @@
 				"priority": 43,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			}
 
 		}
 
 	},
 	"sale_out_detail": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "sale_out_detail",
 		"apiName": "alltrade_salesout_detail",
-		"updateCondition" : "|~transactionType=salesout,transactionType=goodsreplace,transactionType=goodsreturn",
-		"updateKeys" : "documentNo|document_no",
+		"updateCondition": "|~transactionType=salesout,transactionType=goodsreplace,transactionType=goodsreturn",
+		"updateKeys": "documentNo|document_no",
 		"child_table_prefix": "",
 		"fields": {
 			"sale_out_detail_pk": {
 				"name": "sale_out_detail_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "sale_out_detail_pk",
 				"valueType": "single",
 				"indexType": "secondary",
@@ -2537,6 +3112,30 @@
 				"priority": 35,
 				"indexType": "sasi",
 				"tags": [],
+				"is_get_field": "true"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 35,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 35,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
 				"is_get_field": "true"
 			},
 			"customer_name": {
@@ -2827,24 +3426,48 @@
 				"indexType": "sasi",
 				"tags": [],
 				"is_get_field": "true"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 8,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 8,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
 			}
 
 		}
 
 	},
 	"check_stock_detail": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "check_stock_detail",
 		"apiName": "alltrade_checkstock_detail",
-		"updateCondition" : "&~transactionType=checkstock",
-		"updateKeys" : "locationCode|location_code,confirmDateTime|confirm_datetime",
+		"updateCondition": "&~transactionType=checkstock",
+		"updateKeys": "locationCode|location_code,confirmDateTime|confirm_datetime",
 		"child_table_prefix": "",
 		"fields": {
 			"check_stock_detail_pk": {
 				"name": "check_stock_detail_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "check_stock_detail_pk",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -2859,7 +3482,7 @@
 				"priority": 10,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"check_stock_detail_s": {
 				"name": "checkStockDetail",
@@ -2878,7 +3501,7 @@
 				"priority": 14,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"confirm_datetime": {
 				"name": "confirmDateTime",
@@ -2890,6 +3513,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"confirm_datetime_start": {
+				"name": "confirmDateTime_start",
+				"type": "timestamp",
+				"column": "confirm_datetime",
+				"valueType": "single",
+				"priority": 3,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"confirm_datetime_end": {
+				"name": "confirmDateTime_end",
+				"type": "timestamp",
+				"column": "confirm_datetime",
+				"valueType": "single",
+				"priority": 3,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
+			},
 			"confirm_no": {
 				"name": "confirmNo",
 				"type": "text",
@@ -2898,7 +3545,7 @@
 				"priority": 4,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"confirm_user": {
 				"name": "confirmUser",
@@ -2908,7 +3555,7 @@
 				"priority": 2,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_by": {
 				"name": "createBy",
@@ -2918,7 +3565,7 @@
 				"priority": 20,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"create_datetime": {
 				"name": "createDateTime",
@@ -2928,7 +3575,31 @@
 				"priority": 21,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 21,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 21,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"location_code": {
 				"name": "locationCode",
@@ -2948,7 +3619,7 @@
 				"priority": 19,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_code_key": {
 				"name": "matCode_key",
@@ -2958,7 +3629,7 @@
 				"priority": 9,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"model_key": {
 				"name": "model_key",
@@ -2968,7 +3639,7 @@
 				"priority": 11,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_subtype_key": {
 				"name": "productSubType_key",
@@ -2978,7 +3649,7 @@
 				"priority": 13,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"product_type_key": {
 				"name": "productType_key",
@@ -2988,7 +3659,7 @@
 				"priority": 12,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"serial_match_key": {
 				"name": "serialMatch_key",
@@ -2998,7 +3669,7 @@
 				"priority": 15,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"serial_not_found_key": {
 				"name": "serialNotFound_key",
@@ -3008,7 +3679,7 @@
 				"priority": 16,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"company_key": {
 				"name": "company_key",
@@ -3018,7 +3689,7 @@
 				"priority": 22,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"substock_key": {
 				"name": "substock_key",
@@ -3028,7 +3699,7 @@
 				"priority": 23,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"mat_description_key": {
 				"name": "matDescription_key",
@@ -3038,7 +3709,7 @@
 				"priority": 24,
 				"indexType": "secondary",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"stock_on_hand_datetime": {
 				"name": "stockOnHandDateTime",
@@ -3048,7 +3719,31 @@
 				"priority": 6,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"stock_on_hand_datetime_start": {
+				"name": "stockOnHandDateTime_start",
+				"type": "timestamp",
+				"column": "stock_on_hand_datetime",
+				"valueType": "single",
+				"priority": 6,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"stock_on_hand_datetime_end": {
+				"name": "stockOnHandDateTime_end",
+				"type": "timestamp",
+				"column": "stock_on_hand_datetime",
+				"valueType": "single",
+				"priority": 6,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			},
 			"stock_on_hand_qty": {
 				"name": "stockOnHandQty",
@@ -3058,7 +3753,7 @@
 				"priority": 5,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_id": {
 				"name": "transactionId",
@@ -3068,7 +3763,7 @@
 				"priority": 17,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"transaction_type": {
 				"name": "transactionType",
@@ -3078,7 +3773,7 @@
 				"priority": 18,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_by": {
 				"name": "updateBy",
@@ -3088,7 +3783,7 @@
 				"priority": 7,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
 			},
 			"update_datetime": {
 				"name": "updateDateTime",
@@ -3098,45 +3793,69 @@
 				"priority": 8,
 				"indexType": "sasi",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "false"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 8,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "false"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 8,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "false"
 			}
+
 
 		}
 
 	},
 	"local_service_requests": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "local_service_requests",
 		"apiName": "alltrade_local_service_requests",
 		"child_table_prefix": "",
-		"update_list_array" : [
+		"update_list_array": [{
+			"updateCondition": "&~Actor=PHOENIX",
+			"updateKeys": "OrderRef|order_ref"
+		},
 			{
-				"updateCondition" : "&~Actor=PHOENIX",
-				"updateKeys" : "OrderRef|order_ref"
+				"updateCondition": "&~Actor=HORIZON",
+				"updateKeys": "OrderRef|order_ref"
 			},
 			{
-				"updateCondition" : "&~Actor=HORIZON",
-				"updateKeys" : "OrderRef|order_ref"
+				"updateCondition": "&~Actor=PEGAZUS,PgzRecordType=0,BwoId^contains,UserSys^contains",
+				"updateKeys": "BwoId|bwo_id,UserSys|user_sys"
 			},
 			{
-				"updateCondition" : "&~Actor=PEGAZUS,PgzRecordType=0,BwoId^contains,UserSys^contains",
-				"updateKeys" : "BwoId|bwo_id,UserSys|user_sys"
+				"updateCondition": "&~Actor=PEGAZUS,PgzRecordType=0",
+				"updateKeys": "RequestId|request_id"
 			},
 			{
-				"updateCondition" : "&~Actor=PEGAZUS,PgzRecordType=0",
-				"updateKeys" : "RequestId|request_id"
-			},
-			{
-				"updateCondition" : "&~Actor=PEGAZUS,RequestId^contains",
-				"updateKeys" : "PgzTaskId|pgz_task_id"
+				"updateCondition": "&~Actor=PEGAZUS,RequestId^contains",
+				"updateKeys": "PgzTaskId|pgz_task_id"
 			}
 		],
 		"fields": {
 			"local_service_requests_pk": {
 				"name": "local_service_requests_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "local_service_requests_pk",
 				"valueType": "single",
 				"indexType": "sasi",
@@ -3273,6 +3992,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"order_date_start": {
+				"name": "OrderDate_start",
+				"type": "timestamp",
+				"column": "order_date",
+				"valueType": "single",
+				"priority": 13,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"order_date_end": {
+				"name": "OrderDate_end",
+				"type": "timestamp",
+				"column": "order_date",
+				"valueType": "single",
+				"priority": 13,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
+			},
 			"msisdn_key": {
 				"name": "MsisdnKey",
 				"type": "set<text>",
@@ -3341,6 +4084,30 @@
 				"priority": 20,
 				"indexType": "secondary",
 				"tags": [],
+				"is_get_field": "true"
+			},
+			"submitted_date_start": {
+				"name": "SubmittedDate_start",
+				"type": "timestamp",
+				"column": "submitted_date",
+				"valueType": "single",
+				"priority": 20,
+				"indexType": "secondary",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"submitted_date_end": {
+				"name": "SubmittedDate_end",
+				"type": "timestamp",
+				"column": "submitted_date",
+				"valueType": "single",
+				"priority": 20,
+				"indexType": "secondary",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
 				"is_get_field": "true"
 			},
 			"product_name_key": {
@@ -3658,18 +4425,18 @@
 
 	},
 	"print_history_detail": {
-		"databaseType": "cassandra",
+		"databaseType": "postgresxl",
 		"version": 1,
 		"database": "all_trade",
 		"table": "print_history_detail",
 		"apiName": "alltrade_print_history_detail",
-		"updateCondition" : "&~transactionType=printhistory",
-		"updateKeys" : "documentNo|document_no,printTransactionType|print_transaction_type,edition|edition",
+		"updateCondition": "&~transactionType=printhistory",
+		"updateKeys": "documentNo|document_no,printTransactionType|print_transaction_type,edition|edition",
 		"child_table_prefix": "",
 		"fields": {
 			"print_history_detail_pk": {
 				"name": "print_history_detail_pk",
-				"type": "uuid",
+				"type": "int",
 				"column": "print_history_detail_pk",
 				"valueType": "single",
 				"priority": 1,
@@ -3718,7 +4485,7 @@
 				"is_get_field": "true"
 			},
 			"edition": {
-				"name": "Edition",
+				"name": "edition",
 				"type": "text",
 				"column": "edition",
 				"valueType": "single",
@@ -3757,6 +4524,30 @@
 				"tags": [],
 				"is_get_field": "true"
 			},
+			"create_datetime_start": {
+				"name": "createDateTime_start",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 9,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"create_datetime_end": {
+				"name": "createDateTime_end",
+				"type": "timestamp",
+				"column": "create_datetime",
+				"valueType": "single",
+				"priority": 9,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
+			},
 			"update_by": {
 				"name": "updateBy",
 				"type": "text",
@@ -3776,6 +4567,30 @@
 				"indexType": "sasi",
 				"tags": [],
 				"is_get_field": "true"
+			},
+			"update_datetime_start": {
+				"name": "updateDateTime_start",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 11,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": ">",
+				"is_get_field": "true"
+			},
+			"update_datetime_end": {
+				"name": "updateDateTime_end",
+				"type": "timestamp",
+				"column": "update_datetime",
+				"valueType": "single",
+				"priority": 11,
+				"indexType": "sasi",
+				"tags": [],
+				"is_notional_field": "true",
+				"notional_operator": "<",
+				"is_get_field": "true"
 			}
 
 		}
@@ -3788,6 +4603,7 @@
 		"table": "product_master",
 		"apiName": "alltrade_product_master",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"matcode_key15": {
 				"name": "matCode_key15",
@@ -3795,6 +4611,8 @@
 				"column": "matcode_key15",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"company_key0": {
@@ -3803,6 +4621,8 @@
 				"column": "company_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"commercial_name_key1": {
@@ -3811,6 +4631,8 @@
 				"column": "commercial_name_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"mat_description_key2": {
@@ -3819,6 +4641,8 @@
 				"column": "mat_description_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"brand_key6": {
@@ -3827,6 +4651,8 @@
 				"column": "brand_key6",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"model_key7": {
@@ -3835,6 +4661,8 @@
 				"column": "model_key7",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"color_key8": {
@@ -3843,6 +4671,8 @@
 				"column": "color_key8",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"pictureurl1_data": {
@@ -3851,7 +4681,8 @@
 				"column": "pictureurl1_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "true",
+				"is_put_field": "true"
 			},
 			"pictureurl2_data": {
 				"name": "pictureUrl2_data",
@@ -3859,7 +4690,8 @@
 				"column": "pictureurl2_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "true",
+				"is_put_field": "true"
 			},
 			"pictureurl3_data": {
 				"name": "pictureUrl3_data",
@@ -3867,7 +4699,8 @@
 				"column": "pictureurl3_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "true",
+				"is_put_field": "true"
 			},
 			"pictureurl4_data": {
 				"name": "pictureUrl4_data",
@@ -3875,7 +4708,8 @@
 				"column": "pictureurl4_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true"
+				"is_get_field": "true",
+				"is_put_field": "true"
 			},
 			"pictureurl5_data": {
 				"name": "pictureUrl5_data",
@@ -3883,6 +4717,7 @@
 				"column": "pictureurl5_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"pictureurl6_data": {
@@ -3891,6 +4726,7 @@
 				"column": "pictureurl6_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"unit_data": {
@@ -3899,6 +4735,7 @@
 				"column": "unit_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"mat_type_data": {
@@ -3907,6 +4744,7 @@
 				"column": "mat_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"product_type_key3": {
@@ -3915,6 +4753,8 @@
 				"column": "product_type_key3",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"product_sub_type_key4": {
@@ -3923,6 +4763,8 @@
 				"column": "product_sub_type_key4",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"vendor_code_data": {
@@ -3931,6 +4773,7 @@
 				"column": "vendor_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_data": {
@@ -3939,6 +4782,7 @@
 				"column": "active_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"supplier_code_data": {
@@ -3947,6 +4791,7 @@
 				"column": "supplier_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"grade_key5": {
@@ -3955,6 +4800,8 @@
 				"column": "grade_key5",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"defect_flag_data": {
@@ -3963,6 +4810,7 @@
 				"column": "defect_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"division_data": {
@@ -3971,6 +4819,7 @@
 				"column": "division_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"valuation_class_data": {
@@ -3979,6 +4828,7 @@
 				"column": "valuation_class_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"vat_type_data": {
@@ -3987,6 +4837,7 @@
 				"column": "vat_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"effective_date_data": {
@@ -3995,6 +4846,7 @@
 				"column": "effective_date_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"launch_date_data": {
@@ -4003,6 +4855,7 @@
 				"column": "launch_date_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"priceat_launch_date_data": {
@@ -4011,6 +4864,7 @@
 				"column": "priceat_launch_date_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"price_update_data": {
@@ -4019,6 +4873,7 @@
 				"column": "price_update_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"region_key13": {
@@ -4027,6 +4882,8 @@
 				"column": "region_key13",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"sub_region_key14": {
@@ -4035,6 +4892,8 @@
 				"column": "sub_region_key14",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"network_key12": {
@@ -4043,6 +4902,8 @@
 				"column": "network_key12",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"face_value_key10": {
@@ -4051,6 +4912,8 @@
 				"column": "face_value_key10",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"capacity_key9": {
@@ -4059,6 +4922,8 @@
 				"column": "capacity_key9",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"expire_date_key11": {
@@ -4067,6 +4932,8 @@
 				"column": "expire_date_key11",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key16": {
@@ -4075,6 +4942,8 @@
 				"column": "update_datetime_key16",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4083,6 +4952,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4091,6 +4961,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4099,6 +4970,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4112,6 +4984,7 @@
 		"table": "location_ship_to",
 		"apiName": "alltrade_location_ship_to",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"location_code_key0": {
 				"name": "locationCode_key0",
@@ -4119,6 +4992,8 @@
 				"column": "location_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"ship_to_code_key1": {
@@ -4127,6 +5002,8 @@
 				"column": "ship_to_code_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"ship_to_default_flag_data": {
@@ -4135,6 +5012,7 @@
 				"column": "ship_to_default_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"stamp_delivery_data": {
@@ -4143,6 +5021,7 @@
 				"column": "stamp_delivery_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -4151,6 +5030,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4159,6 +5040,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4167,6 +5049,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4175,6 +5058,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4188,6 +5072,7 @@
 		"table": "location_mapping_plant",
 		"apiName": "alltrade_location_mapping_plant",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"location_code_key0": {
 				"name": "locationCode_key0",
@@ -4195,6 +5080,8 @@
 				"column": "location_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"company_key1": {
@@ -4203,6 +5090,8 @@
 				"column": "company_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"plant_key2": {
@@ -4211,6 +5100,8 @@
 				"column": "plant_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"storage_key3": {
@@ -4219,6 +5110,8 @@
 				"column": "storage_key3",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_key4": {
@@ -4227,6 +5120,8 @@
 				"column": "active_flag_key4",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key5": {
@@ -4235,6 +5130,8 @@
 				"column": "update_datetime_key5",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4243,6 +5140,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4251,6 +5149,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4259,6 +5158,7 @@
 				"column": "create_datetime_data",
 				"tags": [],
 				"valueType": "single",
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4272,6 +5172,7 @@
 		"table": "print_history",
 		"apiName": "alltrade_print_history",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"document_no_key0": {
 				"name": "documentNo_key0",
@@ -4279,6 +5180,8 @@
 				"column": "document_no_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"edition_data": {
@@ -4287,6 +5190,7 @@
 				"column": "edition_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"transaction_type_key1": {
@@ -4295,6 +5199,8 @@
 				"column": "transaction_type_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -4303,6 +5209,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"updateby_data": {
@@ -4311,6 +5219,7 @@
 				"column": "updateby_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"createby_data": {
@@ -4319,6 +5228,7 @@
 				"column": "createby_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4327,6 +5237,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4340,6 +5251,7 @@
 		"table": "route_master",
 		"apiName": "alltrade_route_master",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"route_abbr_key0": {
 				"name": "routeAbbr_key0",
@@ -4347,6 +5259,8 @@
 				"column": "route_abbr_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -4355,6 +5269,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"ship_to_code_data": {
@@ -4363,6 +5279,7 @@
 				"column": "ship_to_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"route_name_data": {
@@ -4371,6 +5288,7 @@
 				"column": "route_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"estimate_arrive_time_data": {
@@ -4379,6 +5297,7 @@
 				"column": "estimate_arrive_time_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"interval_route_time_data": {
@@ -4387,6 +5306,7 @@
 				"column": "interval_route_time_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4395,6 +5315,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4403,6 +5324,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4411,6 +5333,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4424,6 +5347,7 @@
 		"table": "company",
 		"apiName": "alltrade_company",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"company_key0": {
 				"name": "company_key0",
@@ -4431,6 +5355,8 @@
 				"column": "company_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -4439,6 +5365,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"company_name_data": {
@@ -4447,6 +5375,7 @@
 				"column": "company_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"company_address_data": {
@@ -4455,6 +5384,7 @@
 				"column": "company_address_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"sale_organize_data": {
@@ -4463,6 +5393,7 @@
 				"column": "sale_organize_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"prefix_company_name_data": {
@@ -4471,6 +5402,7 @@
 				"column": "prefix_company_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_data": {
@@ -4479,6 +5411,7 @@
 				"column": "active_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"faxno_data": {
@@ -4487,6 +5420,7 @@
 				"column": "faxno_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"telno_data": {
@@ -4495,6 +5429,7 @@
 				"column": "telno_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"taxno_data": {
@@ -4503,6 +5438,7 @@
 				"column": "taxno_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4511,6 +5447,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4519,6 +5456,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4527,6 +5465,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4540,6 +5479,7 @@
 		"table": "location",
 		"apiName": "alltrade_location",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"location_code_key0": {
 				"name": "locationCode_key0",
@@ -4547,6 +5487,8 @@
 				"column": "location_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -4555,6 +5497,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"location_name_data": {
@@ -4563,6 +5507,7 @@
 				"column": "location_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_province_data": {
@@ -4571,6 +5516,7 @@
 				"column": "location_province_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_district_data": {
@@ -4579,6 +5525,7 @@
 				"column": "location_district_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_subdistrict_data": {
@@ -4587,6 +5534,7 @@
 				"column": "location_subdistrict_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_road_data": {
@@ -4595,6 +5543,7 @@
 				"column": "location_road_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_soi_data": {
@@ -4603,6 +5552,7 @@
 				"column": "location_soi_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_postcode_data": {
@@ -4611,6 +5561,7 @@
 				"column": "location_postcode_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_address1_data": {
@@ -4619,6 +5570,7 @@
 				"column": "location_address1_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_group_data": {
@@ -4627,6 +5579,7 @@
 				"column": "location_group_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_contactno_data": {
@@ -4635,6 +5588,7 @@
 				"column": "location_contactno_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"distribution_channel_data": {
@@ -4643,6 +5597,7 @@
 				"column": "distribution_channel_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_type_data": {
@@ -4651,6 +5606,7 @@
 				"column": "location_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_sub_type_data": {
@@ -4659,6 +5615,7 @@
 				"column": "location_sub_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"region_data": {
@@ -4667,6 +5624,7 @@
 				"column": "region_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"sub_region_data": {
@@ -4675,6 +5633,7 @@
 				"column": "sub_region_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"sub_stock_groupid_data": {
@@ -4683,6 +5642,7 @@
 				"column": "sub_stock_groupid_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"route_group_data": {
@@ -4691,6 +5651,7 @@
 				"column": "route_group_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4699,6 +5660,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4707,6 +5669,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4715,6 +5678,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_data": {
@@ -4723,6 +5687,7 @@
 				"column": "active_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4736,6 +5701,7 @@
 		"table": "location_sub_stock",
 		"apiName": "alltrade_location_sub_stock",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"sub_stock_groupid_key0": {
 				"name": "subStockGroupId_key0",
@@ -4743,6 +5709,8 @@
 				"column": "sub_stock_groupid_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -4751,6 +5719,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"sub_stock_data": {
@@ -4759,6 +5729,7 @@
 				"column": "sub_stock_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4767,6 +5738,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4775,6 +5747,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4782,6 +5755,7 @@
 				"type": "timestamp",
 				"column": "create_datetime_data",
 				"valueType": "single",
+				"is_put_field": "true",
 				"tags": [],
 				"is_get_field": "true"
 			}
@@ -4796,6 +5770,7 @@
 		"table": "vendor_master",
 		"apiName": "alltrade_vendor_master",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"vendor_code_key0": {
 				"name": "vendorCode_key0",
@@ -4803,6 +5778,8 @@
 				"column": "vendor_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -4811,6 +5788,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"vendor_name_data": {
@@ -4819,6 +5798,7 @@
 				"column": "vendor_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"vendor_address_data": {
@@ -4827,6 +5807,7 @@
 				"column": "vendor_address_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4835,6 +5816,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4843,6 +5825,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4851,6 +5834,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4864,6 +5848,7 @@
 		"table": "supplier_master",
 		"apiName": "alltrade_supplier_master",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"supplier_code_key0": {
 				"name": "supplierCode_key0",
@@ -4871,6 +5856,8 @@
 				"column": "supplier_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -4879,6 +5866,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"supplier_name_data": {
@@ -4887,6 +5876,7 @@
 				"column": "supplier_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"supplier_address_data": {
@@ -4895,6 +5885,7 @@
 				"column": "supplier_address_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4903,6 +5894,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4911,6 +5903,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -4919,6 +5912,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -4932,6 +5926,7 @@
 		"table": "config_route_group",
 		"apiName": "alltrade_config_route_group",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"route_group_key0": {
 				"name": "routeGroup_key0",
@@ -4939,6 +5934,8 @@
 				"column": "route_group_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"day_of_week_key1": {
@@ -4947,6 +5944,8 @@
 				"column": "day_of_week_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"interval_time_key3": {
@@ -4955,6 +5954,8 @@
 				"column": "interval_time_key3",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key4": {
@@ -4963,6 +5964,8 @@
 				"column": "update_datetime_key4",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"interval_time_end_key2": {
@@ -4971,6 +5974,8 @@
 				"column": "interval_time_end_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"stamp_delivery_data": {
@@ -4979,6 +5984,7 @@
 				"column": "stamp_delivery_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -4987,6 +5993,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -4995,6 +6002,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -5003,6 +6011,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -5016,6 +6025,7 @@
 		"table": "master_data",
 		"apiName": "alltrade_master_data",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"masterkey_key0": {
 				"name": "masterKey_key0",
@@ -5023,6 +6033,8 @@
 				"column": "masterkey_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"mastervalue_key1": {
@@ -5031,6 +6043,8 @@
 				"column": "mastervalue_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -5039,6 +6053,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"subkey1_key3": {
@@ -5047,6 +6063,8 @@
 				"column": "subkey1_key3",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"subkey2_key4": {
@@ -5055,6 +6073,8 @@
 				"column": "subkey2_key4",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"subkey3_key5": {
@@ -5063,6 +6083,8 @@
 				"column": "subkey3_key5",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -5071,6 +6093,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -5079,6 +6102,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -5087,6 +6111,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -5100,6 +6125,7 @@
 		"table": "device_specification",
 		"apiName": "alltrade_device_specification",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"commercial_name_key0": {
 				"name": "commercialName_key0",
@@ -5107,6 +6133,8 @@
 				"column": "commercial_name_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"twog_network_data": {
@@ -5115,6 +6143,7 @@
 				"column": "twog_network_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"threeg_network_data": {
@@ -5123,6 +6152,7 @@
 				"column": "threeg_network_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"fourg_network_data": {
@@ -5131,6 +6161,7 @@
 				"column": "fourg_network_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"gprs_data": {
@@ -5139,6 +6170,7 @@
 				"column": "gprs_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"edge_data": {
@@ -5147,6 +6179,7 @@
 				"column": "edge_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"lteca_data": {
@@ -5155,6 +6188,7 @@
 				"column": "lteca_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"chipset_data": {
@@ -5163,6 +6197,7 @@
 				"column": "chipset_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"cpu_data": {
@@ -5171,6 +6206,7 @@
 				"column": "cpu_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"gpu_data": {
@@ -5179,6 +6215,7 @@
 				"column": "gpu_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"handset_type_data": {
@@ -5187,6 +6224,7 @@
 				"column": "handset_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"os_data": {
@@ -5195,6 +6233,7 @@
 				"column": "os_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"os_version_data": {
@@ -5203,6 +6242,7 @@
 				"column": "os_version_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"software_version_data": {
@@ -5211,6 +6251,7 @@
 				"column": "software_version_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"hsdpa_data": {
@@ -5219,6 +6260,7 @@
 				"column": "hsdpa_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"hsupa_speed_data": {
@@ -5227,6 +6269,7 @@
 				"column": "hsupa_speed_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"lte_speed_data": {
@@ -5235,6 +6278,7 @@
 				"column": "lte_speed_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"infrared_data": {
@@ -5243,6 +6287,7 @@
 				"column": "infrared_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"wifi_data": {
@@ -5251,6 +6296,7 @@
 				"column": "wifi_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"wifi_method_data": {
@@ -5259,6 +6305,7 @@
 				"column": "wifi_method_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"wifi_tcp_ip_data": {
@@ -5267,6 +6314,7 @@
 				"column": "wifi_tcp_ip_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"cellular_tcp_ip_data": {
@@ -5275,6 +6323,7 @@
 				"column": "cellular_tcp_ip_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"hotspot_20_data": {
@@ -5283,6 +6332,7 @@
 				"column": "hotspot_20_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"bluetooth_data": {
@@ -5291,6 +6341,7 @@
 				"column": "bluetooth_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"design_type_data": {
@@ -5299,6 +6350,7 @@
 				"column": "design_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"finger_scan_data": {
@@ -5307,6 +6359,7 @@
 				"column": "finger_scan_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"stylus_pen_data": {
@@ -5315,6 +6368,7 @@
 				"column": "stylus_pen_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"water_resistant_data": {
@@ -5323,6 +6377,7 @@
 				"column": "water_resistant_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"display_color_data": {
@@ -5331,6 +6386,7 @@
 				"column": "display_color_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"display_resolution_data": {
@@ -5339,6 +6395,7 @@
 				"column": "display_resolution_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"display_size_data": {
@@ -5347,6 +6404,7 @@
 				"column": "display_size_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"camera_data": {
@@ -5355,6 +6413,7 @@
 				"column": "camera_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"picture_resolution_data": {
@@ -5363,6 +6422,7 @@
 				"column": "picture_resolution_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"front_camera_data": {
@@ -5371,6 +6431,7 @@
 				"column": "front_camera_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"memory_in_phone_data": {
@@ -5379,6 +6440,7 @@
 				"column": "memory_in_phone_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"memory_card_slot_data": {
@@ -5387,6 +6449,7 @@
 				"column": "memory_card_slot_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"dual_sim_data": {
@@ -5395,6 +6458,7 @@
 				"column": "dual_sim_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"sim_type_data": {
@@ -5403,6 +6467,7 @@
 				"column": "sim_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"sim_1000_data": {
@@ -5411,6 +6476,7 @@
 				"column": "sim_1000_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"sms_data": {
@@ -5419,6 +6485,7 @@
 				"column": "sms_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"mms_data": {
@@ -5427,6 +6494,7 @@
 				"column": "mms_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"email_data": {
@@ -5435,6 +6503,7 @@
 				"column": "email_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ussd_type_data": {
@@ -5443,6 +6512,7 @@
 				"column": "ussd_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"browser_data": {
@@ -5451,6 +6521,7 @@
 				"column": "browser_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"gps_data": {
@@ -5459,6 +6530,7 @@
 				"column": "gps_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"nfc_data": {
@@ -5467,6 +6539,7 @@
 				"column": "nfc_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"internet_sharing_data": {
@@ -5475,6 +6548,7 @@
 				"column": "internet_sharing_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"wifi_direct_data": {
@@ -5483,6 +6557,7 @@
 				"column": "wifi_direct_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"dlna_data": {
@@ -5491,6 +6566,7 @@
 				"column": "dlna_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"miracast_data": {
@@ -5499,6 +6575,7 @@
 				"column": "miracast_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"video_call_data": {
@@ -5507,6 +6584,7 @@
 				"column": "video_call_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"voice_call_data": {
@@ -5515,6 +6593,7 @@
 				"column": "voice_call_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"otg_data": {
@@ -5523,6 +6602,7 @@
 				"column": "otg_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"radio_data": {
@@ -5531,6 +6611,7 @@
 				"column": "radio_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"tv_tuner_data": {
@@ -5539,6 +6620,7 @@
 				"column": "tv_tuner_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"tv_out_data": {
@@ -5547,6 +6629,7 @@
 				"column": "tv_out_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_bookstore_data": {
@@ -5555,6 +6638,7 @@
 				"column": "ais_bookstore_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_livetv_data": {
@@ -5563,6 +6647,7 @@
 				"column": "ais_livetv_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_moviestore_data": {
@@ -5571,6 +6656,7 @@
 				"column": "ais_moviestore_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_mpay_rabbit_data": {
@@ -5579,6 +6665,7 @@
 				"column": "ais_mpay_rabbit_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_onair_data": {
@@ -5587,6 +6674,7 @@
 				"column": "ais_onair_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_super_wifi_data": {
@@ -5595,6 +6683,7 @@
 				"column": "ais_super_wifi_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_play_data": {
@@ -5603,6 +6692,7 @@
 				"column": "ais_play_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"calling_melody_data": {
@@ -5611,6 +6701,7 @@
 				"column": "calling_melody_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ais_app_data": {
@@ -5619,6 +6710,7 @@
 				"column": "ais_app_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"mpay_data": {
@@ -5627,6 +6719,7 @@
 				"column": "mpay_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"volte_data": {
@@ -5635,6 +6728,7 @@
 				"column": "volte_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"vowifi_data": {
@@ -5643,6 +6737,7 @@
 				"column": "vowifi_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"kkbox_data": {
@@ -5651,6 +6746,7 @@
 				"column": "kkbox_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"hdvoice_data": {
@@ -5659,6 +6755,7 @@
 				"column": "hdvoice_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"googlemap_data": {
@@ -5667,6 +6764,7 @@
 				"column": "googlemap_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"youtube_data": {
@@ -5675,6 +6773,7 @@
 				"column": "youtube_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"battery_data": {
@@ -5683,6 +6782,7 @@
 				"column": "battery_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ota_setting_data": {
@@ -5691,6 +6791,7 @@
 				"column": "ota_setting_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"ota_sim_data": {
@@ -5699,6 +6800,7 @@
 				"column": "ota_sim_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -5707,6 +6809,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -5715,6 +6818,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -5723,6 +6827,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -5731,6 +6836,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -5744,6 +6851,7 @@
 		"table": "language",
 		"apiName": "alltrade_language",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"element_name_key0": {
 				"name": "elementName_key0",
@@ -5751,6 +6859,8 @@
 				"column": "element_name_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -5759,6 +6869,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"language_data": {
@@ -5767,6 +6879,7 @@
 				"column": "language_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"element_display_data": {
@@ -5775,6 +6888,7 @@
 				"column": "element_display_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -5783,6 +6897,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -5791,6 +6906,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -5799,6 +6915,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -5956,6 +7073,7 @@
 		"table": "map_location_route_group",
 		"apiName": "alltrade_map_location_route_group",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"province_key0": {
 				"name": "province_key0",
@@ -5963,6 +7081,8 @@
 				"column": "province_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -5971,6 +7091,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"route_group_data": {
@@ -5979,6 +7101,7 @@
 				"column": "route_group_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -5987,6 +7110,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -5995,6 +7119,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6003,6 +7128,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6016,6 +7142,7 @@
 		"table": "schedule_report",
 		"apiName": "alltrade_schedule_report",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"report_name_key0": {
 				"name": "reportName_key0",
@@ -6023,6 +7150,8 @@
 				"column": "report_name_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"report_type_key1": {
@@ -6031,6 +7160,8 @@
 				"column": "report_type_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"report_date_key2": {
@@ -6039,6 +7170,8 @@
 				"column": "report_date_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"location_code_key3": {
@@ -6047,6 +7180,8 @@
 				"column": "location_code_key3",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key4": {
@@ -6055,6 +7190,8 @@
 				"column": "update_datetime_key4",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"report_link_file_data": {
@@ -6063,6 +7200,7 @@
 				"column": "report_link_file_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"status_data": {
@@ -6071,6 +7209,7 @@
 				"column": "status_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"reason_data": {
@@ -6079,6 +7218,7 @@
 				"column": "reason_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6087,6 +7227,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6095,6 +7236,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6103,6 +7245,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6116,6 +7259,7 @@
 		"table": "location_relational",
 		"apiName": "alltrade_location_relational",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"location_code_key0": {
 				"name": "locationCode_key0",
@@ -6123,6 +7267,8 @@
 				"column": "location_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"parent_key1": {
@@ -6131,6 +7277,8 @@
 				"column": "parent_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -6139,6 +7287,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6147,6 +7297,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6155,6 +7306,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6163,6 +7315,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6176,6 +7329,7 @@
 		"table": "news_feed",
 		"apiName": "alltrade_news_feed",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"news_title_key0": {
 				"name": "newsTitle_key0",
@@ -6183,6 +7337,8 @@
 				"column": "news_title_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"news_datetime_key1": {
@@ -6191,6 +7347,8 @@
 				"column": "news_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -6199,6 +7357,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"news_group_data": {
@@ -6207,6 +7367,7 @@
 				"column": "news_group_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"news_detail_data": {
@@ -6215,6 +7376,7 @@
 				"column": "news_detail_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_data": {
@@ -6223,6 +7385,7 @@
 				"column": "active_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"news_start_data": {
@@ -6231,6 +7394,7 @@
 				"column": "news_start_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"news_end_data": {
@@ -6239,6 +7403,7 @@
 				"column": "news_end_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"news_link_data": {
@@ -6247,6 +7412,7 @@
 				"column": "news_link_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"priority_data": {
@@ -6255,6 +7421,7 @@
 				"column": "priority_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6263,6 +7430,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6271,6 +7439,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6279,6 +7448,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6292,6 +7462,7 @@
 		"table": "todo_list",
 		"apiName": "alltrade_todo_list",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"program_code_key0": {
 				"name": "programCode_key0",
@@ -6299,6 +7470,8 @@
 				"column": "program_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"todo_list_module_key1": {
@@ -6307,6 +7480,8 @@
 				"column": "todo_list_module_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -6315,6 +7490,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"todo_list_picture_data": {
@@ -6323,6 +7500,7 @@
 				"column": "todo_list_picture_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"todo_list_color_data": {
@@ -6331,6 +7509,7 @@
 				"column": "todo_list_color_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"method_total_data": {
@@ -6339,6 +7518,7 @@
 				"column": "method_total_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"link_to_menu_data": {
@@ -6347,6 +7527,7 @@
 				"column": "link_to_menu_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_data": {
@@ -6355,6 +7536,7 @@
 				"column": "active_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"priority_data": {
@@ -6363,6 +7545,7 @@
 				"column": "priority_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6371,6 +7554,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6379,6 +7563,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6387,6 +7572,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6400,6 +7586,7 @@
 		"table": "menu",
 		"apiName": "alltrade_menu",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"program_code_key0": {
 				"name": "programCode_key0",
@@ -6407,6 +7594,8 @@
 				"column": "program_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -6415,6 +7604,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"main_menu_data": {
@@ -6423,6 +7614,7 @@
 				"column": "main_menu_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"menu_name_data": {
@@ -6431,6 +7623,7 @@
 				"column": "menu_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"link_data": {
@@ -6439,6 +7632,7 @@
 				"column": "link_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"active_flag_data": {
@@ -6447,6 +7641,7 @@
 				"column": "active_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6455,6 +7650,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6463,6 +7659,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6471,6 +7668,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6484,6 +7682,7 @@
 		"table": "asc_master",
 		"apiName": "alltrade_asc_master",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"update_datetime_key1": {
 				"name": "updateDateTime_key1",
@@ -6491,6 +7690,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_code_key0": {
@@ -6499,6 +7700,8 @@
 				"column": "asc_code_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_name_data": {
@@ -6507,6 +7710,7 @@
 				"column": "asc_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_type_data": {
@@ -6515,6 +7719,7 @@
 				"column": "asc_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_subtype_data": {
@@ -6523,6 +7728,7 @@
 				"column": "asc_subtype_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_class_data": {
@@ -6531,6 +7737,7 @@
 				"column": "asc_class_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_status_data": {
@@ -6539,6 +7746,7 @@
 				"column": "asc_status_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"asc_contact_no_data": {
@@ -6547,6 +7755,7 @@
 				"column": "asc_contact_no_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"location_code_data": {
@@ -6555,6 +7764,7 @@
 				"column": "location_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6563,6 +7773,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6571,6 +7782,7 @@
 				"column": "create_datetime_data",
 				"valueType": "timestamp",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6579,6 +7791,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6592,6 +7805,7 @@
 		"table": "qty_per_time_interval",
 		"apiName": "alltrade_qty_per_time_interval",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"event_date_key0": {
 				"name": "eventDate_key0",
@@ -6599,6 +7813,8 @@
 				"column": "event_date_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"location_code_key1": {
@@ -6607,6 +7823,8 @@
 				"column": "location_code_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"sub_stock_key2": {
@@ -6615,6 +7833,8 @@
 				"column": "sub_stock_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"company_key3": {
@@ -6623,6 +7843,8 @@
 				"column": "company_key3",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"mat_code_key4": {
@@ -6631,6 +7853,8 @@
 				"column": "mat_code_key4",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"event_type_key5": {
@@ -6639,6 +7863,8 @@
 				"column": "event_type_key5",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"qty_data": {
@@ -6647,6 +7873,7 @@
 				"column": "qty_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"time_interval_type_data": {
@@ -6655,6 +7882,7 @@
 				"column": "time_interval_type_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"time_interval_counter_data": {
@@ -6663,6 +7891,7 @@
 				"column": "time_interval_counter_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6671,6 +7900,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6679,6 +7909,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6687,6 +7918,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_data": {
@@ -6695,6 +7927,7 @@
 				"column": "update_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6708,6 +7941,7 @@
 		"table": "user_login",
 		"apiName": "alltrade_user_login",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"userid_key0": {
 				"name": "userId_key0",
@@ -6715,6 +7949,8 @@
 				"column": "userid_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -6723,6 +7959,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"location_code_data": {
@@ -6731,6 +7969,7 @@
 				"column": "location_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"group_name_data": {
@@ -6739,6 +7978,7 @@
 				"column": "group_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6747,6 +7987,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6755,6 +7996,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6763,6 +8005,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6776,6 +8019,7 @@
 		"table": "user_authen",
 		"apiName": "alltrade_user_authen",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"group_name_key0": {
 				"name": "groupName_key0",
@@ -6783,6 +8027,8 @@
 				"column": "group_name_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -6791,6 +8037,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"program_code_data": {
@@ -6799,6 +8047,7 @@
 				"column": "program_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6807,6 +8056,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6815,6 +8065,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6823,6 +8074,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6836,6 +8088,7 @@
 		"table": "user_group",
 		"apiName": "alltrade_user_group",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"groupid_key0": {
 				"name": "groupId_key0",
@@ -6843,6 +8096,8 @@
 				"column": "groupid_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -6851,6 +8106,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"group_name_data": {
@@ -6859,6 +8116,7 @@
 				"column": "group_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6867,6 +8125,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6875,6 +8134,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6883,6 +8143,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6896,6 +8157,7 @@
 		"table": "user_component",
 		"apiName": "alltrade_user_component",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"group_name_key0": {
 				"name": "groupName_key0",
@@ -6903,6 +8165,8 @@
 				"column": "group_name_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"program_code_key1": {
@@ -6911,6 +8175,8 @@
 				"column": "program_code_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key2": {
@@ -6919,6 +8185,8 @@
 				"column": "update_datetime_key2",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"component_data": {
@@ -6927,6 +8195,7 @@
 				"column": "component_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"enable_flag_data": {
@@ -6935,6 +8204,7 @@
 				"column": "enable_flag_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -6943,6 +8213,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -6951,6 +8222,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -6959,6 +8231,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -6972,6 +8245,7 @@
 		"table": "user_group_location",
 		"apiName": "alltrade_user_group_location",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"userid_key0": {
 				"name": "userId_key0",
@@ -6979,6 +8253,8 @@
 				"column": "userid_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -6987,6 +8263,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"group_location_name_data": {
@@ -6995,6 +8273,7 @@
 				"column": "group_location_name_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -7003,6 +8282,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -7011,6 +8291,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -7019,6 +8300,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -7032,6 +8314,7 @@
 		"table": "user_location",
 		"apiName": "alltrade_group_location",
 		"child_table_prefix": "",
+		"put_supported": "true",
 		"fields": {
 			"group_location_name_key0": {
 				"name": "groupLocationName_key0",
@@ -7039,6 +8322,8 @@
 				"column": "group_location_name_key0",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"update_datetime_key1": {
@@ -7047,6 +8332,8 @@
 				"column": "update_datetime_key1",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
+				"is_put_filter_field": "true",
 				"is_get_field": "true"
 			},
 			"location_code_data": {
@@ -7055,6 +8342,7 @@
 				"column": "location_code_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_by_data": {
@@ -7063,6 +8351,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"create_datetime_data": {
@@ -7071,6 +8360,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			},
 			"update_by_data": {
@@ -7079,6 +8369,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
+				"is_put_field": "true",
 				"is_get_field": "true"
 			}
 
@@ -7383,7 +8674,7 @@
 			"sub_stock_groupid_key0": {
 				"name": "subStockGroupId_key0",
 				"type": "text",
-				"column": "stock.sub_stock_groupid_key0",
+				"column": "sub_stock_groupid_key0",
 				"valueType": "single",
 				"tags": [],
 				"is_get_field": "true"
@@ -7405,7 +8696,7 @@
 		"table": "stamp_delivery",
 		"apiName": "alltrade_stamp_delivery",
 		"child_table_prefix": "",
-		"put_supported" : "true",
+		"put_supported": "true",
 		"fields": {
 			"ship_to_code_key0": {
 				"name": "shipToCode_key0",
@@ -7413,9 +8704,9 @@
 				"column": "ship_to_code_key0",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
 				"is_put_field": "true",
-				"is_put_filter_field": "true"
+				"is_put_filter_field": "true",
+				"is_get_field": "true"
 			},
 			"day_of_week_key1": {
 				"name": "dayOfWeek_key1",
@@ -7423,29 +8714,29 @@
 				"column": "day_of_week_key1",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
 				"is_put_field": "true",
-				"is_put_filter_field": "true"
+				"is_put_filter_field": "true",
+				"is_get_field": "true"
 			},
 			"interval_time_start_key2": {
 				"name": "intervalTimeStart_key2",
 				"type": "text",
 				"column": "interval_time_start_key2",
 				"valueType": "single",
-				"tags": [""],
-				"is_get_field": "true",
+				"tags": [],
 				"is_put_field": "true",
-				"is_put_filter_field": "true"
+				"is_put_filter_field": "true",
+				"is_get_field": "true"
 			},
 			"interval_time_end_key3": {
 				"name": "intervalTimeEnd_key3",
 				"type": "text",
 				"column": "interval_time_end_key3",
 				"valueType": "single",
-				"tags": [""],
-				"is_get_field": "true",
+				"tags": [],
 				"is_put_field": "true",
-				"is_put_filter_field": "true"
+				"is_put_filter_field": "true",
+				"is_get_field": "true"
 			},
 			"delivery_type_data": {
 				"name": "deliveryType_data",
@@ -7453,8 +8744,7 @@
 				"column": "delivery_type_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"distribution_channel_data": {
 				"name": "distributionChannel_data",
@@ -7462,8 +8752,7 @@
 				"column": "distribution_channel_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"customer_group_data": {
 				"name": "customerGroup_data",
@@ -7471,8 +8760,7 @@
 				"column": "customer_group_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"route_data": {
 				"name": "route_data",
@@ -7480,8 +8768,7 @@
 				"column": "route_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"stamp_delivery_data": {
 				"name": "stampDelivery_data",
@@ -7489,8 +8776,7 @@
 				"column": "stamp_delivery_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"create_by_data": {
 				"name": "createBy_data",
@@ -7498,8 +8784,7 @@
 				"column": "create_by_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"create_datetime_data": {
 				"name": "createDateTime_data",
@@ -7507,8 +8792,7 @@
 				"column": "create_datetime_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"update_by_data": {
 				"name": "updateBy_data",
@@ -7516,8 +8800,7 @@
 				"column": "update_by_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			},
 			"update_datetime_data": {
 				"name": "updateDateTime_data",
@@ -7525,8 +8808,7 @@
 				"column": "update_datetime_data",
 				"valueType": "single",
 				"tags": [],
-				"is_get_field": "true",
-				"is_put_field": "true"
+				"is_get_field": "true"
 			}
 		}
 	}

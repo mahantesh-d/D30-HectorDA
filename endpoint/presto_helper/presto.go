@@ -24,7 +24,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 
 	for _, v := range fields {
 		fieldMeta := v.(map[string]interface{})
-		query += endpoint_common.ReturnCondition(fieldMeta, whereCondition) + " AND"
+		query += endpoint_common.ReturnCondition(fieldMeta, whereCondition, "presto") + " AND"
 	}
 
 	query = strings.Trim(query, "AND")

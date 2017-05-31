@@ -43,10 +43,25 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
 		case "int":
 			name += " " + k + " = " + ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)))) + ","
 			// value1 = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+
 		case "text":
 			name += " " + k + " = " + ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)))) + ","
 			// value = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+
+		case "set<text>":
+			name += " " + k + " = " + ((endpoint_common.ReturnSetTextPG((metaInput["field_keyvalue"].(map[string]interface{}))[k]))) + ","
+		// value = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+
+		case "timestamp":
+			if len((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)) > 0 {
+				name += " " + k + " = " + ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)))) + ","
+			} else {
+				name += " " + k + " = " + " NULL,"
+			}
+
 		}
+
+
 		// query+=","
 	}
 
@@ -64,7 +79,7 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
 
 
 	query+=";"
-	//fmt.Println(query)
+	logger.Write("INFO", "Query is " + query)
 	return []string{ query }
 }
 
@@ -117,6 +132,11 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 			} else {
 				value += " NULL "
 			}
+
+		case "set<text>":
+			value += ((endpoint_common.ReturnSetTextPG((metaInput["field_keyvalue"].(map[string]interface{}))[k])))
+		// value = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+
 		}
 		value += ","
 	}
@@ -145,7 +165,7 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 //		tempStr, _ := json.Marshal(myFields)
 
 		//logger.Write("INFO", "Results from myFields" + string(tempStr) + "Length" + string(len(myFields)))
-		selectString = makeSelect(myFields)
+		selectString = makeSelectPG(myFields)
 	} else {
 
 		selectString = "*"
@@ -171,7 +191,7 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 
 		  for _, v := range fields {
 			  field := v.(map[string]interface{})
-			  query += " " + endpoint_common.ReturnCondition(field, whereCondition) + " " + whereCondition
+			  query += " " + endpoint_common.ReturnCondition(field, whereCondition, "postgresxl") + " " + whereCondition
 		  }
 
 	  } else {
@@ -193,12 +213,26 @@ func makeSelect(fields map[string]interface{}) string {
 
 		selects := []string{}
 
-		for k, v := range fields["fields"].(map[string]interface{}) {
+		for _, v := range fields["fields"].(map[string]interface{}) {
+
+
+			isNotionalField := false
+
+			if _, ok := v.(map[string]interface{})["is_notional_field"].(string); ok {
+
+				if v.(map[string]interface{})["is_notional_field"].(string) == "true" {
+
+					isNotionalField = true
+				}
+			}
+
+			// Dont select notional fields...
+			if isNotionalField { continue }
 
 			// If you are taking select data
 			//fmt.Println(v.(map[string]interface{})["column"], " as ", k)
 
-			selects = append(selects, k + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
+			selects = append(selects, v.(map[string]interface{})["column"].(string) + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
 		}
 
 		return strings.Join(selects, ", ")
@@ -208,3 +242,53 @@ func makeSelect(fields map[string]interface{}) string {
 	}
 
 }
+
+func makeSelectPG(fields map[string]interface{}) string {
+
+	if reflect.TypeOf(fields).String() == "map[string]interface {}" {
+
+		selects := []string{}
+
+		for _, v := range fields["fields"].(map[string]interface{}) {
+
+
+			isNotionalField := false
+
+			if _, ok := v.(map[string]interface{})["is_notional_field"].(string); ok {
+
+				if v.(map[string]interface{})["is_notional_field"].(string) == "true" {
+
+					isNotionalField = true
+				}
+			}
+
+			// Dont select notional fields...
+			if isNotionalField { continue }
+
+			// If you are taking select data
+			//fmt.Println(v.(map[string]interface{})["column"], " as ", k)
+
+			if v.(map[string]interface{})["type"].(string) == "set<text>" {
+
+				selects = append(selects, "array_to_json(" + v.(map[string]interface{})["column"].(string) + ") as \"" + v.(map[string]interface{})["name"].(string) + "\"")
+			} else {
+
+				selects = append(selects, v.(map[string]interface{})["column"].(string) + " as \"" + v.(map[string]interface{})["name"].(string) + "\"")
+			}
+
+
+
+
+
+		}
+
+		return strings.Join(selects, ", ")
+	} else {
+
+		return "*"
+	}
+
+}
+
+
+

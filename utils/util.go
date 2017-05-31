@@ -14,6 +14,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"math/rand"
 	"strconv"
+	"encoding/base64"
 )
 
 // IsJSON validates a JSON string
@@ -367,6 +368,10 @@ func ReturnMapSliceStringVal(k map[string]interface{}, key string) []string {
 
 
 
+func IsBase64(s string) bool {
+	_, err := base64.StdEncoding.DecodeString(s)
+	return err == nil
+}
 
 
 func ShowJSON(byte []byte) {

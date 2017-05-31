@@ -60,7 +60,7 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 		logger.Write("ERROR", "Route for Application: "+reqAbs.Application+", Action: "+reqAbs.Action+", RequestType: "+reqAbs.HTTPRequestType+" not found")
 		return model.ResponseAbstract{
 
-			StatusCode : 404,
+			StatusCode : 501,
 			Status : "fail",
 			StandardStatusMessage : "NOT_FOUND",
 			Text : "The given route was not found",

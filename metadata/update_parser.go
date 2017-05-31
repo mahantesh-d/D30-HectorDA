@@ -231,6 +231,7 @@ func checkGetUpdateKeys(updateKeys string, payload map[string]interface{}) (map[
 					continue
 				}
 
+				fmt.Println("MatchFound is true", reflect.TypeOf(vv), " -- vv value :", vv)
 				matchFound = true;
 				retKeyVal[ keyPairs[1] ] = []string{ vv.(string) }
 			}
