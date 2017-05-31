@@ -6,7 +6,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"encoding/json"
 	"fmt"
-	"strings"
+	"reflect"
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -66,7 +66,7 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 
 
 				if len(columnTags) > 0 && columnTags[0] == "json_array" {
-
+					
 					var jsonArray []map[string]interface{}
 
 					if _, ok := vv.([]string); ok {
@@ -86,25 +86,37 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 						(*curRecord)[kk] = jsonArray
 					}
 
+
+
+
 					if _, ok := vv.([]uint8); ok {
 
 						var payload interface{}
 
-						tmpStr := strings.Trim(string(vv.([]uint8)), `[`)
-						tmpStr = strings.Trim(tmpStr, `]`)
-						tmpStr = strings.Trim(tmpStr, `"`)
+						tmpStr := string(vv.([]uint8))
 
-						tmpStr = strings.Replace(tmpStr, `\`, "", -1)
-
-						fmt.Println("tmpStr", tmpStr)
+						fmt.Println("original string is : ", tmpStr)
 
 						err2 := json.Unmarshal([]byte(tmpStr), &payload)
 
 						if err2 != nil { fmt.Println("Error is...", err2.Error()) }
 
-						fmt.Println("payload", payload)
+						fmt.Println("payload after json Unmarshal", payload)
 
-						(*curRecord)[kk] = payload
+						var retObj []interface{}
+
+						for _, kkk := range payload.([]interface{}) {
+
+							var tmpInterface interface{}
+
+							json.Unmarshal([]byte(kkk.(string)), &tmpInterface)
+
+							retObj = append(retObj, tmpInterface)
+						}
+
+						fmt.Println("retObj for return is", retObj)
+
+						(*curRecord)[kk] = retObj
 
 						fmt.Println(*curRecord)
 
