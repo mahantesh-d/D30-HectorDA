@@ -93,6 +93,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		metaResult["limit"] = req.Limit
 		metaResult["token"] = req.Token
 		metaResult["isOrCondition"] = req.IsOrCondition
+		metaResult["ComplexQuery"] = req.ComplexFilters
 
 		var query []string
 
@@ -167,8 +168,13 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 		metaInputPost := utils.FindMap("table", table_name, config.Metadata_insert())
 
+
+
+
 		// Get the filters from the request
 		metaResult, ok := metadata.InterpretUpdateFilters(metaInputPost, req.Payload, req.Filters)
+
+		metaResult["ComplexQuery"] = req.ComplexFilters
 
 		fmt.Println("Allow from filter", ok, " Filter fields :", metaResult)
 
@@ -189,22 +195,23 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 //		if metaResult["put_supported"] == true {
 
-			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
+//			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
 
-				fmt.Println("Update condition 198.", metaResult["updateCondition"])
+//				fmt.Println("Update condition 198.", metaResult["updateCondition"])
 				dbAbs.QueryType = "UPDATE"
 				query := queryhelper.PrepareUpdateQuery( metaResult )
 				logger.Write("INFO", string(query[0]))
 
 				dbAbs.Query = query
-			} else {
-
+//			} else {
+/*
 				dbAbs.Message = "Error: Filters not passed in query"
 				dbAbs.Count = 0
 				dbAbs.Status = "fail"
 
 				return dbAbs
-			}
+				*/
+//			}
 //		}
 	}
 

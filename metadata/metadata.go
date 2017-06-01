@@ -5,8 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/gocql/gocql"
 	"github.com/dminGod/D30-HectorDA/config"
-	"fmt"
-)
+	)
 
 // Interpret is used to cross-reference application metadata with the request metadata
 // and returns metadata specific to the request for further processing
@@ -88,6 +87,8 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 // metadata map[string]interface{}, payload map[string]interface{}
 
+// Input table / API related data
+
 func InterpretUpdateFilters( input map[string]interface{}, payload map[string]interface{}, filters map[string]interface{}) (map[string]interface{}, bool) {
 
 	outputFields := make(map[string]interface{})
@@ -141,14 +142,14 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 
 	}
 
-	output["put_supported"] = false
-	output["possibleUpdateRequest"] = false
-	output["updateCondition"] = map[string][]string{}
+	//output["put_supported"] = false
+	//output["possibleUpdateRequest"] = false
+	//output["updateCondition"] = map[string][]string{}
 
-	if output["put_supported"] == false {
-
-		output["possibleUpdateRequest"], output["updateCondition"] = CheckCondition(input, payload)
-	}
+	//if output["put_supported"] == false {
+	//
+	//	output["possibleUpdateRequest"], output["updateCondition"] = CheckCondition(input, payload)
+	//}
 
 	output["field_keyvalue"] = outputKeyValues
 	output["field_keymeta"] = outputKeyMeta
@@ -158,7 +159,7 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 	tmpUpdateCondition := map[string][]string{}
 
 	// This is from JSON
-	fields := input["fields"].(map[string]interface{})
+//	fields := input["fields"].(map[string]interface{})
 
 	// Put field is there in the json
 	output["put_supported"] = false
@@ -174,6 +175,7 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 		return map[string]interface{}{}, false
 	}
 
+	/*
 	// Loop over the fields -- You want to extract the filters and fill the filters
 	for _, vv := range filters {
 
@@ -217,6 +219,7 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 			return kkk, false
 		}
 	}
+	*/
 
 	output["updateCondition"] = tmpUpdateCondition
 

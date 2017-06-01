@@ -24,6 +24,7 @@ type RequestAbstract struct {
 	TableFields	[]Field
 	IsPutSupported	bool
 //	RequestFilters 	[]RequestFilter
+	ComplexFilters	string
 
 	SearchFilter	[]Field
 	SelectFields	[]Field
