@@ -335,7 +335,6 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 				whereCondition = "OR"
 			}
 
-
 			for _, v := range fields {
 				fieldMeta := v.(map[string]interface{})
 
