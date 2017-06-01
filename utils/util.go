@@ -117,6 +117,32 @@ func GetSelectMap(key string, attributes map[string]interface{}, v string) map[s
 	return retVal
 }
 
+// KeyInMap checks if a given key exists in a map of string and interface
+func GetFieldByName(key string, attributes map[string]interface{}) map[string]interface{} {
+
+	retVal := map[string]interface{}{}
+
+	// iterate over each route
+	for _, v := range attributes {
+
+		vv := v.(map[string]interface{})
+
+		for kkk, vvv := range vv {
+
+			if kkk == "name" && vvv == key {
+
+				retVal = vv
+			}
+		}
+	}
+
+	return retVal
+}
+
+
+
+
+
 
 // FindMap checks if a given key matches a given value and returns the entire map
 func FindMap(key string, value interface{}, input map[string]interface{}) map[string]interface{} {

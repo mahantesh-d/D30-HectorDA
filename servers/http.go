@@ -131,7 +131,9 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		if len(paramsURI) > 1 {
 
 			reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(paramsURI[1])
+			reqAbs.ComplexFilters = paramsURI[1]
 		}
+
 
 		reqAbs.Limit = 0
 		reqAbs.Token = ""
@@ -154,6 +156,7 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		if len(paramsURI) > 1 {
 
 			reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(paramsURI[1])
+			reqAbs.ComplexFilters = paramsURI[1]
 		}
 	}
 

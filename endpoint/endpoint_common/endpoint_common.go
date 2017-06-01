@@ -160,3 +160,81 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 
 	return condition
 }
+
+
+func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType string) string {
+
+	condition := ""
+	relationalOperator := ""
+	endRelationalOperator := ""
+	isNotionalField := false
+	notionalOperator := ""
+
+
+	// Check if this is a notional field, if so set the flag
+	if _, ok := input["is_notional_field"].(string); ok {
+
+		if _, ok := input["notional_operator"].(string); ok && input["is_notional_field"].(string) == "true" {
+
+			isNotionalField = true
+			notionalOperator = input["notional_operator"].(string)
+		} else {
+
+			logger.Write("ERROR", "Field " + input["name"].(string) + " marked as notional but no operator specified.")
+		}
+	}
+
+
+	if input["valueType"].(string) == "single" {
+
+
+		if isNotionalField {
+
+			relationalOperator = notionalOperator
+		} else {
+
+			relationalOperator = "="
+		}
+
+	} else if input["valueType"].(string) == "multi" {
+
+
+		if isNotionalField {
+
+			relationalOperator = notionalOperator
+		} else {
+
+			if dbType == "postgresxl" {
+
+				relationalOperator = " = (ARRAY["
+				endRelationalOperator = "]) "
+
+			} else {
+
+				relationalOperator = "CONTAINS"
+			}
+
+		}
+	}
+
+	switch dataType := input["type"]; dataType {
+
+	case "text", "timestamp", "set<text>":
+
+			if len(value) > 0 {
+
+				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator
+			}
+
+	case "int":
+
+			if len(value) > 0 {
+				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + endRelationalOperator
+			}
+
+	}
+
+	return condition
+}
+
+

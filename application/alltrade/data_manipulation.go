@@ -6,7 +6,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"encoding/json"
 	"fmt"
-	"reflect"
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -86,22 +85,19 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 						(*curRecord)[kk] = jsonArray
 					}
 
-
-
-
 					if _, ok := vv.([]uint8); ok {
 
 						var payload interface{}
 
 						tmpStr := string(vv.([]uint8))
 
-						fmt.Println("original string is : ", tmpStr)
+//						fmt.Println("original string is : ", tmpStr)
 
 						err2 := json.Unmarshal([]byte(tmpStr), &payload)
 
 						if err2 != nil { fmt.Println("Error is...", err2.Error()) }
 
-						fmt.Println("payload after json Unmarshal", payload)
+//						fmt.Println("payload after json Unmarshal", payload)
 
 						var retObj []interface{}
 
@@ -114,11 +110,11 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 							retObj = append(retObj, tmpInterface)
 						}
 
-						fmt.Println("retObj for return is", retObj)
+//						fmt.Println("retObj for return is", retObj)
 
 						(*curRecord)[kk] = retObj
 
-						fmt.Println(*curRecord)
+//						fmt.Println(*curRecord)
 
 
 					}

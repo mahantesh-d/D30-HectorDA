@@ -8,6 +8,8 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"reflect"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/metadata"
+	"fmt"
 )
 /**
 
@@ -24,6 +26,23 @@ WITH (OIDS=FALSE);
 
 
  */
+
+func ReturnWhereComplex(query string, table_name string, dbType string) string {
+
+	var Parser metadata.Pr
+
+	fmt.Println("Query is ", query)
+
+	Parser.SetString(query)
+
+	Parser.Parse()
+
+	retStr := Parser.MakeString(table_name, dbType)
+
+	fmt.Println("==============" + retStr)
+
+	return retStr
+}
 
 
 func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
@@ -68,12 +87,18 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
 	name = strings.Trim(name,",")
 
 
-	for curKey, curVal := range metaInput["updateCondition"].(map[string][]string) {
+	//for curKey, curVal := range metaInput["updateCondition"].(map[string][]string) {
+	//
+	//	where += " " + curKey + " = '" + curVal[0] + "'  AND";
+	//}
 
-		where += " " + curKey + " = '" + curVal[0] + "'  AND";
-	}
+	//	where = strings.Trim(where, "AND")
 
-	where = strings.Trim(where, "AND")
+
+
+	where += ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
+
+
 
 	query="UPDATE " + table + " SET " + name + " WHERE " + where
 
@@ -109,6 +134,7 @@ func DeleteQueryBuilder(metaInput map[string]interface{})  string {
 }
 
 func InsertQueryBuild(metaInput map[string]interface{})  []string {
+
 	name := ""
 	value := ""
 
@@ -174,7 +200,6 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 
 	whereCondition := "AND"
 
-
 	if isOrCondition {
 
 		whereCondition = "OR"
@@ -183,21 +208,27 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 
 	query := "SELECT " + selectString  + " FROM"+" " + table
 
-	fields := metaInput["fields"].(map[string]interface{})
-          if len(fields) > 0 {
+//	fields := metaInput["fields"].([]map[string]interface{})
+//          if len(fields) > 0 {
 
 		  query +=" "
 		  query +="WHERE"
 
+		  query += ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
+
+		  /*
+
 		  for _, v := range fields {
-			  field := v.(map[string]interface{})
+
+			  field := v // .(map[string]interface{})
 			  query += " " + endpoint_common.ReturnCondition(field, whereCondition, "postgresxl") + " " + whereCondition
 		  }
+		  */
 
-	  } else {
+//	  } else {
 
 		  query += ""
-	  }
+//	  }
 
 	query=strings.Trim(query, whereCondition)
 	query+=" LIMIT 20;"
