@@ -85,8 +85,9 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 								jsonArray = append(jsonArray, payload)
 							}
 						}
-					
+
 						(*curRecord)[kk] = jsonArray
+
 					}
 
 
@@ -116,15 +117,16 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 						}
 
 						fmt.Println("retObj for return is", retObj)
-
 						(*curRecord)[kk] = retObj
-
 						fmt.Println(*curRecord)
-
 
 					}
 
 				}
 			}
+			if vv==nil{
+				(*curRecord)[kk] = ""
+			}
+
 		}
 }
