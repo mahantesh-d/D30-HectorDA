@@ -113,6 +113,7 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 	} else if reqAbs.HTTPRequestType == "GET" {
 
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
+		reqAbs.ComplexFilters = req.GetFilter()
 	}
 
 	return reqAbs
