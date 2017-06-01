@@ -142,7 +142,7 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 
 	}
 
-	//output["put_supported"] = false
+	output["put_supported"] = false
 	//output["possibleUpdateRequest"] = false
 	//output["updateCondition"] = map[string][]string{}
 

@@ -193,7 +193,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		fmt.Println(metaResult)
 
 
-//		if metaResult["put_supported"] == true {
+		if metaResult["put_supported"] == true {
 
 //			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
 
@@ -203,15 +203,14 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 				logger.Write("INFO", string(query[0]))
 
 				dbAbs.Query = query
-//			} else {
-/*
-				dbAbs.Message = "Error: Filters not passed in query"
+			} else {
+
+				dbAbs.Message = "Error: Put not supported on this API"
 				dbAbs.Count = 0
 				dbAbs.Status = "fail"
 
 				return dbAbs
-				*/
-//			}
+			}
 //		}
 	}
 

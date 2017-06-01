@@ -4,6 +4,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"strings"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"regexp"
 )
 
 func ReturnString(input interface{}) string {
@@ -219,7 +220,20 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 
 	switch dataType := input["type"]; dataType {
 
-	case "text", "timestamp", "set<text>":
+	case "timestamp":
+
+		if len(value) > 0 {
+
+			parsedTime := matchTimeFromStringGet( value )
+
+			if len(parsedTime) > 6 {
+
+				logger.Write("INFO", "Time got parsed from native format : " + value + "to " + parsedTime)
+				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(parsedTime) + " " + endRelationalOperator
+			}
+		}
+
+	case "text",  "set<text>":
 
 			if len(value) > 0 {
 
@@ -238,3 +252,19 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 }
 
 
+func matchTimeFromStringGet(timePassed string) string {
+
+	var retString = ""
+
+
+	re := regexp.MustCompile(`(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\+?(\d{4})?`)
+	segs := re.FindAllStringSubmatch(timePassed, -1)
+
+
+	if len(segs) > 0 {
+
+		retString = segs[0][1] + "-" + segs[0][2] + "-" + segs[0][3] + " " + segs[0][4] + ":" + segs[0][5] + ":" + segs[0][6] + "+0700"
+	}
+
+	return retString
+}

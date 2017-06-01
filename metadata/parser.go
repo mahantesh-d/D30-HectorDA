@@ -60,7 +60,6 @@ func (p Pr) Swap(i, j int) {
 	p.Elements[i].IncNumber, p.Elements[j].IncNumber = p.Elements[j].IncNumber, p.Elements[i].IncNumber
 }
 
-
 type Element struct {
 
 	UniqueId		string		// Unique Id for this
@@ -201,7 +200,6 @@ func (p *Pr) SetCondition(condition string) {
 
 	//	fmt.Println("setting condition for level : ", p.PrevParentHash[ p.CurLevel  ], " Condition : ", condition)
 }
-
 
 func (p *Pr) updateValueByUID( key string, value string ) {
 
@@ -353,7 +351,6 @@ func (p *Pr) MakeString(table_name string, dbType string) string {
 
 	return MyString
 }
-
 
 func AddElement(p *Pr, kv string) {
 
@@ -525,5 +522,7 @@ func printWordByLevel(k Pr, word string) {
 
 	//	fmt.Println(showString + word)
 }
+
+
 
 
