@@ -343,7 +343,7 @@
 			},
 			"mm_doc_year": {
 				"name": "mmDocYear",
-				"type": "int",
+				"type": "text",
 				"column": "mm_doc_year",
 				"valueType": "single",
 				"priority": 17,
