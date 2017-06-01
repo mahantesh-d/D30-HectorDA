@@ -141,6 +141,8 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 			isUpdateRequest, updateCondition = getUpdateQueryConditions(metaInputPost, metaResult["updateCondition"].(map[string][]string))
 
+			metaResult["is_post_update"] = true
+
 			if isUpdateRequest {
 
 				dbAbs.QueryType = "UPDATE"
@@ -168,13 +170,11 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 		metaInputPost := utils.FindMap("table", table_name, config.Metadata_insert())
 
-
-
-
 		// Get the filters from the request
 		metaResult, ok := metadata.InterpretUpdateFilters(metaInputPost, req.Payload, req.Filters)
 
 		metaResult["ComplexQuery"] = req.ComplexFilters
+		metaResult["is_post_update"] = false
 
 		fmt.Println("Allow from filter", ok, " Filter fields :", metaResult)
 

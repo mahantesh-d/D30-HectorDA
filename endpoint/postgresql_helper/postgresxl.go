@@ -87,17 +87,20 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
 	name = strings.Trim(name,",")
 
 
-	//for curKey, curVal := range metaInput["updateCondition"].(map[string][]string) {
-	//
-	//	where += " " + curKey + " = '" + curVal[0] + "'  AND";
-	//}
+	if  metaInput["is_post_update"].(bool) == true {
 
-	//	where = strings.Trim(where, "AND")
+	for curKey, curVal := range metaInput["updateCondition"].(map[string][]string) {
+
+		where += " " + curKey + " = '" + curVal[0] + "'  AND";
+	}
+
+		where = strings.Trim(where, "AND")
+
+	} else {
 
 
-
-	where += ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
-
+		where += ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
+	}
 
 
 	query="UPDATE " + table + " SET " + name + " WHERE " + where
