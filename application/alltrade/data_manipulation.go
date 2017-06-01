@@ -6,6 +6,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/model"
 	"encoding/json"
 	"fmt"
+
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -40,6 +41,8 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 							vv = vv.(time.Time).Format("20060102150405-0700")
 							(*curRecord)[kk] = vv
 						}
+					}else{
+						(*curRecord)[kk] = ""
 					}
 				}
 
