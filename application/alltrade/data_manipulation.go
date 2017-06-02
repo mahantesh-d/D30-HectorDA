@@ -127,7 +127,18 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 				}
 			}
 			if vv==nil{
-				(*curRecord)[kk] = ""
+
+				columnType := columnDetails["type"].(string)
+
+				if columnType == "set<text>" {
+
+					(*curRecord)[kk] = []string{}
+				} else {
+
+					(*curRecord)[kk] = ""
+				}
+
+
 			}
 
 		}
