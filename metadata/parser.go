@@ -444,12 +444,12 @@ func (p *Pr) Parse() {
 
 		}
 
-		if mat, _ := regexp.MatchString("[a-zA-Z=]", p.GetCurr()); mat {
+		if mat, _ := regexp.MatchString(`[^\(\)&\|]`, p.GetCurr()); mat {
 
 			tmpStr := ""
 
 			for {
-				if mat, _ := regexp.MatchString(`[a-zA-Z_0-9\-\=]`, p.GetCurr()); mat {
+				if mat, _ := regexp.MatchString(`[^\(\)&\|]`, p.GetCurr()); mat {
 
 					tmpStr += p.GetCurr()
 					p.MoveForward()
