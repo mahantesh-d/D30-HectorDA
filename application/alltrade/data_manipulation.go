@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"strconv"
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -46,6 +47,13 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 					}
 				}
 
+				if columnType == "int" {
+
+					if vv != nil {
+
+						(*curRecord)[kk] = strconv.Itoa( int(vv.(int64)) )
+					}
+				}
 
 				if dbAbs.DBType == "postgresxl" && columnType == "set<text>" {
 
