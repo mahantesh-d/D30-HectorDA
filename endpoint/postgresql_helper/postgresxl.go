@@ -27,7 +27,7 @@ WITH (OIDS=FALSE);
 
  */
 
-func ReturnWhereComplex(query string, table_name string, dbType string) string {
+func ReturnWhereComplex(query string, table_name string, dbType string) (string, bool) {
 
 	var Parser metadata.Pr
 
@@ -37,21 +37,22 @@ func ReturnWhereComplex(query string, table_name string, dbType string) string {
 
 	Parser.Parse()
 
-	retStr := Parser.MakeString(table_name, dbType)
+	retStr, isOk := Parser.MakeString(table_name, dbType)
 
 	fmt.Println("==============" + retStr)
 
-	return retStr
+	return retStr, isOk
 }
 
 
-func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
+func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 
 	var query string
 	query = ""
 	value := ""
 	name := ""
 	where := ""
+	isOk := true
 
 //	database:= metaInput["database"].(string)
 	table:= metaInput["table"].(string)
@@ -99,16 +100,23 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string{
 	} else {
 
 
-		where += ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
+		tmpWhere, isOk := ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
+
+		if isOk {
+
+			where += tmpWhere
+		} else {
+
+			return []string{}, false
+		}
 	}
 
 
 	query="UPDATE " + table + " SET " + name + " WHERE " + where
 
-
 	query+=";"
 	logger.Write("INFO", "Query is " + query)
-	return []string{ query }
+	return []string{ query }, isOk
 }
 
 func DeleteQueryBuilder(metaInput map[string]interface{})  string {
@@ -180,10 +188,12 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 
 }
 
-func SelectQueryBuild(metaInput map[string]interface{})  string {
+func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 
 	table := metaInput["table"].(string)
 	isOrCondition := metaInput["isOrCondition"].(bool)
+	isOk := true
+
 
 	myFields := utils.FindMap("table", table, config.Metadata_insert())
 
@@ -217,8 +227,12 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 		  query +=" "
 		  query +="WHERE"
 
-		  query += ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
+		  tmpWhere, isOk := ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
 
+		  if isOk {
+
+			  query += tmpWhere
+		  }
 		  /*
 
 		  for _, v := range fields {
@@ -237,7 +251,7 @@ func SelectQueryBuild(metaInput map[string]interface{})  string {
 	query+=" LIMIT 20;"
 
 	//fmt.Println("Postgres query on limit: ", query)
-	return query
+	return query, isOk
 }
 
 

@@ -84,6 +84,8 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	var dbAbs = model.DBAbstract{}
 
 	dbAbs.TableName = table_name
+	isOk := true
+
 
 	if req.HTTPRequestType == "GET" {
 
@@ -110,9 +112,19 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 			}
 		}
 
-		query = queryhelper.PrepareSelectQuery(metaResult)
+		query, isOk = queryhelper.PrepareSelectQuery(metaResult)
 		dbAbs.DBType = metaResult["databaseType"].(string)
 		dbAbs.Query = query
+
+		if !isOk {
+
+			dbAbs.Message = "Error: There was an error in the condition passed in the query"
+			dbAbs.Count = 0
+			dbAbs.Status = "fail"
+
+			return dbAbs
+		}
+
 
 	} else if req.HTTPRequestType == "POST" {
 
@@ -149,7 +161,17 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 				dbAbs.UpdateCondition = updateCondition
 				metaResult["updateCondition"] = updateCondition
 
-				query = queryhelper.PrepareUpdateQuery(metaResult)
+				query, isOk = queryhelper.PrepareUpdateQuery(metaResult)
+
+
+				if !isOk {
+
+					dbAbs.Message = "Error: There was an error in the condition passed in the query"
+					dbAbs.Count = 0
+					dbAbs.Status = "fail"
+
+					return dbAbs
+				}
 			}
 		}
 
@@ -199,11 +221,22 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 //				fmt.Println("Update condition 198.", metaResult["updateCondition"])
 				dbAbs.QueryType = "UPDATE"
-				query := queryhelper.PrepareUpdateQuery( metaResult )
+				var query []string
+				query, isOk = queryhelper.PrepareUpdateQuery( metaResult )
 				logger.Write("INFO", string(query[0]))
 
 				dbAbs.Query = query
-			} else {
+
+				if !isOk {
+
+					dbAbs.Message = "Error: There was an error in the condition passed in the query"
+					dbAbs.Count = 0
+					dbAbs.Status = "fail"
+
+					return dbAbs
+				}
+
+		} else {
 
 				dbAbs.Message = "Error: Put not supported on this API"
 				dbAbs.Count = 0

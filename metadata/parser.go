@@ -233,10 +233,11 @@ func (p *Pr) updateValueByUID( key string, value string ) {
 	}
 }
 
-func (p *Pr) MakeString(table_name string, dbType string) string {
+func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 	curLevel := 0
 	MyString := ""
+	isOk := true
 
 	LoopPrevCondition := ""
 
@@ -311,7 +312,7 @@ func (p *Pr) MakeString(table_name string, dbType string) string {
 
 		} else {
 
-			//fmt.Println("Key", v.Key, "Value", v.Value, "Condition", v.Condition)
+			fmt.Println("Key", v.Key, "Value", v.Value, "Condition", v.Condition)
 
 			cond := ""
 			if Condition == "&" { cond = "AND" }
@@ -332,6 +333,10 @@ func (p *Pr) MakeString(table_name string, dbType string) string {
 					//MyString += "( " + v.Key + " = " +v.Value + ")" + cond
 				}
 
+			} else {
+
+				fmt.Println("Field not found, skipping ------------", v.Key )
+				isOk = false
 			}
 		}
 		curLevel = v.Level
@@ -349,13 +354,14 @@ func (p *Pr) MakeString(table_name string, dbType string) string {
 
 	fmt.Println("MyString-------------", MyString)
 
-	return MyString
+	return MyString, isOk
 }
 
 func AddElement(p *Pr, kv string) {
 
 	keyVal := strings.Split(kv, "=")
 
+	fmt.Println("For Add " + kv)
 
 	if len(keyVal) > 1 {
 
@@ -455,11 +461,13 @@ func (p *Pr) Parse() {
 					p.MoveForward()
 				} else {
 
+					fmt.Println("Error in character " + p.GetCurr() + " skipping")
 					p.MoveBack()
 					break
 				}
 			}
 
+			fmt.Println(tmpStr)
 			AddElement(p, tmpStr )
 			printWordByLevel( *p, tmpStr)
 

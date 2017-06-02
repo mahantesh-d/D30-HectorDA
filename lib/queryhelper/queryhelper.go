@@ -31,11 +31,12 @@ func PrepareInsertQuery(metaInput map[string]interface{}) []string {
 
 // PrepareSelectQuery is used to parse Application metadata
 // and return the corresponding SELECT query
-func PrepareSelectQuery(metaInput map[string]interface{}) []string {
+func PrepareSelectQuery(metaInput map[string]interface{}) ([]string, bool) {
 	// get the endpoint
 	databaseType := metaInput["databaseType"].(string)
 
 	var query []string
+	isOk := true
 
 	if databaseType == "cassandra" {
 
@@ -48,16 +49,21 @@ func PrepareSelectQuery(metaInput map[string]interface{}) []string {
 		query = []string{cassandra_helper.StratioSelectQueryBuild(metaInput)}
 	} else if databaseType == "postgresxl"{
 
-		query =[]string{postgresql_helper.SelectQueryBuild(metaInput)}
+		var tmpQry string
+		tmpQry, isOk = postgresql_helper.SelectQueryBuild(metaInput)
+
+		query = []string{tmpQry}
 	}
 
-	return query
+	return query, isOk
 }
 
-func PrepareUpdateQuery(metaInput map[string]interface{}) []string  {
+func PrepareUpdateQuery(metaInput map[string]interface{}) ([]string, bool)  {
 
 	databaseType := metaInput["databaseType"].(string)
         // databaseType:="postgresxl"
+
+	isOk := true
 
 	var query []string
 
@@ -72,10 +78,10 @@ func PrepareUpdateQuery(metaInput map[string]interface{}) []string  {
 
 	}else if databaseType =="postgresxl"{
 
-		query = postgresql_helper.UpdateQueryBuilder(metaInput)
+		query, isOk = postgresql_helper.UpdateQueryBuilder(metaInput)
 	}
 
-	return query
+	return query, isOk
 }
 
 func PrepareDeleteQuery(metaInput map[string]interface{}) []string {

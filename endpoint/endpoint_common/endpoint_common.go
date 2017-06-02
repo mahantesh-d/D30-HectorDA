@@ -233,6 +233,7 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 			}
 		}
 
+
 	case "text",  "set<text>":
 
 			if len(value) > 0 {
@@ -240,11 +241,18 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator
 			}
 
+
 	case "int":
 
 			if len(value) > 0 {
 				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + endRelationalOperator
 			}
+
+
+	default:
+			logger.Write("ERROR", "Field sent for create " + input["column"].(string) + " is invalid")
+
+		break
 
 	}
 

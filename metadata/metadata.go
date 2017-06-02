@@ -294,7 +294,7 @@ func InterpretSelect(table_name string, filters map[string]interface{}) map[stri
 //			fmt.Println("DM : Searching for field", k, "Fields are ", fields)
 
 			// Logging this out as an error
-			logger.Write("ERROR", "Field passed in the filters '"+ k +"' was not found in the JSON API filter definition. Please use the correct filter. Using wrong filters has been set to cause API to fail.")
+			// logger.Write("ERROR", "Field passed in the filters '"+ k +"' was not found in the JSON API filter definition. Please use the correct filter. Using wrong filters has been set to cause API to fail.")
 			return input
 		}
 	}
