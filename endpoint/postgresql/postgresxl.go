@@ -58,7 +58,7 @@ func init() {
 
 	dbpool.SetMaxOpenConns(20)
 	dbpool.SetMaxIdleConns(10)
-	//	        dbpool.SetConnMaxLifetime(2 * time.Second)
+//	        dbpool.SetConnMaxLifetime(2 * time.Second)
 
 	fmt.Println(dbpool.Stats())
 
@@ -325,7 +325,6 @@ func Delete(dbAbstract *model.DBAbstract) {
 		checkErros(err)
 	}
 	db.Close()
-	fmt.Println(db.Ping())
 }
 
 func checkErros(err error) {
