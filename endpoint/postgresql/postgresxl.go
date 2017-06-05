@@ -58,16 +58,11 @@ func init() {
 
 	dbpool.SetMaxOpenConns(20)
 	dbpool.SetMaxIdleConns(10)
-//	        dbpool.SetConnMaxLifetime(2 * time.Second)
-
-	fmt.Println(dbpool.Stats())
+	dbpool.SetConnMaxLifetime(3 * time.Minute)
 
 }
 
 func getConnection() (*sql.DB, error) {
-
-	//	a := rand.Intn(18)
-	fmt.Println("gettting conection")
 
 	return dbpool, nil
 }
@@ -97,7 +92,7 @@ func Insert(dbAbstract *model.DBAbstract) {
 	}
 
 	var error_messages []string
-	row, err := connection.Query(dbAbstract.Query[0])
+	row, err := connection.Exec(dbAbstract.Query[0])
 
 	fmt.Println(row)
 
@@ -239,7 +234,10 @@ func Update(dbAbstract *model.DBAbstract) {
 		return
 	}
 
-	data, err := db.Query(dbAbstract.Query[0])
+	data, err := db.Exec(dbAbstract.Query[0])
+
+	fmt.Println(data)
+
 	var success_count uint64
 	error_messages := []string{}
 
@@ -275,15 +273,6 @@ func Update(dbAbstract *model.DBAbstract) {
 
 	}
 
-	for data.Next() {
-		var uid int
-		var username string
-		var department string
-		var created time.Time
-		err := data.Scan(&uid, &username, &department, &created)
-		checkErros(err)
-	}
-
 	closeConnection(db)
 
 }
@@ -303,7 +292,10 @@ func Delete(dbAbstract *model.DBAbstract) {
 
 	}
 
-	data, err := db.Query(dbAbstract.Query[0])
+	data, err := db.Exec(dbAbstract.Query[0])
+
+
+        fmt.Println(data)
 
 	if err != nil {
 
@@ -316,15 +308,7 @@ func Delete(dbAbstract *model.DBAbstract) {
 
 	}
 
-	for data.Next() {
-		var uid int
-		var username string
-		var department string
-		var created time.Time
-		err := data.Scan(&uid, &username, &department, &created)
-		checkErros(err)
-	}
-	db.Close()
+	closeConnection(db)
 }
 
 func checkErros(err error) {
