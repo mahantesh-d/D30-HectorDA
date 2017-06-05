@@ -96,6 +96,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		metaResult["token"] = req.Token
 		metaResult["isOrCondition"] = req.IsOrCondition
 		metaResult["ComplexQuery"] = req.ComplexFilters
+		metaResult["SelectFields"] = req.TableFields
 
 		var query []string
 
@@ -111,6 +112,9 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 				metaResult["databaseType"] = "cassandra_stratio"
 			}
 		}
+
+
+
 
 		query, isOk = queryhelper.PrepareSelectQuery(metaResult)
 		dbAbs.DBType = metaResult["databaseType"].(string)

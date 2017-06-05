@@ -201,8 +201,7 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 	isOrCondition := metaInput["isOrCondition"].(bool)
 	isOk := true
 
-
-	myFields := utils.FindMap("table", table, config.Metadata_insert())
+	myFields := utils.FindMapSelect("table", table, config.Metadata_insert(), metaInput["SelectFields"].([]string))
 
 	var selectString string
 

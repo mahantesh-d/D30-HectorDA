@@ -139,6 +139,48 @@ func GetFieldByName(key string, attributes map[string]interface{}) map[string]in
 	return retVal
 }
 
+// FindMap checks if a given key matches a given value and returns the entire map
+func FindMapSelect(key string, table_name interface{}, json_records map[string]interface{}, filter_fields []string) map[string]interface{} {
+
+	output := make(map[string]interface{})
+
+	// iterate over each map
+	for _, v := range json_records {
+
+		meta := v.(map[string]interface{})
+
+		if meta[key] == table_name {
+
+			// In the matched table save the fields array as a tmpVar
+
+			curFields := meta["fields"].(map[string]interface{})
+			sendFields := make(map[string]interface{})
+
+			for kk, vv := range curFields {
+
+				curField := vv.(map[string]interface{})
+
+				for _, f_field := range filter_fields {
+
+					if f_field == curField["name"] {
+
+						sendFields[  kk  ] = curField
+					}
+				}
+			}
+
+			if len(sendFields) > 0 {
+
+				meta["fields"] = sendFields
+			}
+
+			output = meta
+		}
+	}
+
+	return output
+
+}
 
 
 
@@ -176,6 +218,22 @@ func ReadFile(path string) string {
 	HandleError(err)
 	return string(raw)
 }
+
+
+func ParseSelectFields(passedVal string) []string {
+
+	retStrs := strings.Split(passedVal, ",")
+
+	if len(retStrs) == 0 {
+
+		return []string{}
+	}
+
+	return retStrs
+}
+
+
+
 
 // ParseFilter is used to convert an LDAP type query filter to a map of string and interface
 func ParseFilter(input string) (map[string]interface{}, bool) {

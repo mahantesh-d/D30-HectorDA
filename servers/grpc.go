@@ -114,6 +114,7 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
 		reqAbs.ComplexFilters = req.GetFilter()
+		reqAbs.TableFields = utils.ParseSelectFields(req.GetSelectFields())
 	}
 
 	return reqAbs
@@ -129,8 +130,8 @@ func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb
 	resp.Data = respAbs.Data
 	resp.Count = *(proto.Uint64(respAbs.Count))
 	resp.ID = reqAbs.GetID()
-	return resp
 
+	return resp
 }
 
 func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {

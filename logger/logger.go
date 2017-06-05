@@ -1,10 +1,11 @@
 package logger
 
 import (
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/config"
+	// "log"
+	lg "github.com/antigloss/go/logger"
 	"log"
-	"os"
+	"fmt"
 )
 
 // AllowedLevels specify the logging levels that are permitted in the application
@@ -14,12 +15,27 @@ func init() {
 	Conf := config.Get()
 	logLevel :=  Conf.Hector.Log
 	logLevelInt = arrayIndex(AllowedLevels, logLevel)
-	f, err := os.OpenFile(Conf.Hector.LogDirectory+"/server.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
+	// f, err := os.OpenFile(Conf.Hector.LogDirectory + "/server.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
+
+	//if err != nil {
+	//	fmt.Println(err.Error())
+	//	os.Exit(1)
+	//} else {
+	//	log.SetOutput(f)
+	//}
+
+	fmt.Println("Log file name" + Conf.Hector.Log)
+
+	err := lg.Init(Conf.Hector.LogDirectory, // specify the directory to save the logfiles
+		200, // maximum logfiles allowed under the specified log directory
+		20, // number of logfiles to delete when number of logfiles exceeds the configured limit
+		80, // maximum size of a logfile in MB
+		false) // whether logs with Trace level are written down
+
+
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	} else {
-		log.SetOutput(f)
+
+		fmt.Println("Error is : ", err.Error())
 	}
 }
 
@@ -29,10 +45,30 @@ func init() {
 // Output:
 //  2017/02/16 05:40:21  [ INFO ] Writing to the log file
 func Write(level string, message string) {
+
 	levelInt := arrayIndex(AllowedLevels,level)
-	if levelInt >= logLevelInt && logLevelInt != -1 {
-		put(level, message)
+
+	if levelInt < logLevelInt {
+
+		return
 	}
+
+	switch level {
+
+	case "VERBOSE", "DEBUG", "INFO":
+		lg.Info(message)
+
+	case "WARN":
+		lg.Warn(message)
+
+	case "ERROR":
+		lg.Error(message)
+
+	}
+
+	// if levelInt >= logLevelInt && logLevelInt != -1 {
+	//	put(level, message)
+	// }
 }
 
 

@@ -137,7 +137,7 @@ func mapRequestFields(reqqAbs *model.RequestAbstract, routeDetails map[string]in
 			f.IsPutField =  utils.ReturnMapBoolVal(allFields, "is_put_field")
 			f.IsPutFilterField =  utils.ReturnMapBoolVal(allFields, "is_put_filter_field")
 
-			(*reqqAbs).TableFields = append(reqqAbs.TableFields, f)
+			//(*reqqAbs).TableFields = append(reqqAbs.TableFields, f)
 		}
 	}
 }

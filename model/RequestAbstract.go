@@ -21,8 +21,9 @@ type RequestAbstract struct {
 	DatabaseName	string
 	Table		string
 	ApiName		string
-	TableFields	[]Field
+	TableFields	[]string
 	IsPutSupported	bool
+
 //	RequestFilters 	[]RequestFilter
 	ComplexFilters	string
 
