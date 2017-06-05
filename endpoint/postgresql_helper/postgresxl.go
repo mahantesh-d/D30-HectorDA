@@ -39,7 +39,7 @@ func ReturnWhereComplex(query string, table_name string, dbType string) (string,
 
 	retStr, isOk := Parser.MakeString(table_name, dbType)
 
-	fmt.Println("==============" + retStr)
+	fmt.Println("Parser response is : ", retStr)
 
 	return retStr, isOk
 }
@@ -102,8 +102,14 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 
 		tmpWhere, isOk := ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
 
+
+		countStr := len(strings.Replace(strings.Replace(tmpWhere, "(", "", -1), ")", "", -1))
+
+		if countStr == 0 { isOk = false }
+
 		if isOk {
 
+			fmt.Println( "Length of tmpWhere ", len(tmpWhere), tmpWhere)
 
 			where += " WHERE " + tmpWhere
 		} else {
@@ -214,6 +220,7 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 
 	whereCondition := "AND"
 
+
 	if isOrCondition {
 
 		whereCondition = "OR"
@@ -229,7 +236,9 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 
 		  tmpWhere, isOk := ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
 
-		  if isOk {
+		  countStr := len(strings.Replace(strings.Replace(tmpWhere, "(", "", -1), ")", "", -1))
+
+		  if isOk && countStr > 0 {
 
 			  query +=" WHERE "
 			  query += tmpWhere

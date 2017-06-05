@@ -223,9 +223,15 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 				dbAbs.QueryType = "UPDATE"
 				var query []string
 				query, isOk = queryhelper.PrepareUpdateQuery( metaResult )
+
+				if (len(query) > 0) {
 				logger.Write("INFO", string(query[0]))
 
 				dbAbs.Query = query
+				} else {
+
+					isOk = false
+				}
 
 				if !isOk {
 
