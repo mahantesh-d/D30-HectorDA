@@ -95,7 +95,7 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 		where += " " + curKey + " = '" + curVal[0] + "'  AND";
 	}
 
-		where = strings.Trim(where, "AND")
+		where = " WHERE " + strings.Trim(where, "AND")
 
 	} else {
 
@@ -104,7 +104,8 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 
 		if isOk {
 
-			where += tmpWhere
+
+			where += " WHERE " + tmpWhere
 		} else {
 
 			return []string{}, false
@@ -112,7 +113,7 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 	}
 
 
-	query="UPDATE " + table + " SET " + name + " WHERE " + where
+	query="UPDATE " + table + " SET " + name + where
 
 	query+=";"
 	logger.Write("INFO", "Query is " + query)
@@ -225,12 +226,12 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 //          if len(fields) > 0 {
 
 		  query +=" "
-		  query +="WHERE"
 
 		  tmpWhere, isOk := ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
 
 		  if isOk {
 
+			  query +=" WHERE "
 			  query += tmpWhere
 		  }
 		  /*

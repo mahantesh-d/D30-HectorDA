@@ -210,6 +210,10 @@ func ParseFilter(input string) (map[string]interface{}, bool) {
 	// Passed Filters
 	for _, v := range filters {
 
+		if strings.Count(v, "=") == 0 {
+
+			continue;
+		}
 		// Clean
 		v = strings.Replace(v, "(", "", 1)
 		v = strings.Replace(v, ")", "", 1)
