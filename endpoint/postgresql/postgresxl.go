@@ -1,6 +1,7 @@
 package postgresxl
 
-import ("github.com/dminGod/D30-HectorDA/model"
+import (
+	"github.com/dminGod/D30-HectorDA/model"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
@@ -15,22 +16,24 @@ import ("github.com/dminGod/D30-HectorDA/model"
 
 //var prestgresqlChan chan *sql.DB
 
+
 func Handle(dbAbstract *model.DBAbstract) {
 
 	if dbAbstract.QueryType == "INSERT" {
 		Insert(dbAbstract)
 	} else if dbAbstract.QueryType == "SELECT" {
 		Select(dbAbstract)
-	} else if dbAbstract.QueryType == "UPDATE"{
+	} else if dbAbstract.QueryType == "UPDATE" {
 		Update(dbAbstract)
-	}else if dbAbstract.QueryType == "DELETE"{
+	} else if dbAbstract.QueryType == "DELETE" {
 		Delete(dbAbstract)
 	}
 
 }
 
-func getConnection() (*sql.DB, error) {
+var dbpool *sql.DB
 
+func init() {
 	Conf := config.Get()
 
 	dbName := Conf.Postgresxl.Database
@@ -51,19 +54,27 @@ func getConnection() (*sql.DB, error) {
 			dbUser, dbPass, dbName, dbHost, dbPort)
 	}
 
-	db, err := sql.Open("postgres", dbInfo)
+	dbpool, _ = sql.Open("postgres", dbInfo)
 
-	if err != nil {
+	dbpool.SetMaxOpenConns(20)
+	dbpool.SetMaxIdleConns(10)
+	//	        dbpool.SetConnMaxLifetime(2 * time.Second)
 
-		logger.Write("ERROR", "Trouble connecting to database Postgres Error : " + err.Error())
+	fmt.Println(dbpool.Stats())
 
-	}
-
-	return db, err
 }
 
-func closeConnection(sql *sql.DB)  {
-       sql.Close()
+func getConnection() (*sql.DB, error) {
+
+	//	a := rand.Intn(18)
+	fmt.Println("gettting conection")
+
+	return dbpool, nil
+}
+
+func closeConnection(sql *sql.DB) {
+	//   sql.Close()
+
 }
 func Insert(dbAbstract *model.DBAbstract) {
 
@@ -85,20 +96,19 @@ func Insert(dbAbstract *model.DBAbstract) {
 		}
 	}
 
-	connection.Begin()
-	 var error_messages []string
-	 row, err := connection.Query(dbAbstract.Query[0])
+	var error_messages []string
+	row, err := connection.Query(dbAbstract.Query[0])
 
-	 fmt.Println(row)
+	fmt.Println(row)
 
-	 var success_count uint64
-	 logger.Write("DEBUG", "Running Queries for insert start : num of queries to run "+string(len(dbAbstract.Query)))
-	 logger.Write("DEBUG","Insert Record successfully")
+	var success_count uint64
+	logger.Write("DEBUG", "Running Queries for insert start : num of queries to run " + string(len(dbAbstract.Query)))
+	logger.Write("DEBUG", "Insert Record successfully")
 
 	if err != nil {
 		logger.Write("ERROR", "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : " + err.Error())
-		error_messages = append(error_messages, "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : "+err.Error())
-	        // logger.Write("INFO","Execution Query"+","+ single_query)
+		error_messages = append(error_messages, "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : " + err.Error())
+		// logger.Write("INFO","Execution Query"+","+ single_query)
 	} else {
 		success_count += 1
 	}
@@ -118,22 +128,17 @@ func Insert(dbAbstract *model.DBAbstract) {
 		dbAbstract.Status = "success"
 		dbAbstract.Message = "Inserted successfully"
 		dbAbstract.Data = "{}"
-		dbAbstract.Count=success_count
+		dbAbstract.Count = success_count
 
 	}
 
-
-	go closeConnection(connection)
+	closeConnection(connection)
 
 }
 func Select(dbAbstract *model.DBAbstract) {
 	var prestoResult []map[string]interface{}
 
-
 	db, err := getConnection()
-	db.Begin()
-
-	defer db.Close()
 
 	if err != nil {
 
@@ -175,7 +180,6 @@ func Select(dbAbstract *model.DBAbstract) {
 		return
 	}
 
-
 	data := make([]interface{}, len(cols))
 	args := make([]interface{}, len(data))
 
@@ -200,28 +204,28 @@ func Select(dbAbstract *model.DBAbstract) {
 		prestoResult = append(prestoResult, rowData)
 
 	}
-	 if err!=nil {
-		 dbAbstract.Status = "fail"
-		 dbAbstract.Message = "Error connecting to endpoint"
-		 dbAbstract.Data = "{}"
-		 dbAbstract.Count = 0
-		 return
-	 }else{
-		 dbAbstract.Status = "success"
-		 dbAbstract.Message = "Select successful"
-		 dbAbstract.Data = utils.EncodeJSON(prestoResult)
-		 dbAbstract.RichData = prestoResult
-		 dbAbstract.Count = uint64(len(prestoResult))
+	if err != nil {
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = "Error connecting to endpoint"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = 0
+		return
+	} else {
+		dbAbstract.Status = "success"
+		dbAbstract.Message = "Select successful"
+		dbAbstract.Data = utils.EncodeJSON(prestoResult)
+		dbAbstract.RichData = prestoResult
+		dbAbstract.Count = uint64(len(prestoResult))
 
 	}
 
-
 	checkErros(err)
+
+	closeConnection(db)
 
 }
 
-
-func Update(dbAbstract *model.DBAbstract)  {
+func Update(dbAbstract *model.DBAbstract) {
 
 	db, err := getConnection()
 
@@ -235,12 +239,10 @@ func Update(dbAbstract *model.DBAbstract)  {
 		return
 	}
 
-	db.Begin()
-	data,err:=db.Query(dbAbstract.Query[0])
+	data, err := db.Query(dbAbstract.Query[0])
 	var success_count uint64
-	error_messages:=[]string{}
+	error_messages := []string{}
 
-	defer db.Close()
 	if err != nil {
 
 		logger.Write("ERROR", err.Error())
@@ -269,7 +271,7 @@ func Update(dbAbstract *model.DBAbstract)  {
 		dbAbstract.Status = "success"
 		dbAbstract.Message = "Update successful"
 		dbAbstract.Data = "{}"
-		dbAbstract.Count=success_count
+		dbAbstract.Count = success_count
 
 	}
 
@@ -278,12 +280,15 @@ func Update(dbAbstract *model.DBAbstract)  {
 		var username string
 		var department string
 		var created time.Time
-		err:= data.Scan(&uid, &username, &department, &created)
+		err := data.Scan(&uid, &username, &department, &created)
 		checkErros(err)
 	}
+
+	closeConnection(db)
+
 }
 
-func Delete(dbAbstract *model.DBAbstract)  {
+func Delete(dbAbstract *model.DBAbstract) {
 
 	db, err := getConnection()
 
@@ -298,9 +303,7 @@ func Delete(dbAbstract *model.DBAbstract)  {
 
 	}
 
-	db.Begin()
 	data, err := db.Query(dbAbstract.Query[0])
-
 
 	if err != nil {
 
@@ -313,22 +316,20 @@ func Delete(dbAbstract *model.DBAbstract)  {
 
 	}
 
-
-	defer db.Close()
 	for data.Next() {
 		var uid int
 		var username string
 		var department string
 		var created time.Time
-		err:= data.Scan(&uid, &username, &department, &created)
+		err := data.Scan(&uid, &username, &department, &created)
 		checkErros(err)
 	}
-
+	db.Close()
+	fmt.Println(db.Ping())
 }
 
-
-func checkErros(err error)  {
-     if err!=nil {
-	     panic(err)
-     }
+func checkErros(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
