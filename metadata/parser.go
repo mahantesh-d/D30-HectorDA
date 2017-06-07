@@ -1,6 +1,7 @@
 package metadata
 
-import (
+import
+(
 "strings"
 "math/rand"
 "strconv"
@@ -437,6 +438,30 @@ func (p *Pr) GetCurr() string {
 	return string( p.ParsedString[ p.CurPos ] )
 }
 
+func (p *Pr) GetPrev() string {
+
+	retStr := ""
+
+	if p.CurPos > 0 {
+		retStr = string(p.ParsedString[ p.CurPos - 1 ])
+	}
+
+	return retStr
+}
+
+func (p *Pr) GetNext() string {
+
+	retStr := ""
+
+	if (p.CurPos + 1) < len(p.ParsedString) {
+
+		retStr = string(p.ParsedString[ p.CurPos + 1 ])
+	}
+
+	return  string(retStr)
+}
+
+
 func (p *Pr) MoveGet() string {
 
 	if p.CurPos != 0 && p.CurPos != (p.Size() - 1) {
@@ -485,13 +510,10 @@ func (p *Pr) Parse() {
 			tmpStr := ""
 
 			for {
-				if mat, _ := regexp.MatchString(`[^\(\)&\|]`, p.GetCurr()); mat {
-
+				if mat, _ := regexp.MatchString(`[^\(\)&\|]`, p.GetCurr()); mat || p.matchesAndInsideText() {
 					tmpStr += p.GetCurr()
 					p.MoveForward()
 				} else {
-
-					fmt.Println("Error in character " + p.GetCurr() + " skipping")
 					p.MoveBack()
 					break
 				}
@@ -510,6 +532,15 @@ func (p *Pr) Parse() {
 		if p.CurPos == p.Size() {  break;  }
 	}
 }
+
+func (p *Pr) matchesAndInsideText() bool {
+
+	text := p.GetPrev() + p.GetCurr() + p.GetNext()
+	mat, _ := regexp.MatchString(`[\w \t_-]&[\w \t_-]`, text)
+	return mat
+}
+
+
 
 func (p *Pr) Size() int {
 

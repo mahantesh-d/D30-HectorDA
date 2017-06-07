@@ -256,8 +256,8 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 		  query += ""
 //	  }
 
-	query=strings.Trim(query, whereCondition)
-	query+=" LIMIT 20;"
+	query = strings.Trim(query, whereCondition)
+	query += " OFFSET " + metaInput["offset"].(string) + " LIMIT " + metaInput["limit"].(string) + ";"
 
 	//fmt.Println("Postgres query on limit: ", query)
 	return query, isOk

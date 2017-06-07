@@ -10,6 +10,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"net"
+	"strconv"
 )
 
 // GRPCServer registers
@@ -102,6 +103,20 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.ID = req.GetID()
 
+	// Set the default limit
+	defaultLimit, err := strconv.Atoi(Conf.Hector.DefaultRecordsLimit)
+
+	// Set the limit to 20 if the limit is not set on the configuration
+	if err != nil {
+
+		logger.Write("ERROR", "No defaultRecordLimit set in config.toml file, using 20 records as default")
+		defaultLimit = 20
+	}
+
+	// Set default first, if passed, then will be increased
+	reqAbs.Limit = uint32(defaultLimit)
+	reqAbs.Offset = 0
+
 	reqAbs.HTTPRequestType = req.GetMethod().String()
 	if reqAbs.HTTPRequestType == "POST" || reqAbs.HTTPRequestType == "PUT" {
 
@@ -114,8 +129,16 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
 		reqAbs.ComplexFilters = req.GetFilter()
-		reqAbs.TableFields = utils.ParseSelectFields(req.GetSelectFields())
+		reqAbs.TableFields = utils.ParseSelectFields(req.GetSelectField())
+
+		if req.GetRowLimit() > 0 {  reqAbs.Limit = req.GetRowLimit()     }
+		if req.GetOffset() > 0 {  reqAbs.Offset = req.GetOffset()   }
+
 	}
+
+
+
+
 
 	return reqAbs
 }

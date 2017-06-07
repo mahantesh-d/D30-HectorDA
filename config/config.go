@@ -28,6 +28,7 @@ type hector struct {
 	RequestMetrics bool
 	QueryMetrics bool
 	PortHTTP string
+	DefaultRecordsLimit string
 }
 
 type postgresxl struct {

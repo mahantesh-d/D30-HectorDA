@@ -92,7 +92,9 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		metaResult := metadata.InterpretSelect(table_name, req.Filters)
 
 		// pagination and limit check
-		metaResult["limit"] = req.Limit
+		metaResult["limit"] = strconv.Itoa(int(req.Limit))
+		metaResult["offset"] = strconv.Itoa(int(req.Offset))
+
 		metaResult["token"] = req.Token
 		metaResult["isOrCondition"] = req.IsOrCondition
 		metaResult["ComplexQuery"] = req.ComplexFilters

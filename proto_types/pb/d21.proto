@@ -12,7 +12,7 @@ package pb;
 /* option (gogoproto.goproto_getters_all) = false; */
 
 // The Add service definition.
-/*
+
 service D21 {
   rpc Do (Request) returns (Response);
   rpc ResolveAlias (Request) returns (Response);
@@ -23,7 +23,7 @@ service D21 {
   rpc TxRollback (TxRollbackRequest) returns (TxRollbackResponse);
   rpc GetStream (Request) returns (stream Response);
 }
-*/
+
 
 message TxBeginRequest {
     uint64  ID                         = 1;
@@ -122,6 +122,7 @@ message Request {
     string ApplicationPayload          = 54;
     string SelectField                 = 55;
     uint32 RowLimit                    = 56;
+    uint32 Offset                      = 57;
 }
 
 message TxRequest {
