@@ -16,6 +16,8 @@ type RequestAbstract struct {
 	Limit 		int32
 	Token		string
 	IsOrCondition	bool
+        AreDatesValid   bool
+        DateErrors      []string
 
 	DatabaseType	string
 	DatabaseName	string

@@ -15,6 +15,7 @@ import (
 	"math/rand"
 	"strconv"
 	"encoding/base64"
+
 )
 
 // IsJSON validates a JSON string
@@ -139,6 +140,26 @@ func GetFieldByName(key string, attributes map[string]interface{}) map[string]in
 	return retVal
 }
 
+func matchFieldTag(tagsArr []interface{}, match string) bool {
+
+	retVal := false
+
+	for _, v := range tagsArr {
+
+		if _, ok := v.(string); ok {
+			if v == match {
+
+				retVal = true
+			}
+		}
+	}
+
+	return retVal
+}
+
+
+
+
 // FindMap checks if a given key matches a given value and returns the entire map
 func FindMapSelect(key string, table_name interface{}, json_records map[string]interface{}, filter_fields []string) map[string]interface{} {
 
@@ -155,8 +176,29 @@ func FindMapSelect(key string, table_name interface{}, json_records map[string]i
 
 			curFields := meta["fields"].(map[string]interface{})
 			sendFields := make(map[string]interface{})
+			limitedFields := make(map[string]interface{})
 
 			for kk, vv := range curFields {
+
+				curField := vv.(map[string]interface{})
+
+
+				if _, ok := curField["tags"].([]interface{}); ok {
+
+
+					if matchFieldTag(curField["tags"].([]interface{}), "internal_field") == false {
+
+						sendFields[  kk  ] = curField
+					}
+				} else {
+
+					sendFields[  kk  ] = curField
+				}
+			}
+
+
+
+			for kk, vv := range sendFields {
 
 				curField := vv.(map[string]interface{})
 
@@ -164,12 +206,15 @@ func FindMapSelect(key string, table_name interface{}, json_records map[string]i
 
 					if f_field == curField["name"] {
 
-						sendFields[  kk  ] = curField
+						limitedFields[  kk  ] = curField
 					}
 				}
 			}
 
-			if len(sendFields) > 0 {
+			if len(limitedFields) > 0 {
+
+				meta["fields"] = limitedFields
+			} else {
 
 				meta["fields"] = sendFields
 			}
@@ -224,6 +269,7 @@ func ParseSelectFields(passedVal string) []string {
 
 	retStrs := strings.Split(passedVal, ",")
 
+	fmt.Println("parse selecfeilds",retStrs)
 	if len(retStrs) == 0 {
 
 		return []string{}
@@ -466,4 +512,20 @@ func ShowJSON(byte []byte) {
 	buf := new(bytes.Buffer)
 	json.Indent(buf, byte, "", "  ")
 	fmt.Println(buf)
+}
+
+func IsDateValid(date string)  bool {
+
+	strings.Replace(date,"","",-1)
+
+	dateFormat := "(19|20)[0-9]{1}[0-9]{1}[0-1]{1}[0-9]{1}[0-3]{1}[0-9]{1}[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}[0-5]{1}[0-9]{1}"
+
+	ok,err := regexp.MatchString(dateFormat,date)
+
+	 if err != nil {
+
+		  logger.Write("ERROR", err.Error())
+	 }
+
+        return ok
 }
