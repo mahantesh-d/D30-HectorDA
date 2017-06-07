@@ -4,7 +4,15 @@ syntax = "proto3";
 
 package pb;
 
+/* import "github.com/gogo/protobuf/gogoproto/gogo.proto"; */
+
+/* option (gogoproto.marshaler_all)       = true; */
+/* option (gogoproto.sizer_all)           = true; */
+/* option (gogoproto.unmarshaler_all)     = true; */
+/* option (gogoproto.goproto_getters_all) = false; */
+
 // The Add service definition.
+/*
 service D21 {
   rpc Do (Request) returns (Response);
   rpc ResolveAlias (Request) returns (Response);
@@ -15,30 +23,38 @@ service D21 {
   rpc TxRollback (TxRollbackRequest) returns (TxRollbackResponse);
   rpc GetStream (Request) returns (stream Response);
 }
+*/
 
-message TxBeginRequest {}
+message TxBeginRequest {
+    uint64  ID                         = 1;
+}
 
 message TxBeginResponse {
     uint64  TID                        = 1;
     Metadata Metadata                  = 2;
+    uint64  ID                         = 3;
 }
 
 message TxCommitRequest {
     uint64  TID                        = 1;
+    uint64  ID                         = 2;
 }
 
 message TxCommitResponse {
     uint64  TID                        = 1;
     Metadata Metadata                  = 2;
+    uint64  ID                         = 3;
 }
 
 message TxRollbackRequest {
     uint64  TID                        = 1;
+    uint64  ID                         = 2;
 }
 
 message TxRollbackResponse {
     uint64  TID                        = 1;
     Metadata Metadata                  = 2;
+    uint64  ID                         = 3;
 }
 
 // LDAP Search scope
@@ -99,12 +115,13 @@ message Request {
     uint64 GID                         = 16; // Group ID
     uint64 TID                         = 17; // Transaction ID
     TxMethod TxMethod                  = 18; // Transcation Method
-    uint64 UUID                        = 19;
-    string ApplicationName	           = 51;
+    uint64 UUID                        = 19; // Unique ID internally used for triggering
+    string ApplicationName             = 51;
     string ApplicationMethod           = 52;
     uint32 ApplicationVersion          = 53;
     string ApplicationPayload          = 54;
-    string SelectFields                = 55;
+    string SelectField                 = 55;
+    uint32 RowLimit                    = 56;
 }
 
 message TxRequest {
@@ -158,12 +175,12 @@ message Response {
     repeated string Controls           = 9;
     uint64 TID                         = 10; // Tx ID
     uint32 StreamFlag                  = 11; // 0: Done, 1: StreamEntryResponse
-    uint32 StatusCode		       = 12;
-    string Status		       = 13;
+    uint32 StatusCode                  = 12;
+    string Status                      = 13;
     string StatusCodeMessage           = 14;
     string Message                     = 15;
-    string Data			       = 16;
-    uint64 Count		       = 17;
+    string Data                        = 16;
+    uint64 Count                       = 17;
 }
 
 // Meta data is used to return meta data to response
@@ -173,4 +190,3 @@ message Metadata {
     uint64 RaftIndex                   = 3;
     uint64 RaftTerm                    = 4;
 }
-
