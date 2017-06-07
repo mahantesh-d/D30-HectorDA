@@ -46,6 +46,7 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 	reqAbs.RouteName = route
 
+	reqAbs.AreDatesValid = true
 
 	var respAbs model.ResponseAbstract
 
@@ -73,6 +74,18 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 	// All the hooks for global level and applciation will be applied here for changing the requests
 	enrichRequest(&reqAbs)
 
+	 if reqAbs.AreDatesValid == false {
+
+		 return model.ResponseAbstract{
+
+			 StatusCode : 501,
+			 Status : "fail",
+			 StandardStatusMessage : "NOT_FOUND",
+			 Text : reqAbs.DateErrors[0],
+			 Data : "{}",
+			 Count : 0,
+		 }, errors.New("Route not found")
+	 }
 
 	if RouteExists(route) {
 

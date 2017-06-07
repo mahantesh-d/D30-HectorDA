@@ -32,9 +32,20 @@ func convertIncomingTimes(reqAbs **model.RequestAbstract){
 			columnDetails := utils.GetColumnDetailsGeneric("apiName", (**reqAbs).RouteName, kk)
 
 			if len(columnDetails) > 0 {
+
 			columnType := columnDetails["type"].(string)
 
 			if columnType == "timestamp" {
+
+				flag := utils.IsDateValid(vv.(string))
+
+				if flag == false && len(vv.(string)) > 0 {
+
+					(**reqAbs).AreDatesValid = false
+
+					(**reqAbs).DateErrors  = []string{"Error: Date field "+ kk +" is invalid"}
+
+				}
 
 				parsedTime := matchTimeFromString(vv.(string))
 
