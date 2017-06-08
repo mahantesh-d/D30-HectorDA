@@ -138,6 +138,10 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		reqAbs.Limit = 0
 		reqAbs.Token = ""
 
+		limitVal, _ := strconv.Atoi(Conf.Hector.DefaultRecordsLimit)
+
+		reqAbs.Limit = uint32(limitVal)
+
 		/*
 		if len(params["limit"]) > 0 {
 			reqAbs.Limit = 10

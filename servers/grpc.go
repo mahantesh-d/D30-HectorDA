@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"strconv"
+	"fmt"
 )
 
 // GRPCServer registers
@@ -131,9 +132,31 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 		reqAbs.ComplexFilters = req.GetFilter()
 		reqAbs.TableFields = utils.ParseSelectFields(req.GetSelectField())
 
-		if req.GetRowLimit() > 0 {  reqAbs.Limit = req.GetRowLimit()     }
-		if req.GetOffset() > 0 {  reqAbs.Offset = req.GetOffset()   }
+		if req.GetRowLimit() > 0 {
 
+			tmpNum, _ := strconv.Atoi(Conf.Hector.MaxLimitAllowedByAPI)
+			maxAllowedLimit := uint32(tmpNum)
+			
+
+			reqAbs.Limit = req.GetRowLimit()
+
+			if maxAllowedLimit > 0 && req.GetRowLimit() > maxAllowedLimit {
+
+				reqAbs.Limit = uint32(maxAllowedLimit)
+			}
+
+
+			fmt.Println("Got row limit as ", req.GetRowLimit() );
+		}
+
+		if req.GetOffset() > 0 {
+			reqAbs.Offset = req.GetOffset()
+		}
+
+
+
+
+		fmt.Println("Row limit is ", req.GetRowLimit())
 	}
 
 
