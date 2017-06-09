@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"strconv"
+	"sync"
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -16,10 +17,10 @@ func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
 	for kk, vv := range v { (*curRecord)[kk] = vv }
 }
 
-func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
+func manipulateData(dbAbs model.DBAbstract, curRecord map[string]interface{}, retData *[]map[string]interface{}, wg *sync.WaitGroup) {
 
 		// Loop through all fields of the record
-		for kk, vv := range *curRecord {
+		for kk, vv := range curRecord {
 
 			// Get the type, given a table name and a field name
 			columnDetails := utils.GetColumnDetails( dbAbs.TableName, kk )
@@ -36,14 +37,14 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 							loc, _ := time.LoadLocation("Asia/Bangkok")
 							vv = vv.(time.Time).In(loc).Format("20060102150405-0700")
 
-							(*curRecord)[kk] = vv
+							(curRecord)[kk] = vv
 						} else {
 
 							vv = vv.(time.Time).Format("20060102150405-0700")
-							(*curRecord)[kk] = vv
+							(curRecord)[kk] = vv
 						}
 					}else{
-						(*curRecord)[kk] = ""
+						(curRecord)[kk] = ""
 					}
 				}
 
@@ -51,7 +52,7 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 
 					if vv != nil {
 
-						(*curRecord)[kk] = strconv.Itoa( int(vv.(int64)) )
+						(curRecord)[kk] = strconv.Itoa( int(vv.(int64)) )
 					}
 				}
 
@@ -65,12 +66,12 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 
 							if err == nil {
 
-								(*curRecord)[kk] =  payload
+								(curRecord)[kk] =  payload
 							}
 
 					} else {
 
-						(*curRecord)[kk] = []string{}
+						(curRecord)[kk] = []string{}
 					}
 				}
 
@@ -93,7 +94,7 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 							}
 						}
 
-						(*curRecord)[kk] = jsonArray
+						(curRecord)[kk] = jsonArray
 
 					}
 
@@ -125,9 +126,9 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 
 						fmt.Println("retObj for return is", retObj)
 
-						(*curRecord)[kk] = retObj
+						(curRecord)[kk] = retObj
 
-						fmt.Println(*curRecord)
+						fmt.Println(curRecord)
 
 
 					}
@@ -140,14 +141,17 @@ func manipulateData(dbAbs model.DBAbstract, curRecord *map[string]interface{}) {
 
 				if columnType == "set<text>" {
 
-					(*curRecord)[kk] = []string{}
+					(curRecord)[kk] = []string{}
 				} else {
 
-					(*curRecord)[kk] = ""
+					(curRecord)[kk] = ""
 				}
 
 
 			}
 
 		}
+
+		*retData = append(*retData, curRecord)
+		wg.Done()
 }

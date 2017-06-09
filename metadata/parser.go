@@ -1,6 +1,7 @@
 package metadata
 
-import (
+import
+(
 "strings"
 "math/rand"
 "strconv"
@@ -10,6 +11,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/config"
+
 )
 
 type Pr struct {
@@ -104,7 +106,11 @@ func (p *Pr) SetString(s string) {
 
 	p.IncNumber = 0
 
+	//p.ParsedString, _ =  url.QueryUnescape(s)
+
 	p.ParsedString =  s
+
+	fmt.Println("Parsed string is : ", p.ParsedString)
 }
 
 // Start of a new level and element
@@ -203,6 +209,7 @@ func (p *Pr) SetCondition(condition string) {
 
 func (p *Pr) updateValueByUID( key string, value string ) {
 
+
 	for i, e := range p.Elements {
 
 		if e.UniqueId == p.CurrentId {
@@ -213,17 +220,6 @@ func (p *Pr) updateValueByUID( key string, value string ) {
 
 			case "condition":
 				myElem.Condition = value
-				break
-
-			case "key_value":
-
-				tmpSplit := strings.Split(value, "=")
-
-				if len(tmpSplit) > 1 {
-					myElem.Key = tmpSplit[0]
-					myElem.Value = tmpSplit[1]
-					myElem.ElementType = "leaf"
-				}
 				break
 
 			case "type":
@@ -245,12 +241,13 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 	input := utils.FindMap("table", table_name, config.Metadata_get())
 	fields := input["fields"].(map[string]interface{})
 
-
 	for _, v := range p.Elements {
 
 		//fmt.Println("IncNumber", v.IncNumber, "Level", v.Level)
 
 		Condition := ""
+
+
 
 		if len(LoopPrevCondition) > 0 {  Condition = LoopPrevCondition }
 		if len(v.Condition) > 0 {  Condition = v.Condition }
@@ -324,13 +321,16 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 				if curLevel == v.Level {
 
-					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value, dbType) + ")"
+					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value, dbType, v.Operator) + ")"
+
+
 
 					//MyString += "( " + v.Key + " = " +v.Value + ")"
 				} else {
 
-					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value,dbType) + ")" + cond
+					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value,dbType, v.Operator) + ")" + cond
 					//MyString += "( " + v.Key + " = " +v.Value + ")" + cond
+
 				}
 
 			} else {
@@ -359,7 +359,37 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 func AddElement(p *Pr, kv string) {
 
-	keyVal := strings.Split(kv, "=")
+//	keyVal := strings.Split(kv, "=")
+
+
+	keyVal := []string{}
+	listOfOperators := []string{"<=", ">=", "=>", "=<", "<" , ">", "="}
+
+	op := ""
+
+	for  _, operator  :=  range  listOfOperators {
+
+		if strings.Contains(kv, operator) {
+
+			if operator == "=" && strings.Contains(kv , "*") {
+
+				vvv  := strings.Replace(kv, "*", "%", 1)
+				keyVal = strings.Split(vvv, operator)
+				op = "like"
+				break
+
+			} else  {
+
+				keyVal = strings.Split(kv, operator)
+
+				if operator == "=>" {  operator = ">=" }
+				if operator == "=<" {  operator = "<=" }
+
+				op = operator
+				break
+			}
+		}
+	}
 
 	fmt.Println("For Add " + kv)
 
@@ -375,10 +405,8 @@ func AddElement(p *Pr, kv string) {
 		p.LevelIdTracker[ p.CurLevel ] = CurrentId
 		p.LevelDictAdd( p.CurLevel, CurrentId )
 
-
 		key := keyVal[0]
 		val := keyVal[1]
-
 
 		p.Elements = append(p.Elements, Element{
 			Key: key,
@@ -389,6 +417,8 @@ func AddElement(p *Pr, kv string) {
 			Level: p.CurLevel,
 			HasChildren: false,
 			ParentId: parentId,
+			Operator: op,
+			ElementType: "leaf",
 		})
 	}
 }
@@ -407,6 +437,30 @@ func (p *Pr) GetCurr() string {
 
 	return string( p.ParsedString[ p.CurPos ] )
 }
+
+func (p *Pr) GetPrev() string {
+
+	retStr := ""
+
+	if p.CurPos > 0 {
+		retStr = string(p.ParsedString[ p.CurPos - 1 ])
+	}
+
+	return retStr
+}
+
+func (p *Pr) GetNext() string {
+
+	retStr := ""
+
+	if (p.CurPos + 1) < len(p.ParsedString) {
+
+		retStr = string(p.ParsedString[ p.CurPos + 1 ])
+	}
+
+	return  string(retStr)
+}
+
 
 func (p *Pr) MoveGet() string {
 
@@ -446,6 +500,7 @@ func (p *Pr) Parse() {
 			p.SetCondition(p.GetCurr())
 
 			p.updateValueByUID("condition", p.GetCurr())
+
 			printWordByLevel( *p, p.GetCurr() )
 
 		}
@@ -455,17 +510,15 @@ func (p *Pr) Parse() {
 			tmpStr := ""
 
 			for {
-				if mat, _ := regexp.MatchString(`[^\(\)&\|]`, p.GetCurr()); mat {
-
+				if mat, _ := regexp.MatchString(`[^\(\)&\|]`, p.GetCurr()); mat || p.matchesAndInsideText() {
 					tmpStr += p.GetCurr()
 					p.MoveForward()
 				} else {
-
-					fmt.Println("Error in character " + p.GetCurr() + " skipping")
 					p.MoveBack()
 					break
 				}
 			}
+
 
 			fmt.Println(tmpStr)
 			AddElement(p, tmpStr )
@@ -479,6 +532,15 @@ func (p *Pr) Parse() {
 		if p.CurPos == p.Size() {  break;  }
 	}
 }
+
+func (p *Pr) matchesAndInsideText() bool {
+
+	text := p.GetPrev() + p.GetCurr() + p.GetNext()
+	mat, _ := regexp.MatchString(`[\w \t_-]&[\w \t_-]`, text)
+	return mat
+}
+
+
 
 func (p *Pr) Size() int {
 

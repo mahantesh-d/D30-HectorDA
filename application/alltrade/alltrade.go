@@ -15,6 +15,7 @@ import (
 	"github.com/gocql/gocql"
 	"strconv"
 	"reflect"
+	"sync"
 )
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
@@ -38,8 +39,12 @@ func EnrichDataResponse(dbAbs *model.DBAbstract) {
 
 	if len(dbAbs.RichData) > 0 {
 
+		var wg sync.WaitGroup
+
 		// Loop through the array
 		for _, v := range dbAbs.RichData {
+
+			wg.Add(1)
 
 			var curRecord = make(map[string]interface{})
 
@@ -47,11 +52,11 @@ func EnrichDataResponse(dbAbs *model.DBAbstract) {
 			mapRecord(v, &curRecord)
 
 			// Make the time as per the format that they want..
-			manipulateData(*dbAbs, &curRecord)
-
-			retData = append(retData, curRecord)
+			go manipulateData(*dbAbs, curRecord, &retData, &wg)
+			// retData = append(retData, curRecord)
 		}
 
+		wg.Wait()
 
 	}
 
@@ -92,7 +97,9 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		metaResult := metadata.InterpretSelect(table_name, req.Filters)
 
 		// pagination and limit check
-		metaResult["limit"] = req.Limit
+		metaResult["limit"] = strconv.Itoa(int(req.Limit))
+		metaResult["offset"] = strconv.Itoa(int(req.Offset))
+
 		metaResult["token"] = req.Token
 		metaResult["isOrCondition"] = req.IsOrCondition
 		metaResult["ComplexQuery"] = req.ComplexFilters

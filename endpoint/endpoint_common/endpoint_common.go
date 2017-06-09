@@ -141,7 +141,13 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 
 			if len(value) > 0 {
 
-				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator + " " + whereCondition
+				buildCondition :=  "  " + input["column"].(string) + " " + relationalOperator + " " + "|1" + " " + endRelationalOperator + " " + whereCondition
+
+				buildConditionValue  :=  ReturnString(value)
+
+				condition  += replaceString(buildCondition,buildConditionValue)
+
+				//condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator + " " + whereCondition
 			}
 		}
 
@@ -150,7 +156,14 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 		for _, value := range input["value"].([]string) {
 
 			if len(value) > 0 {
-				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + endRelationalOperator + " " + whereCondition
+
+				builCondition := "  " + input["column"].(string) + " " + relationalOperator + " " + "|1" + " " + endRelationalOperator + " " + whereCondition
+
+				buildConditionValue := 	ReturnInt(input["value"].(string))
+
+				condition += replaceString(builCondition,buildConditionValue)
+
+				//condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + endRelationalOperator + " " + whereCondition
 			}
 
 		}
@@ -163,7 +176,7 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 }
 
 
-func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType string) string {
+func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType string, op string) string {
 
 	condition := ""
 	relationalOperator := ""
@@ -194,11 +207,10 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 			relationalOperator = notionalOperator
 		} else {
 
-			relationalOperator = "="
+			relationalOperator = op
 		}
 
 	} else if input["valueType"].(string) == "multi" {
-
 
 		if isNotionalField {
 
@@ -229,7 +241,15 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 			if len(parsedTime) > 6 {
 
 				logger.Write("INFO", "Time got parsed from native format : " + value + "to " + parsedTime)
-				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(parsedTime) + " " + endRelationalOperator
+
+				buildCondition  := "  " + input["column"].(string) + " " + relationalOperator + " " + "|1" +" "+ " " + endRelationalOperator
+
+				buildConditionValue :=  ReturnString(parsedTime)
+
+				condition += replaceString(buildCondition, buildConditionValue)
+
+				// condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(parsedTime) + " " + endRelationalOperator
+
 			}
 		}
 
@@ -238,14 +258,27 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 
 			if len(value) > 0 {
 
-				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator
+				buildCondition :="  " + input["column"].(string) + " " + relationalOperator + " " + "|1" + " " + endRelationalOperator
+
+				buildConditionValue := ReturnString(value)
+
+				condition  +=  replaceString(buildCondition,buildConditionValue)
+
+				//condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator
 			}
 
 
 	case "int":
 
 			if len(value) > 0 {
-				condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + endRelationalOperator
+
+				buildCondition := "  " + input["column"].(string) + " " + relationalOperator + " " +"|1" + " " + endRelationalOperator
+
+				buildConditionValue :=  ReturnInt(input["value"].(string))
+
+				condition += replaceString(buildCondition,buildConditionValue)
+
+				//condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnInt(input["value"].(string)) + " " + endRelationalOperator
 			}
 
 
@@ -275,4 +308,13 @@ func matchTimeFromStringGet(timePassed string) string {
 	}
 
 	return retString
+}
+
+
+
+func replaceString(buildCondition string,buildConditionValue string)  string {
+
+	Condition := strings.Replace(buildCondition, "|1",  buildConditionValue, 1)
+
+	return Condition
 }
