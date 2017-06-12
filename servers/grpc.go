@@ -12,6 +12,7 @@ import (
 	"net"
 	"strconv"
 	"fmt"
+	"encoding/json"
 )
 
 // GRPCServer registers
@@ -136,7 +137,7 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 			tmpNum, _ := strconv.Atoi(Conf.Hector.MaxLimitAllowedByAPI)
 			maxAllowedLimit := uint32(tmpNum)
-			
+
 
 			reqAbs.Limit = req.GetRowLimit()
 
@@ -159,10 +160,6 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 		fmt.Println("Row limit is ", req.GetRowLimit())
 	}
 
-
-
-
-
 	return reqAbs
 }
 
@@ -176,6 +173,9 @@ func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb
 	resp.Data = respAbs.Data
 	resp.Count = *(proto.Uint64(respAbs.Count))
 	resp.ID = reqAbs.GetID()
+
+	resObjBytes, _ := json.Marshal(resp)
+	logger.Write("INFO", "Gave Response GRPC" + string(resObjBytes) )
 
 	return resp
 }

@@ -35,11 +35,14 @@ func EnrichResponse(reqAbs *model.ResponseAbstract) { }
 
 func EnrichDataResponse(dbAbs *model.DBAbstract) {
 
+
 	var retData []map[string]interface{}
 
 	if len(dbAbs.RichData) > 0 {
 
 		var wg sync.WaitGroup
+
+		fieldsConfig := utils.GetLimitedTableDetails(dbAbs.TableName)
 
 		// Loop through the array
 		for _, v := range dbAbs.RichData {
@@ -52,7 +55,7 @@ func EnrichDataResponse(dbAbs *model.DBAbstract) {
 			mapRecord(v, &curRecord)
 
 			// Make the time as per the format that they want..
-			go manipulateData(*dbAbs, curRecord, &retData, &wg)
+			go manipulateData(*dbAbs, curRecord, fieldsConfig, &retData, &wg )
 			// retData = append(retData, curRecord)
 		}
 

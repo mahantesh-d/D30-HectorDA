@@ -373,7 +373,7 @@ func AddElement(p *Pr, kv string) {
 
 			if operator == "=" && strings.Contains(kv , "*") {
 
-				vvv  := strings.Replace(kv, "*", "%", 1)
+				vvv  := strings.Replace(kv, "*", "%", -1)
 				keyVal = strings.Split(vvv, operator)
 				op = "like"
 				break

@@ -78,7 +78,7 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 		 return model.ResponseAbstract{
 
-			 StatusCode : 501,
+			 StatusCode : 40300,
 			 Status : "fail",
 			 StandardStatusMessage : "NOT_FOUND",
 			 Text : reqAbs.DateErrors[0],

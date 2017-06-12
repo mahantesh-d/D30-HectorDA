@@ -342,6 +342,33 @@ func ParseFilter(input string) (map[string]interface{}, bool) {
 
 
 // Given a fieldname and table name return the type of data type the column is.
+func GetLimitedTableDetails( table_name string ) map[string]interface{} {
+
+	jsonData := config.Metadata_insert()
+	retType := make(map[string]interface{})
+
+	for _, v := range jsonData {
+
+		fields := v.(map[string]interface{})
+
+		if( fields["table"] == table_name) {
+
+			// Looping over the fields block
+			for _, vv := range fields["fields"].(map[string]interface{}) {
+
+				curFieldBlock := vv.(map[string]interface{})
+
+					retType[ curFieldBlock["name"].(string) ] = curFieldBlock
+			}
+		}
+	}
+
+	return retType
+}
+
+
+
+// Given a fieldname and table name return the type of data type the column is.
 func GetColumnDetails( table_name string, field_name string) map[string]interface{} {
 
 	jsonData := config.Metadata_insert()

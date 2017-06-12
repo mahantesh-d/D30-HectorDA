@@ -31,6 +31,7 @@ type hector struct {
 	DefaultRecordsLimit string
 	MaxLimitAllowedByAPI string
 	AsyncProcessRequests bool
+	ManipulateData	bool
 }
 
 type postgresxl struct {
