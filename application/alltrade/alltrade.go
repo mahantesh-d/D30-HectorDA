@@ -333,9 +333,30 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 
 	for k, v := range updateCondition {
 
-		for _, vv := range v {
+		colDetails := utils.GetColumnDetailsByColumnName(table_name, k)
 
-			query +=  " " + k + " = '" + vv + "' AND"
+		if colDetails["valueType"].(string) == "single" {
+			// 1. Handle Multi column query here
+			// Range query for date as well
+			for _, vv := range v {
+
+				query += " " + k + " = '" + vv + "' AND"
+			}
+		} else if colDetails["valueType"].(string) == "multi" {
+
+			if len(v) > 0 {
+
+				query += " " + k + " = (ARRAY["
+
+				for _, vv := range v {
+
+					query += vv + ","
+				}
+
+				query = strings.Trim(query, ",")
+
+				query += "]) "
+			}
 		}
 	}
 
