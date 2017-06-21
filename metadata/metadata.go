@@ -9,13 +9,13 @@ import (
 
 // Interpret is used to cross-reference application metadata with the request metadata
 // and returns metadata specific to the request for further processing
-func Interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
+func Interpret(metadata map[string]interface{}, payload map[string]interface{}, filters string) map[string]interface{} {
 
-	return interpret(metadata, payload)
+	return interpret(metadata, payload, filters)
 }
 
 
-func interpret(metadata map[string]interface{}, payload map[string]interface{}) map[string]interface{} {
+func interpret(metadata map[string]interface{}, payload map[string]interface{}, filters string) map[string]interface{} {
 
 	output := make(map[string]interface{})
 
@@ -41,6 +41,20 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 		val[1] = f["type"].(string)
 		curKey := f["column"].(string)
 
+		isCassandraPrimaryKey := false
+
+		if _, ok := f["tags"].([]interface{}); ok {
+
+			isCassandraPrimaryKey = utils.MatchFieldTag(f["tags"].([]interface{}), "cassandra_pk")
+		}
+
+		if isCassandraPrimaryKey {
+
+			record_uuid_u, _ := gocql.RandomUUID()
+			record_uuid = record_uuid_u.String()
+			outputKeyValues[curKey] = record_uuid
+			outputKeyMeta[curKey] = val[1]
+		}
 
 		switch t := val[1]; t {
 
@@ -74,7 +88,7 @@ func interpret(metadata map[string]interface{}, payload map[string]interface{}) 
 
 	if output["put_supported"] == false {
 
-		output["possibleUpdateRequest"], output["updateCondition"] = CheckCondition(metadata, payload)
+		output["possibleUpdateRequest"], output["updateCondition"] = CheckCondition(metadata, payload, filters)
 	}
 
 	output["field_keyvalue"] = outputKeyValues

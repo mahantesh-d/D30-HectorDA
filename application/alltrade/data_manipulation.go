@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"sync"
-	"fmt"
+	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 func mapRecord(v map[string]interface{}, curRecord *map[string]interface{}) {
@@ -74,8 +74,6 @@ func manipulateData(dbAbs model.DBAbstract, curRecord map[string]interface{}, fi
 						}
 					}
 
-					fmt.Println(columnTags)
-
 
 					if len(columnTags) > 0 && columnTags[0] == "json_array" {
 
@@ -109,7 +107,8 @@ func manipulateData(dbAbs model.DBAbstract, curRecord map[string]interface{}, fi
 							err2 := json.Unmarshal([]byte(tmpStr), &payload)
 
 							if err2 != nil {
-								fmt.Println("Error is...", err2.Error())
+								logger.Write("ERROR", "Error when trying to unmarshal JSON array in data_manipulation manipulate_data method " +
+									err2.Error())
 							}
 
 							var retObj []interface{}
@@ -123,11 +122,7 @@ func manipulateData(dbAbs model.DBAbstract, curRecord map[string]interface{}, fi
 								retObj = append(retObj, tmpInterface)
 							}
 
-							fmt.Println("retObj for return is", retObj)
-
 							(curRecord)[kk] = retObj
-
-							fmt.Println(curRecord)
 
 						}
 

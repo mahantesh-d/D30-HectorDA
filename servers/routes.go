@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/utils"
-	"fmt"
 )
 
 // Routes store the mapping of routes to the underlying application logic
@@ -102,11 +101,9 @@ func HandleRoutes(reqAbs model.RequestAbstract) (model.ResponseAbstract, error) 
 
 		if len(routeDetails) != 0 {
 
-			logger.Write("INFO", "Calling common method for the request")
+			logger.Write("INFO", "Calling common method for the request", "Request Abstract is : ", reqAbs)
 
 			mapRequestFields(&reqAbs, routeDetails)
-
-			fmt.Println(reqAbs)
 
 			respAbs = alltrade.HandleUnlistedRequest(reqAbs, routeDetails["table"].(string))
 		}

@@ -6,27 +6,31 @@ import (
 	"github.com/dminGod/D30-HectorDA/endpoint/postgresql_helper"
 
 	//"google.golang.org/genproto/googleapis/spanner/admin/database/v1"
+	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 // PrepareInsertQuery is used to parse Application metadata
 // and return the corresponding INSERT query
-func PrepareInsertQuery(metaInput map[string]interface{}) []string {
+func PrepareInsertQuery(metaInput map[string]interface{}) ([]string, bool) {
 
 	// get the endpoint
 	databaseType := metaInput["databaseType"].(string)
+
+	isOk := true
 
 	var query []string
 
 	if databaseType == "cassandra" {
 
-		query = cassandra_helper.InsertQueryBuild(metaInput)
+		query, isOk = cassandra_helper.InsertQueryBuild(metaInput)
 	}else if databaseType == "postpresto" {
 
 	}else if databaseType == "postgresxl"{
 
-                query =postgresql_helper.InsertQueryBuild(metaInput)
+                query, isOk = postgresql_helper.InsertQueryBuild(metaInput)
 	}
-	return query
+
+	return query, isOk
 }
 
 // PrepareSelectQuery is used to parse Application metadata
@@ -67,16 +71,17 @@ func PrepareUpdateQuery(metaInput map[string]interface{}) ([]string, bool)  {
 
 	var query []string
 
-
 	if databaseType == "cassandra" {
 
-		query = cassandra_helper.UpdateQueryBuilder(metaInput)
+		query, isOk = cassandra_helper.UpdateQueryBuilder(metaInput)
 	} else if databaseType == "presto" {
 
 
 	} else if databaseType == "cassandra_stratio" {
 
 	}else if databaseType =="postgresxl"{
+
+		logger.Write("INFO", "Trace from PrepareUpdateQuery queryhelper.go")
 
 		query, isOk = postgresql_helper.UpdateQueryBuilder(metaInput)
 	}

@@ -35,6 +35,8 @@ func readFile(path string) string {
 	raw, err := ioutil.ReadFile(path)
 
 	if err != nil {
+
+		// dont put logger here, import cycle issue hoga
 		fmt.Println("Error when reading file", path,  err, raw)
 	}
 

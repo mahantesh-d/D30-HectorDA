@@ -10,7 +10,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/metadata"
 	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
-	"fmt"
 	"strings"
 	"github.com/gocql/gocql"
 	"strconv"
@@ -94,6 +93,9 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	dbAbs.TableName = table_name
 	isOk := true
 
+	isCassInsert := false
+	var cassDbAbs model.DBAbstract
+
 
 	if req.HTTPRequestType == "GET" {
 
@@ -142,11 +144,19 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 	} else if req.HTTPRequestType == "POST" {
 
+
 		metaInputPost := utils.FindMap("table", table_name, config.Metadata_insert())
 
-		metaResult := metadata.Interpret(metaInputPost, req.Payload)
+		metaResult := metadata.Interpret(metaInputPost, req.Payload, req.ComplexFilters)
 
 		dbAbs.DBType = metaInputPost["databaseType"].(string)
+
+		// Does it have tag Cassandra?
+		if _, ok := metaInputPost["tags"].([]interface{}); ok && len(metaInputPost["tags"].([]interface{})) > 0 {
+
+			isCassInsert = utils.MatchFieldTag(metaInputPost["tags"].([]interface{}), "D30_API")
+		}
+
 
 		var query []string
 
@@ -156,6 +166,8 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		// Only for POST coming in for Update, used for Cassandra
 		if metaResult["possibleUpdateRequest"].(bool) {
 
+			logger.Write("INFO", "Possible update request from commonRequestProcess.")
+
 			// Could be possibly be an update request
 			//getPK :=
 
@@ -163,7 +175,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 				metaResult["updateCondition"] = map[string][]string{}
 			}
-
 
 			isUpdateRequest, updateCondition = getUpdateQueryConditions(metaInputPost, metaResult["updateCondition"].(map[string][]string))
 
@@ -180,7 +191,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 				if !isOk {
 
-					dbAbs.Message = "Error: There was an error in the condition passed in the query"
+					dbAbs.Message = "Error: There was an error in the condition passed in the parameters"
 					dbAbs.Count = 0
 					dbAbs.Status = "fail"
 
@@ -194,8 +205,44 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 			// This is a regular POST request
 
 			dbAbs.QueryType = "INSERT"
-			query = queryhelper.PrepareInsertQuery( metaResult )
-			logger.Write("INFO", string(query[0]))
+			query, isOk = queryhelper.PrepareInsertQuery( metaResult )
+
+			 if !isOk {
+
+				 dbAbs.Message = "Error: There was an error in the condition passed in the parameters"
+				 dbAbs.Count = 0
+				 dbAbs.Status = "fail"
+
+				 return dbAbs
+			 }
+
+			 logger.Write("INFO", string(query[0]))
+
+		}
+
+		if isCassInsert {
+
+
+			var cassQuery []string
+
+			cassQuery, isOk = cassandra_helper.InsertQueryBuild(metaResult)
+
+			if isOk {
+
+				cassDbAbs = model.DBAbstract{
+					DBType: "cassandra",
+					Query: cassQuery,
+					QueryType: "INSERT",
+					TableName: table_name,
+				}
+			} else {
+
+				dbAbs.Message = "Error: There was an error in the condition passed in the parameters"
+				dbAbs.Count = 0
+				dbAbs.Status = "fail"
+
+				return dbAbs
+			}
 
 		}
 
@@ -212,7 +259,8 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		metaResult["ComplexQuery"] = req.ComplexFilters
 		metaResult["is_post_update"] = false
 
-		fmt.Println("Allow from filter", ok, " Filter fields :", metaResult)
+		// Remove this later
+		logger.Write("INFO", "Allow from filter", ok, " Filter fields :", metaResult)
 
 		if _, ok := metaResult["updateCondition"].(map[string][]string); !ok {
 
@@ -226,14 +274,13 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 		dbAbs.DBType = metaInputPost["databaseType"].(string)
 
-		fmt.Println(metaResult)
 
 
 		if metaResult["put_supported"] == true {
 
 //			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
 
-//				fmt.Println("Update condition 198.", metaResult["updateCondition"])
+
 				dbAbs.QueryType = "UPDATE"
 				var query []string
 				query, isOk = queryhelper.PrepareUpdateQuery( metaResult )
@@ -255,7 +302,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 					return dbAbs
 				}
-
 		} else {
 
 				dbAbs.Message = "Error: Put not supported on this API"
@@ -268,8 +314,9 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 	}
 
 
-	fmt.Println("Running query ", dbAbs)
-	endpoint.Process(&dbAbs)
+	logger.Write("INFO", "dbAbs object before processing query", dbAbs)
+
+	endpoint.Process(&dbAbs, &cassDbAbs, isCassInsert)
 
 	return dbAbs
 }
@@ -284,6 +331,16 @@ func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 	responseAbstract.Count = dbAbs.Count
 
 	return responseAbstract
+}
+
+
+func handleCustomDateManipulation(queryStr *string, table_name string, column_type string, key string, value string) {
+
+	if table_name == "check_stock_detail" && key == "confirm_datetime" {
+
+		onlyDate := value[:10]
+		*queryStr += " " + key + " > '" + onlyDate + " 00:00:00'  AND " + key + " < '" + onlyDate + " 23:59:59' AND"
+	}
 }
 
 
@@ -335,7 +392,18 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 
 		colDetails := utils.GetColumnDetailsByColumnName(table_name, k)
 
-		if colDetails["valueType"].(string) == "single" {
+		if colDetails["valueType"].(string) == "single" && colDetails["type"].(string) == "timestamp" {
+
+			passValue := ""
+
+			if len(v) > 0 {
+
+				passValue = v[0]
+			}
+
+			handleCustomDateManipulation(&query, table_name, colDetails["type"].(string), k, passValue)
+
+		} else if colDetails["valueType"].(string) == "single" {
 			// 1. Handle Multi column query here
 			// Range query for date as well
 			for _, vv := range v {
@@ -350,12 +418,12 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 
 				for _, vv := range v {
 
-					query += vv + ","
+					query += "'" + vv + "',"
 				}
 
 				query = strings.Trim(query, ",")
 
-				query += "]) "
+				query += "]) AND"
 			}
 		}
 	}
@@ -376,9 +444,9 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 		QueryType: "SELECT",
 	}
 
-	endpoint.Process( &dbAbs )
+	endpoint.Process( &dbAbs, &model.DBAbstract{}, false )
 
-	fmt.Println("Result from the query", dbAbs)
+	logger.Write("INFO", "getUpdateQueryConditions result from the query dbAbs", dbAbs)
 
 	var updateKeyStr string
 
@@ -397,9 +465,6 @@ func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondit
 		case "gocql.UUID" :
 			updateKeyStr = dbAbs.RichData[0]["key"].(gocql.UUID).String()
 		}
-
-
-		fmt.Println(reflect.TypeOf( dbAbs.RichData[0]["key"] ).String())
 
 		logger.Write("INFO", "From update query Returning " + primaryKey + " : " + updateKeyStr)
 		return true, map[string][]string{ primaryKey : []string{ updateKeyStr } }

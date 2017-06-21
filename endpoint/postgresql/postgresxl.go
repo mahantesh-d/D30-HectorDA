@@ -12,20 +12,26 @@ import (
 
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/config"
+	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
 )
 
 //var prestgresqlChan chan *sql.DB
 
 
-func Handle(dbAbstract *model.DBAbstract) {
+func Handle(dbAbstract *model.DBAbstract, secondQuery *model.DBAbstract, processSecond bool) {
 
 	if dbAbstract.QueryType == "INSERT" {
-		Insert(dbAbstract)
+
+		Insert(dbAbstract, secondQuery, processSecond)
+
 	} else if dbAbstract.QueryType == "SELECT" {
+
 		Select(dbAbstract)
 	} else if dbAbstract.QueryType == "UPDATE" {
-		Update(dbAbstract)
+
+		Update(dbAbstract, secondQuery, processSecond)
 	} else if dbAbstract.QueryType == "DELETE" {
+
 		Delete(dbAbstract)
 	}
 
@@ -71,7 +77,7 @@ func closeConnection(sql *sql.DB) {
 	//   sql.Close()
 
 }
-func Insert(dbAbstract *model.DBAbstract) {
+func Insert(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSecond bool) {
 
 	connection, err := getConnection()
 
@@ -87,14 +93,52 @@ func Insert(dbAbstract *model.DBAbstract) {
 			dbAbstract.Message = err.Error()
 			dbAbstract.Data = "{}"
 			return
-
 		}
 	}
 
 	var error_messages []string
-	row, err := connection.Exec(dbAbstract.Query[0])
 
-	fmt.Println(row)
+	if processSecond {
+
+		tx, _ := connection.Begin()
+
+		tx.Exec(dbAbstract.Query[0])
+
+		cassandra.Handle(secondAbs)
+
+		logger.Write("INFO", "Ran the Cassandra extra insert from PG Insert object is:", secondAbs)
+		if secondAbs.Status == "success" {
+
+			err := tx.Commit()
+
+			if err != nil {
+
+				logger.Write("ERROR", "Postgres transaction failed with error, " + err.Error())
+				dbAbstract.Status = "fail"
+				dbAbstract.Message = "Insert Transaction failed"
+				dbAbstract.Data = "{}"
+			} else {
+
+				logger.Write("INFO", "Transaction Commited, insert successful")
+			}
+
+
+		} else {
+
+			tx.Rollback()
+
+			logger.Write("ERROR", "Cassandra insert did not go through, Rolling back commit")
+			dbAbstract.Status = "fail"
+			dbAbstract.Message = "The insert request failed."
+			dbAbstract.Data = "{}"
+			return
+		}
+
+	} else {
+
+		_, err = connection.Exec(dbAbstract.Query[0])
+
+	}
 
 	var success_count uint64
 	logger.Write("DEBUG", "Running Queries for insert start : num of queries to run " + string(len(dbAbstract.Query)))
@@ -118,6 +162,7 @@ func Insert(dbAbstract *model.DBAbstract) {
 		dbAbstract.Status = "fail"
 		dbAbstract.Message = response_text
 		dbAbstract.Data = "{}"
+
 	} else {
 		logger.Write("INFO", "Inserted successfully")
 		dbAbstract.Status = "success"
@@ -130,6 +175,7 @@ func Insert(dbAbstract *model.DBAbstract) {
 	closeConnection(connection)
 
 }
+
 func Select(dbAbstract *model.DBAbstract) {
 	var prestoResult []map[string]interface{}
 
@@ -144,7 +190,6 @@ func Select(dbAbstract *model.DBAbstract) {
 		dbAbstract.Data = "{}"
 		dbAbstract.Count = 0
 
-		return
 		return
 	}
 
@@ -220,7 +265,7 @@ func Select(dbAbstract *model.DBAbstract) {
 
 }
 
-func Update(dbAbstract *model.DBAbstract) {
+func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSecond bool) {
 
 	db, err := getConnection()
 
@@ -234,9 +279,47 @@ func Update(dbAbstract *model.DBAbstract) {
 		return
 	}
 
-	data, err := db.Exec(dbAbstract.Query[0])
+	if processSecond {
 
-	fmt.Println(data)
+		tx, _ := db.Begin()
+
+		tx.Exec(dbAbstract.Query[0])
+
+		cassandra.Handle(secondAbs)
+
+		logger.Write("INFO", "Ran the Cassandra extra insert from PG Insert object is:", secondAbs)
+		if secondAbs.Status == "success" {
+
+			err := tx.Commit()
+
+			if err != nil {
+
+				logger.Write("ERROR", "Postgres transaction failed with error, " + err.Error())
+				dbAbstract.Status = "fail"
+				dbAbstract.Message = "Insert Transaction failed"
+				dbAbstract.Data = "{}"
+			} else {
+
+				logger.Write("INFO", "Transaction Commited, insert successful")
+			}
+
+
+		} else {
+
+			tx.Rollback()
+
+			logger.Write("ERROR", "Cassandra insert did not go through, Rolling back commit" + secondAbs.Message)
+			dbAbstract.Status = "fail"
+			dbAbstract.Message = "Insert Transaction failed"
+			dbAbstract.Data = "{}"
+			return
+		}
+
+	} else {
+
+		_, err = db.Exec(dbAbstract.Query[0])
+
+	}
 
 	var success_count uint64
 	error_messages := []string{}
@@ -292,10 +375,7 @@ func Delete(dbAbstract *model.DBAbstract) {
 
 	}
 
-	data, err := db.Exec(dbAbstract.Query[0])
-
-
-        fmt.Println(data)
+	_, err = db.Exec(dbAbstract.Query[0])
 
 	if err != nil {
 

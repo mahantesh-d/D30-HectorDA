@@ -2,13 +2,12 @@ package metadata
 
 import (
 	"strings"
-	"fmt"
 	"reflect"
 	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 // Condition
-func CheckCondition(metadata map[string]interface{}, payload map[string]interface{}) (bool, map[string][]string)  {
+func CheckCondition(metadata map[string]interface{}, payload map[string]interface{}, filters string) (bool, map[string][]string)  {
 
 
 	var updateProblem bool
@@ -25,13 +24,12 @@ func CheckCondition(metadata map[string]interface{}, payload map[string]interfac
 		updateProblem = true
 	}
 
-	fmt.Println("This is the type : ", reflect.TypeOf(metadata["update_list_array"]))
 
 	if _, ok := metadata["update_list_array"].([]interface{}); ok {
 
 		isRequirementArray = true
 		updateProblem = false
-//		fmt.Println("This is is the array I am getting...", metadata["update_list_array"].([]map[string]interface{}))
+
 
 		for _, v := range metadata["update_list_array"].([]interface{}){
 
@@ -64,9 +62,6 @@ func CheckCondition(metadata map[string]interface{}, payload map[string]interfac
 
 		for _, curRec := range loopOver {
 
-			fmt.Println("My updateCondition is ", curRec["updateCondition"])
-			fmt.Println("My updateKeys are", curRec["updateKeys"])
-
 			condition := curRec["updateCondition"].(string)
 			updateKeys := curRec["updateKeys"].(string)
 
@@ -75,13 +70,12 @@ func CheckCondition(metadata map[string]interface{}, payload map[string]interfac
 			// Conditions are valid
 			if valid {
 
-				fmt.Println("Splits", splits)
-
-				shouldTryUpdate := checkConditionsPayload(splits, payload)
+				shouldTryUpdate := checkConditionsPayload(splits, payload, filters)
 
 				if !shouldTryUpdate {
 
-					fmt.Println("Recommend not to try update...", shouldTryUpdate)
+					logger.Write("INFO", "Recommend not to try update...", shouldTryUpdate)
+
 					// return false, map[string]string{}
 					continue
 				}
@@ -91,12 +85,12 @@ func CheckCondition(metadata map[string]interface{}, payload map[string]interfac
 				// Update Keys seem to be okay as well. Now we need to get the primary key for this record
 				if updateKeysOk {
 
-					fmt.Println("Returning okay for update keys -- should try updates", shouldTryUpdate, "Update keys", updateKeysRet)
+					logger.Write("INFO", "Returning okay for update keys -- should try updates", shouldTryUpdate, "Update keys", updateKeysRet)
 					return shouldTryUpdate, updateKeysRet
 
 				} else {
 
-					fmt.Println("Returning false, updateKeys not okay")
+					logger.Write("INFO", "Returning false, updateKeys not okay")
 					return false, map[string][]string{}
 					continue
 				}
@@ -106,13 +100,13 @@ func CheckCondition(metadata map[string]interface{}, payload map[string]interfac
 
 	}
 
-	fmt.Println("Did not get anything, going out.... ")
+	logger.Write("INFO", "Update parser, CheckCondition did not get anything return blank")
 	return false, map[string][]string{}
 }
 
 // Check if the splits of conditions match with the passed payload.. this is the decider
 
-func checkConditionsPayload(splits map[string]interface{}, payload map[string]interface{}) bool {
+func checkConditionsPayload(splits map[string]interface{}, payload map[string]interface{}, filters string) bool {
 
 	var shouldTryUpdate bool
 
@@ -122,10 +116,13 @@ func checkConditionsPayload(splits map[string]interface{}, payload map[string]in
 
 	if isOrCondition {
 
+		// Or condition will not work with contains!
+		// This is a new feature will need to be built!!
+
 		shouldTryUpdate = checkOrCondition(fields, payload)
 	} else {
 
-		shouldTryUpdate = checkAndCondition(fields, payload)
+		shouldTryUpdate = checkAndCondition(fields, payload, filters)
 	}
 
 	return shouldTryUpdate
@@ -141,7 +138,7 @@ func checkOrCondition(conditionPairs []map[string]interface{}, values map[string
 
 		if _, ok := curField["key"].(string); !ok {
 
-			fmt.Println("ISSUE with this curFiled", curField)
+			logger.Write("INFO", "update parser, checkOrCondition is expecting curField['key'] to be string Curfield is : ", curField, " The passed type is ", reflect.TypeOf(curField["key"]).String())
 			continue
 		}
 
@@ -168,39 +165,71 @@ func checkOrCondition(conditionPairs []map[string]interface{}, values map[string
 }
 
 
-func checkAndCondition(conditionPairs []map[string]interface{}, values map[string]interface{}) bool {
+func checkAndCondition(conditionPairs []map[string]interface{}, values map[string]interface{}, filters string) bool {
 
 	andPasses := true
 
+	var Parser Pr
+
+	if len(filters) > 0 {
+
+		Parser.SetString(filters)
+		Parser.Parse()
+	}
+
+
 	for _, curField := range conditionPairs {
 
-		if _, ok := curField["key"].(string); !ok {
+		//if _, ok := curField["key"].(string); !ok {
+		//
+		//	logger.Write("INFO", "update parser, checkAndCondition is expecting curField['key'] to be string Curfield is : ", curField, " The passed type is ", reflect.TypeOf(curField["key"]).String())
+		//	continue
+		//}
 
-			fmt.Println("ISSUE with this curFiled", curField)
-			continue
-		}
+		tmpPass := true
+		tmpPass2 := true
+
+
+		if _, ok := values[ curField["key"].(string) ].(string); !ok { tmpPass = false }
+		if _, ok := values[ curField["key"].(string) ].([]interface{}); !ok { tmpPass2 = false }
+
 
 		// If we dont get it, then surely not passing
-		if _, ok := values[ curField["key"].(string) ].(string); !ok {
+		if tmpPass == false && tmpPass2 == false {
 
+			logger.Write("ERROR", "Type of curfield is not string and array of interface, it is ", reflect.TypeOf( values[ curField["key"].(string) ]), "Key is", curField["key"].(string))
 			andPasses = false
 		} else {
 
 			// It passes, but if this is an equals then we need to check and
 			// fail them if equals does not pass, otherwise we're considering true anyways
 
-			if curField["isEqualCheck"].(bool) {
-
-
-				fmt.Println( "Val1 -->", values[ curField["key"].(string) ].(string), "'")
-				fmt.Println( "Val2 -->", curField["value"].(string), "'")
+			// This is a equals check field
+			if curField["isEqualCheck"].(bool) && tmpPass == true {
 
 				if values[ curField["key"].(string) ].(string) != curField["value"].(string) {
 
 					andPasses = false
 				} else {
 
-					fmt.Println("Both are equal")
+					logger.Write("INFO", "Update parser, checkAndCondition both are equal key and val", curField["value"].(string))
+				}
+			}
+
+			// This is a contains type field -- Contains type field will need to be pulled from the filter...
+			// Parserbaba ki jai ho! Explicit assumption is made, if its contains it will come from URL
+			if curField["isEqualCheck"].(bool) == false {
+
+				logger.Write("INFO", "update_parser, checkAndCondition, Checking the URL for contains ", curField["key"].(string))
+
+				// If key does not exit make this false
+				if doesKeyExist := Parser.CheckKeyExists( curField["key"].(string) ); doesKeyExist == false {
+
+					logger.Write("INFO", "update_parser, checkAndCondition, The key does not exist in the URL : ", curField["key"].(string))
+					andPasses = false
+				} else {
+
+					logger.Write("INFO", "update_parser, checkAndCondition, The key exists in the URL : ", curField["key"].(string), " Good..")
 				}
 			}
 		}
@@ -224,16 +253,38 @@ func checkGetUpdateKeys(updateKeys string, payload map[string]interface{}) (map[
 
 			if kk == keyPairs[0] {
 
-				// Not supporting stuff other than string coming in
-				if _, ok := vv.(string); !ok {
+				_, isStr := vv.(string);
+				_, isArr := vv.([]interface{})
 
-					fmt.Println("Continuing, Type of vv got is", reflect.TypeOf(vv), " -- vv value :", vv)
+				// Not supporting stuff other than string coming in
+				if !isStr && !isArr {
+
+					logger.Write("INFO", "update_parser, checkGetUpdateKeys Continuing, Type of vv is not string or []interface it is is", reflect.TypeOf(vv), " -- vv value :", vv)
 					continue
 				}
 
-				fmt.Println("MatchFound is true", reflect.TypeOf(vv), " -- vv value :", vv)
-				matchFound = true;
-				retKeyVal[ keyPairs[1] ] = []string{ vv.(string) }
+				if isStr {
+
+					logger.Write("INFO", "update_parser, checkGetUpdateKeys MatchFound is true", reflect.TypeOf(vv), " -- vv value :", vv)
+					matchFound = true;
+					retKeyVal[ keyPairs[1] ] = []string{ vv.(string) }
+				}
+
+				if isArr {
+
+					logger.Write("INFO", "update_parser, checkGetUpdateKeys MatchFound Arr is true", reflect.TypeOf(vv), " -- vv value :", vv)
+
+					if len(vv.([]interface{})) > 0 {
+
+						if _, ok := vv.([]interface{})[0].(string); ok {
+
+							matchFound = true;
+							retKeyVal[ keyPairs[1] ] = []string{ vv.([]interface{})[0].(string) }
+						}
+					}
+				}
+
+
 			}
 		}
 
@@ -253,13 +304,14 @@ func checkConditionsAndMassage(condition string) (map[string]interface{}, bool) 
 
 	if ! strings.Contains(condition, "~") {
 
-		fmt.Println("Condition, " + condition + " does not contain ~ - Failing")
+		logger.Write("ERROR", "update_parser, checkConditionsAndMassage Condition, " + condition + " does not contain ~ - Failing")
+
 		return map[string]interface{}{}, false
 	}
 
 	if !strings.Contains(condition, "=") && !strings.Contains(condition, "^") {
 
-		fmt.Println("Condition, values " + condition + " does not contain = or ^ - Failing")
+		logger.Write("ERROR", "update_parser, checkConditionsAndMassage Condition, values " + condition + " does not contain = or ^ - Failing")
 		return map[string]interface{}{}, false
 	}
 
@@ -296,7 +348,7 @@ func checkMassageFields(conditions string) (map[string]interface{}, bool) {
 
 	if !hasCaret && !hasEqual {
 
-		fmt.Println("ERROR, Field is invalid" + conditions)
+		logger.Write("ERROR", "update_parser, checkMassageFields Field is invalid" + conditions)
 		return map[string]interface{}{}, false
 	}
 
@@ -335,7 +387,7 @@ func isOrConditionCheck(condition string) bool {
 		return true
 	} else {
 
-		fmt.Println("ERROR, not &, Not |")
+		logger.Write("ERROR", "update_parser, isOrConditionCheck not &, Not |")
 	}
 
 	return false

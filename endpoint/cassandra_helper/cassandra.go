@@ -8,9 +8,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"reflect"
 	"github.com/dminGod/D30-HectorDA/logger"
-	"fmt"
-	"github.com/dminGod/D30-HectorDA/model"
-	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
 	"github.com/gocql/gocql"
 )
 
@@ -74,7 +71,7 @@ func MakeCassandraInQuery(prestoResult []map[string]interface{}, metaInput map[s
 	return retStr
 }
 
-func InsertQueryBuild(metaInput map[string]interface{}) []string {
+func InsertQueryBuild(metaInput map[string]interface{}) ([]string, bool) {
 
 	name := ""
 	value := ""
@@ -89,8 +86,36 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 	database := metaInput["database"].(string)
 	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
 
+		// Check if the type is expected
+		// If its not set of text then its going to be string
+		if v != "set<text>" {
+
+			// Its not a string, get out...
+			if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string); !ok {
+
+				logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+					", request sent is invalid, skipping field.")
+
+				return []string{}, false
+			}
+		} else {
+			// If set<text> then it should be an array else fail
+			if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].([]interface{}); !ok {
+
+				logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+					", request sent is invalid, skipping field.")
+
+				return []string{}, false
+			}
+		}
+
+
+
 		name += (k + ",")
 		value += " "
+
+
+
 
 		switch dataType := v.(string); v {
 		case "uuid":
@@ -131,7 +156,12 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 			value += endpoint_common.ReturnMap((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 
 		case "int":
-			value += endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+			tmpVal := endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+			if tmpVal == "" || tmpVal == "''" { tmpVal = "null" }
+
+			value += tmpVal
 
 		default:
 			_ = dataType
@@ -147,10 +177,11 @@ func InsertQueryBuild(metaInput map[string]interface{}) []string {
 
 	queries := append(minor_queries, main_query)
 
-	return queries
+	// Manually returning true for isOk
+	return queries, true
 }
 
-func UpdateQueryBuilder(metaInput map[string]interface{}) []string {
+func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool) {
 
 	name := ""
 	value := ""
@@ -165,7 +196,34 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string {
 
 	database := metaInput["database"].(string)
 
-	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
+		for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
+
+
+			// Check if the type is expected
+			// If its not set of text then its going to be string
+			if v != "set<text>" {
+
+				// Its not a string, get out...
+				if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string); !ok {
+
+					logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+						", request sent is invalid, skipping field.")
+
+					return []string{}, false
+				}
+			} else {
+				// If set<text> then it should be an array else fail
+				if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].([]interface{}); !ok {
+
+					logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+						", request sent is invalid, skipping field.")
+
+					return []string{}, false
+				}
+			}
+
+
+
 
 
 		switch dataType := v.(string); v {
@@ -221,7 +279,12 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string {
 		case "int":
 			name += (", " + k + " = ")
 			value += " "
-			name += endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+			tmpVal := endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
+
+			if tmpVal == "" || tmpVal == "''" { tmpVal = "null" }
+
+			name += tmpVal
 //			value += endpoint_common.ReturnInt((metaInput["field_keyvalue"].(map[string]interface{}))[k])
 
 		default:
@@ -261,8 +324,11 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) []string {
 	queries := append(minor_queries, main_query)
 
 
-	fmt.Println("This is the update queries", queries)
-	return queries
+	logger.Write("INFO", "Cassandra UpdateQueriesBuilder array of queries : ", queries)
+
+
+	// Manually returning true for the isOk
+	return queries, true
 }
 
 func SelectQueryBuild(metaInput map[string]interface{}) string {
@@ -270,9 +336,6 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 	table := metaInput["table"].(string)
 	database := metaInput["database"].(string)
 	whereCondition := "AND"
-
-//	fmt.Println( " Metadata related to Get", config.Metadata_get)
-//	fmt.Println( " Metadata related to Insert", config.Metadata_insert)
 
 	myFields := utils.FindMap("table", table, config.Metadata_insert())
 
@@ -303,7 +366,7 @@ func SelectQueryBuild(metaInput map[string]interface{}) string {
 		if int(metaInput["limit"].(int32)) > 0 {
 			limit = int(metaInput["limit"].(int32))
 		}
-//		fmt.Println(query)
+
 		numberOfParams := len(fields)
 
 
@@ -531,47 +594,6 @@ func getPKForUpdate(table string, whereCondition map[string]string){
 
 
 }
-
-
-// Pass databasename.tablename here
-func getCountForUpdate(db_table string, whereConditions map[string]string) int {
-
-	query := []string{ "SELECT COUNT(*) AS count FROM " + db_table + " WHERE " }
-	var where string
-
-	for k, v := range whereConditions {
-
-		where += " " + k + " = " + v + " AND"
-	}
-
-	where = strings.Trim(where, "AND")
-
-	dbAbs := model.DBAbstract{ Query: query }
-
-	cassandra.Select(&dbAbs)
-
-	fmt.Println("Result from the query is : ", dbAbs)
-
-	return 42
-}
-
-
-func TestSelectQuery(){
-
-	dbAbs := model.DBAbstract{ Query: []string{ "select * from all_trade.stock_adjustment limit 1"},
-		QueryType: "SELECT",
-	}
-
-//	cassandra.Handle( &dbAbs )
-
-	fmt.Println("Result from the query", dbAbs)
-}
-
-
-
-
-
-
 
 
 func SelectQueryCassandraByID(metaInput map[string]interface{}, pk_id string) string {

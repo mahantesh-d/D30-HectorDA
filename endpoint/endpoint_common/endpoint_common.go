@@ -5,15 +5,48 @@ import (
 	"strings"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"regexp"
+	"strconv"
 )
 
 func ReturnString(input interface{}) string {
+
+	if _, ok := input.(string); !ok {
+
+		logger.Write("ERROR", "There passed param is not string returning blank. Possible incorrect value sent in request. Got value ", input, " expecting string.")
+		return ""
+	}
+
 
 	return "'" + strings.Replace(input.(string), "'", "''", -1) + "'"
 
 }
 
+func IsValidInt(input string) bool {
+
+	var err error
+	var retVal bool
+
+	if _, err = strconv.Atoi(input); err != nil {
+
+		retVal = false
+	} else {
+
+		retVal =  true
+	}
+
+	return retVal
+}
+
+
+
 func ReturnInt(input interface{}) string {
+
+	if _, ok := input.(string); !ok {
+
+		logger.Write("ERROR", "There passed param is not string returning blank. Possible incorrect value sent in request. Got value ", input, " expecting string.")
+		return ""
+	}
+
 
 	return strings.Replace(input.(string), "'", "\\'", -1)
 
@@ -21,9 +54,20 @@ func ReturnInt(input interface{}) string {
 
 func ReturnSetText(input interface{}) string {
 
+
 	value := "{"
 
-	inputs := input.([]interface{})
+	var inputs []interface{}
+
+	if _, ok := input.([]interface{}); !ok {
+
+		logger.Write("ERROR", "There passed param is not []string returning blank. Possible incorrect value sent in request. Got value ", input, " expecting string.")
+		inputs = []interface{}{}
+	} else {
+
+		inputs = input.([]interface{})
+	}
+
 
 	for _, v := range inputs {
 		switch vType := v.(type) {
@@ -46,7 +90,16 @@ func ReturnSetTextPG(input interface{}) string {
 
 	value := "ARRAY["
 
-	inputs := input.([]interface{})
+	var inputs []interface{}
+
+	if _, ok := input.([]interface{}); !ok {
+
+		logger.Write("ERROR", "There passed param is not []string returning blank. Possible incorrect value sent in request. Got value ", input, " expecting string.")
+		inputs = []interface{}{}
+	} else {
+
+		inputs = input.([]interface{})
+	}
 
 	for _, v := range inputs {
 		switch vType := v.(type) {
@@ -67,6 +120,13 @@ func ReturnSetTextPG(input interface{}) string {
 
 
 func ReturnMap(input interface{}) string {
+
+	if _, ok := input.(map[string]interface{}); !ok {
+
+
+		logger.Write("ERROR", "There passed param is not map[string]interface{} returning blank. Possible incorrect value sent in request. Got value ", input, " expecting string.")
+		return ""
+	}
 
 	value := utils.EncodeJSON(input.(map[string]interface{}))
 
@@ -91,11 +151,8 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 			notionalOperator = input["notional_operator"].(string)
 		} else {
 
-
 			logger.Write("ERROR", "Field " + input["name"].(string) + " marked as notional but no operator specified.")
 		}
-
-
 	}
 
 
@@ -129,7 +186,6 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 
 				relationalOperator = "CONTAINS"
 			}
-
 		}
 	}
 
@@ -183,7 +239,6 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 	endRelationalOperator := ""
 	isNotionalField := false
 	notionalOperator := ""
-
 
 	// Check if this is a notional field, if so set the flag
 	if _, ok := input["is_notional_field"].(string); ok {

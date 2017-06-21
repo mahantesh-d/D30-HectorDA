@@ -140,7 +140,7 @@ func GetFieldByName(key string, attributes map[string]interface{}) map[string]in
 	return retVal
 }
 
-func matchFieldTag(tagsArr []interface{}, match string) bool {
+func MatchFieldTag(tagsArr []interface{}, match string) bool {
 
 	retVal := false
 
@@ -186,7 +186,7 @@ func FindMapSelect(key string, table_name interface{}, json_records map[string]i
 				if _, ok := curField["tags"].([]interface{}); ok {
 
 
-					if matchFieldTag(curField["tags"].([]interface{}), "internal_field") == false {
+					if MatchFieldTag(curField["tags"].([]interface{}), "internal_field") == false {
 
 						sendFields[  kk  ] = curField
 					}
@@ -269,7 +269,6 @@ func ParseSelectFields(passedVal string) []string {
 
 	retStrs := strings.Split(passedVal, ",")
 
-	fmt.Println("parse selecfeilds",retStrs)
 	if len(retStrs) == 0 {
 
 		return []string{}
@@ -513,6 +512,8 @@ func Exit(code int) {
 }
 
 func ExecuteCommand(command string, args ...string) string {
+
+
 	out, _ := exec.Command(command, args...).Output()
 	output := string(out)
 	output = strings.Trim(output, "\r")
@@ -579,7 +580,7 @@ func IsDateValid(date string)  bool {
 
 	strings.Replace(date,"","",-1)
 
-	dateFormat := "(19|20)[0-9]{1}[0-9]{1}[0-1]{1}[0-9]{1}[0-3]{1}[0-9]{1}[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}[0-5]{1}[0-9]{1}"
+	dateFormat := "(19|20|21|22)[0-9]{1}[0-9]{1}[0-1]{1}[0-9]{1}[0-3]{1}[0-9]{1}[0-2]{1}[0-9]{1}[0-5]{1}[0-9]{1}[0-5]{1}[0-9]{1}"
 
 	ok,err := regexp.MatchString(dateFormat,date)
 

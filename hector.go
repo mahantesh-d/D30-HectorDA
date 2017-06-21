@@ -4,7 +4,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/servers"
 	"github.com/dminGod/D30-HectorDA/utils"
-	"fmt"
 	"github.com/dminGod/D30-HectorDA/logger"
 )
 
@@ -19,7 +18,6 @@ func main() {
 
 	logger.Write("INFO", "Hector initialize called, Version : "+ config.Conf.Hector.Version)
 
-//	alltrade.ProductMasterGet(model.RequestAbstract{})
 
 	// Start the servers based on the configuration
 	conf := config.Get()
@@ -28,9 +26,7 @@ func main() {
 
 		i++
 
-		fmt.Println("Calling server start for ", server)
+		logger.Write("INFO", "Calling server start for", server)
 		servers.Server(server)
 	}
-
-
 }

@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"strconv"
-	"fmt"
 	"encoding/json"
+	"time"
 )
 
 // GRPCServer registers
@@ -28,9 +28,13 @@ func (g *GRPCServer) AtomicAdd(ctx context.Context, req *pb.Request) (*pb.Respon
 func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, error) {
 
 	resp := new(pb.Response)
+
 	if validGRPCRequest(req, resp) {
+
 		// map the data to the abstract request
-		RequestAbstract = mapGRPCAbstractRequest(req)
+		// Changed this from a globabl variable to a local one so its fresh
+		// across requests.
+		RequestAbstract := mapGRPCAbstractRequest(req)
 
 		// routing
 		respAbs, _ := HandleRoutes(RequestAbstract)
@@ -38,6 +42,7 @@ func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, err
 		// map the result to abstract response
 		resp = mapAbstractResponse(respAbs, req)
 	}
+	
 	return resp, nil
 }
 
@@ -92,18 +97,33 @@ func GRPCStartServer() {
 		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+ Conf.Hector.Port)
 	}
 
+	// Refresh the config in case there are changes from ETCD
+	go func(){
+
+		for {
+			time.Sleep(10 * time.Second)
+			Conf = config.Get()
+		}
+	}()
+
+
 	grpcServer := grpc.NewServer()
 	pb.RegisterD21Server(grpcServer, new(GRPCServer))
 	grpcServer.Serve(listener)
 }
 
+
+
+
 func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 	var reqAbs model.RequestAbstract
+
 	reqAbs.Application = req.GetApplicationName()
 	reqAbs.APIVersion = req.GetApplicationVersion()
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.ID = req.GetID()
+
 
 	// Set the default limit
 	defaultLimit, err := strconv.Atoi(Conf.Hector.DefaultRecordsLimit)
@@ -120,6 +140,7 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 	reqAbs.Offset = 0
 
 	reqAbs.HTTPRequestType = req.GetMethod().String()
+
 	if reqAbs.HTTPRequestType == "POST" || reqAbs.HTTPRequestType == "PUT" {
 
 		reqAbs.Payload = utils.DecodeJSON(req.GetApplicationPayload())
@@ -127,6 +148,7 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 		reqAbs.ComplexFilters = req.GetFilter()
 
 		logger.Write("INFO", "GRPC, got filters " + req.GetFilter() )
+
 	} else if reqAbs.HTTPRequestType == "GET" {
 
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
@@ -147,21 +169,19 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 			}
 
 
-			fmt.Println("Got row limit as ", req.GetRowLimit() );
 		}
 
 		if req.GetOffset() > 0 {
 			reqAbs.Offset = req.GetOffset()
 		}
-
-
-
-
-		fmt.Println("Row limit is ", req.GetRowLimit())
 	}
+
+	logger.Write("INFO", "This is the reqAbs object", reqAbs)
 
 	return reqAbs
 }
+
+
 
 func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb.Response {
 
@@ -180,9 +200,19 @@ func mapAbstractResponse(respAbs model.ResponseAbstract, reqAbs *pb.Request) *pb
 	return resp
 }
 
+/*
+	Maps the gRPC request with the internal RequestAbstract
+
+	If the request type is POST or PUT then checks if the data sent is valid
+	or not if the JSON is not valid, update the response for a fail response and
+	return false
+
+*/
+
 func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 
 	var reqAbs model.RequestAbstract
+
 	reqAbs.Application = req.GetApplicationName()
 	reqAbs.Action = req.GetApplicationMethod()
 	reqAbs.HTTPRequestType = req.GetMethod().String()
@@ -192,22 +222,11 @@ func validGRPCRequest(req *pb.Request, resp *pb.Response) bool {
 	// check if the route exists
 	logger.Write("INFO","Route : " + route)
 
-	/*
-	if !RouteExists(route) {
-		resp.StatusCode = 404
-		resp.Status = "fail"
-		resp.StatusCodeMessage = "NOT_FOUND"
-		resp.Message = "The given route was not found"
-		resp.Data = "{}"
-		resp.ID = req.GetID()
-		resp.Count = 0
-		return false
-	} */
-
 	// post validations
-	if req.GetMethod().String() == "POST" {
+	if req.GetMethod().String() == "POST" || req.GetMethod().String() == "PUT" {
 
 		if !utils.IsJSON(req.GetApplicationPayload()) {
+
 			resp.StatusCode = 400
 			resp.Status = "fail"
 			resp.StatusCodeMessage = "INVALID_PARAMETERS"

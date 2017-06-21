@@ -8,22 +8,33 @@ import (
 	"github.com/gocql/gocql"
 	"strings"
 	"time"
+	"fmt"
 )
 
 var cassandraChan chan *gocql.Session
 var cassandraSession *gocql.Session
 var cassandraHost []string
 
+var cassandraUID string
+var cassandraPass string
+var Conf config.Config
+
+
 func init() {
 	cassandraChan = make(chan *gocql.Session, 5)
+
 }
 
 // Handle acts as an entry point to handle different operations on Cassandra
 func Handle(dbAbstract *model.DBAbstract) {
 
+
 	Conf := config.Get()
 
 	cassandraHost = Conf.Cassandra.Host
+	cassandraUID = Conf.Cassandra.Username
+	cassandraPass = Conf.Cassandra.Password
+
 
 	if dbAbstract.QueryType == "INSERT" {
 
@@ -43,6 +54,14 @@ func Handle(dbAbstract *model.DBAbstract) {
 
 func getSession() (*gocql.Session, error) {
 	logger.Write("INFO", "Initializing Cassandra Session")
+
+	Conf := config.Get()
+
+	cassandraHost = Conf.Cassandra.Host
+	cassandraUID = Conf.Cassandra.Username
+	cassandraPass = Conf.Cassandra.Password
+
+
 	select {
 
 	case cassandraSession := <-cassandraChan:
@@ -55,6 +74,14 @@ func getSession() (*gocql.Session, error) {
 		cluster.Keyspace = "system"
 		cluster.ProtoVersion = 3
 		cluster.Timeout = 30 * time.Second
+
+		fmt.Println("The username is ", cassandraUID, " cassandra password", cassandraPass)
+
+		cluster.Authenticator = gocql.PasswordAuthenticator{
+			Username: cassandraUID,
+			Password: cassandraPass,
+			}
+
 		session, err := cluster.CreateSession()
 
 		if err != nil {
@@ -99,10 +126,7 @@ func Insert(dbAbstract *model.DBAbstract) {
 
 				success_count += 1
 			}
-
 		}
-
-
 	}
 
 	if len(error_messages) > 0 {
@@ -126,7 +150,6 @@ func Insert(dbAbstract *model.DBAbstract) {
 	dbAbstract.Count = 0
 
 	go queueSession(session)
-
 }
 
 

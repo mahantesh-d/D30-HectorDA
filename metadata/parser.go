@@ -5,13 +5,13 @@ import
 "strings"
 "math/rand"
 "strconv"
-"fmt"
-"os"
+	"os"
 "regexp"
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/config"
 
+	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 type Pr struct {
@@ -97,7 +97,6 @@ func (p *Pr) LevelDictAdd(level int, str string) {
 // This is init for now
 func (p *Pr) SetString(s string) {
 
-	//fmt.Println("Setting string....")
 	p.LevelCounter = make(map[int]int)
 	p.LevelIdTracker = make(map[int]string)
 	p.LevelDict = make(map[int][]string)
@@ -110,7 +109,6 @@ func (p *Pr) SetString(s string) {
 
 	p.ParsedString =  s
 
-	fmt.Println("Parsed string is : ", p.ParsedString)
 }
 
 // Start of a new level and element
@@ -176,8 +174,6 @@ func (p *Pr) IncreaseLevel() {
 
 	p.Elements = append(p.Elements, e)
 
-	//	fmt.Println("I am on level", p.CurLevel, "Sublevel ", p.LevelCounter[ p.CurLevel ], "My ID is : ", p.PrevParentHash[ p.CurLevel  ],"Parent ID is :", p.LevelIdTracker[ p.CurLevel - 1 ])
-
 	p.LastToLastLevel = p.LastLevel
 	p.LastLevel = p.CurLevel
 
@@ -204,7 +200,6 @@ func (p *Pr) SetCondition(condition string) {
 
 	p.CurrentCondition = condition
 
-	//	fmt.Println("setting condition for level : ", p.PrevParentHash[ p.CurLevel  ], " Condition : ", condition)
 }
 
 func (p *Pr) updateValueByUID( key string, value string ) {
@@ -229,6 +224,26 @@ func (p *Pr) updateValueByUID( key string, value string ) {
 	}
 }
 
+func (p *Pr) CheckKeyExists(key string) (bool) {
+
+	retCond := false
+//	retVal := ""
+
+	for _, v := range p.Elements {
+
+		logger.Write("INFO", "Parser, CheckKeyExists for Update using POST. parsed Key " + v.Key + " checking key is " + key)
+
+		if v.ElementType == "leaf" && v.Key == key {
+
+			retCond = true
+//			retVal = v.Value
+		}
+	}
+
+	return retCond
+}
+
+
 func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 	curLevel := 0
@@ -243,17 +258,19 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 	for _, v := range p.Elements {
 
-		//fmt.Println("IncNumber", v.IncNumber, "Level", v.Level)
 
 		Condition := ""
 
+		if v.ElementType == "bad" {
 
+			isOk = false
+			break
+		}
 
 		if len(LoopPrevCondition) > 0 {  Condition = LoopPrevCondition }
 		if len(v.Condition) > 0 {  Condition = v.Condition }
 		if len(v.ParentCondition) > 0 {  Condition = v.ParentCondition }
 
-		//fmt.Println("My Condition", v.Condition, "Parent C", v.ParentCondition, "Passed condition", Condition)
 
 		if v.ElementType == "node" {
 			if curLevel < v.Level {
@@ -270,7 +287,7 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 				LoopPrevCondition = Condition
 
-				//fmt.Println(cond , "(")
+
 				MyString +=   "("
 
 			} else if curLevel > v.Level {
@@ -279,7 +296,6 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 
 					MyString += ")"
-					//fmt.Println(")")
 				}
 
 				cond := ""
@@ -289,11 +305,9 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 				MyString += ")" + cond
 
-				//fmt.Println("Coming here )" , cond)
 
 			} else if curLevel == v.Level {
 
-				//fmt.Println("Coming here ==", Condition, MyString)
 
 				cond := ""
 
@@ -303,13 +317,11 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 				MyString +=  "" + cond
 
-				//fmt.Println("Coming here ==", Condition, MyString)
 			}
 
 
 		} else {
 
-			fmt.Println("Key", v.Key, "Value", v.Value, "Condition", v.Condition)
 
 			cond := ""
 			if Condition == "&" { cond = "AND" }
@@ -335,7 +347,6 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 			} else {
 
-				fmt.Println("Field not found, skipping ------------", v.Key )
 				isOk = false
 			}
 		}
@@ -352,7 +363,8 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 		}
 	}
 
-	fmt.Println("MyString-------------", MyString)
+
+	logger.Write("INFO", "Parser, MakeString return statement", MyString)
 
 	return MyString, isOk
 }
@@ -391,9 +403,7 @@ func AddElement(p *Pr, kv string) {
 		}
 	}
 
-	fmt.Println("For Add " + kv)
-
-	if len(keyVal) > 1 {
+	if len(keyVal) > 1 && len(strings.Trim(keyVal[1], " ")) > 0 {
 
 		p.IncNumber += 1
 		CurrentId := makeAnID()
@@ -420,6 +430,24 @@ func AddElement(p *Pr, kv string) {
 			Operator: op,
 			ElementType: "leaf",
 		})
+	} else {
+
+
+		if len(keyVal) > 0 {
+
+			logger.Write("INFO", "Got bad element without value", keyVal[0])
+
+			p.Elements = append(p.Elements, Element{
+				ElementType: "bad",
+			})
+		} else {
+
+			logger.Write("INFO", "Got bad element without value")
+
+			p.Elements = append(p.Elements, Element{
+				ElementType: "bad",
+			})
+		}
 	}
 }
 
@@ -519,8 +547,6 @@ func (p *Pr) Parse() {
 				}
 			}
 
-
-			fmt.Println(tmpStr)
 			AddElement(p, tmpStr )
 			printWordByLevel( *p, tmpStr)
 
@@ -554,7 +580,7 @@ func (p *Pr) Validate() bool {
 
 	if countOpen != countClose {
 
-		fmt.Println("Open and close counts do not match")
+		logger.Write("ERROR", "Parser, Validate open and close counts do not match")
 		os.Exit(1)
 	}
 
@@ -577,7 +603,6 @@ func printByLevel(k Pr) {
 		showString += tabChar
 	}
 
-	//	fmt.Println(showString + k.GetCurr())
 }
 
 func printWordByLevel(k Pr, word string) {
@@ -590,7 +615,6 @@ func printWordByLevel(k Pr, word string) {
 		showString += tabChar
 	}
 
-	//	fmt.Println(showString + word)
 }
 
 

@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/metadata"
-	"fmt"
 )
 /**
 
@@ -31,15 +30,13 @@ func ReturnWhereComplex(query string, table_name string, dbType string) (string,
 
 	var Parser metadata.Pr
 
-	fmt.Println("Query is ", query)
-
 	Parser.SetString(query)
 
 	Parser.Parse()
 
 	retStr, isOk := Parser.MakeString(table_name, dbType)
 
-	fmt.Println("Parser response is : ", retStr)
+	logger.Write("INFO", "Parser: Query is:" + query + "Parser response is : " + retStr)
 
 	return retStr, isOk
 }
@@ -57,12 +54,49 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 //	database:= metaInput["database"].(string)
 	table:= metaInput["table"].(string)
 
+	logger.Write("INFO", "Trace UpdateQueryBuilder start....")
+
 	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
-		value +=""
+
+		value += ""
+
+		// Check if the type is expected
+		// If its not set of text then its going to be string
+		if v != "set<text>" {
+
+			// Its not a string, get out...
+			if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string); !ok {
+
+				logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+					", request sent is invalid, skipping field.")
+
+				return []string{}, false
+			}
+		} else {
+			// If set<text> then it should be an array else fail
+			if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].([]interface{}); !ok {
+
+				logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+					", request sent is invalid, skipping field.")
+
+				return []string{}, false
+			}
+		}
+
+
 		switch s:=v.(string); s{
 		case "int":
-			name += " " + k + " = " + ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)))) + ","
-			// value1 = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			if endpoint_common.IsValidInt( (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string) ) {
+
+				passVal := ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+
+				if passVal == "" { passVal = "null" }
+				name += " " + k + " = " + passVal + ","
+				// value1 = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			} else {
+
+
+			}
 
 		case "text":
 			name += " " + k + " = " + ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)))) + ","
@@ -109,8 +143,6 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 
 		if isOk {
 
-			fmt.Println( "Length of tmpWhere ", len(tmpWhere), tmpWhere)
-
 			where += " WHERE " + tmpWhere
 		} else {
 
@@ -147,11 +179,10 @@ func DeleteQueryBuilder(metaInput map[string]interface{})  string {
 		 query+=";"
 	   }
          query=strings.Trim(query," ")
-	 //fmt.Println(query)
 	return query
 }
 
-func InsertQueryBuild(metaInput map[string]interface{})  []string {
+func InsertQueryBuild(metaInput map[string]interface{})  ([]string, bool) {
 
 	name := ""
 	value := ""
@@ -160,15 +191,53 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 	//database := metaInput["database"].(string)
 	for k, v := range metaInput["field_keymeta"].(map[string]interface{}) {
 
-		name += (k + ",")
-		value += " "
-		switch s:=v.(string); s{
+		// Check if the type is expected
+		// If its not set of text then its going to be string
+		if v != "set<text>" {
+
+			// Its not a string, get out...
+			if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string); !ok {
+
+				logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+					", request sent is invalid, skipping field.")
+
+				return []string{}, false
+			}
+
+		} else {
+
+			// If set<text> then it should be an array else fail
+			if _, ok := (metaInput["field_keyvalue"].(map[string]interface{}))[k].([]interface{}); !ok {
+
+				logger.Write("ERROR", "There was an error with the datatype of the field " + k +
+					", request sent is invalid, skipping field.")
+
+				return []string{}, false
+			}
+		}
+
+
+		valueBlank := false
+
+		if (v != "int" || ( v == "int" && endpoint_common.IsValidInt( (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string) ) ) ) {
+
+			name += (k + ",")
+			value += " "
+		}
+
+		switch s := v.(string); s{
 
 		case "int":
-			value +=((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			if endpoint_common.IsValidInt( (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string) ) {
+				value += ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			} else {
+
+				valueBlank = true
+			}
+
 
 		case "text":
-			value +=((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
+			value += ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
 
 		case "timestamp":
 			if len((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string)) > 0 {
@@ -182,7 +251,11 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 		// value = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
 
 		}
-		value += ","
+
+		if valueBlank == false {
+
+			value += ","
+		}
 	}
 	name = strings.Trim(name, ",")
 	value = strings.Trim(value, ",")
@@ -190,8 +263,9 @@ func InsertQueryBuild(metaInput map[string]interface{})  []string {
 	main_query := "INSERT INTO " + metaInput["table"].(string) + " ( " + name + ") VALUES (" + value + ")"
 
 	queries := append(minor_queries, main_query)
-        //fmt.Print(queries)
-	return queries
+
+	// Return isOk manually
+	return queries, true
 
 }
 
@@ -256,10 +330,11 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 		  query += ""
 //	  }
 
+
 	query = strings.Trim(query, whereCondition)
 	query += " OFFSET " + metaInput["offset"].(string) + " LIMIT " + metaInput["limit"].(string) + ";"
 
-	//fmt.Println("Postgres query on limit: ", query)
+
 	return query, isOk
 }
 

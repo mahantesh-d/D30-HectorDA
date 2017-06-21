@@ -24,14 +24,11 @@ func init() {
 	//	log.SetOutput(f)
 	//}
 
-	fmt.Println("Log file name" + Conf.Hector.Log)
-
 	err := lg.Init(Conf.Hector.LogDirectory, // specify the directory to save the logfiles
-		200, // maximum logfiles allowed under the specified log directory
+		100, // maximum logfiles allowed under the specified log directory
 		20, // number of logfiles to delete when number of logfiles exceeds the configured limit
-		80, // maximum size of a logfile in MB
+		200, // maximum size of a logfile in MB
 		false) // whether logs with Trace level are written down
-
 
 	if err != nil {
 
@@ -44,13 +41,27 @@ func init() {
 //  Write("INFO", "Writing to the log file")
 // Output:
 //  2017/02/16 05:40:21  [ INFO ] Writing to the log file
-func Write(level string, message string) {
+func Write(level string, messageIn ...interface{}) {
 
 	levelInt := arrayIndex(AllowedLevels,level)
 
 	if levelInt < logLevelInt {
 
 		return
+	}
+
+	var message string
+
+
+	if _, ok := messageIn[0].(string); ok && len(messageIn) == 1 {
+
+		message = messageIn[0].(string)
+	} else {
+
+		for _, v := range messageIn {
+
+			message += fmt.Sprint(v) + " "
+		}
 	}
 
 	switch level {

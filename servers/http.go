@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"encoding/json"
+	"time"
 )
 
 // HttpServer is the http server handler
@@ -23,6 +24,18 @@ func HTTPStartServer() {
 	HttpServer = http.NewServeMux()
 	handleHTTPRoutes()
 	logger.Write("INFO", "Server Starting - host:port - " + Conf.Hector.Host + " : " + Conf.Hector.PortHTTP)
+
+
+	go func(){
+
+		for {
+			time.Sleep(time.Second * 5)
+			Conf = config.Get()
+		}
+	}()
+
+
+
 	err := http.ListenAndServe(Conf.Hector.Host+":"+Conf.Hector.PortHTTP, HttpServer)
 	if err != nil {
 		logger.Write("ERROR", "Server Starting Fail - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.PortHTTP)
@@ -30,6 +43,10 @@ func HTTPStartServer() {
 	} else {
 		logger.Write("INFO", "Server Running - host:port - "+Conf.Hector.Host+" : "+Conf.Hector.PortHTTP)
 	}
+
+
+
+
 }
 
 func handleHTTPRoutes() {
@@ -138,6 +155,8 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		reqAbs.Limit = 0
 		reqAbs.Token = ""
 
+		logger.Write("INFO", "Default Config I have on http is", Conf.Hector.DefaultRecordsLimit)
+
 		limitVal, _ := strconv.Atoi(Conf.Hector.DefaultRecordsLimit)
 
 		reqAbs.Limit = uint32(limitVal)
@@ -163,6 +182,8 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 			reqAbs.ComplexFilters = paramsURI[1]
 		}
 	}
+
+	logger.Write("INFO", "This is the reqAbs object", reqAbs)
 
 	return reqAbs
 }

@@ -8,7 +8,7 @@ import (
 )
 
 // Process acts as an entry point to mapping the different data operations to different database endpoints
-func Process(DBAbstract *model.DBAbstract) {
+func Process(DBAbstract *model.DBAbstract, SecondQuery *model.DBAbstract, processSecond bool) {
 
 	endpoint := DBAbstract.DBType
 
@@ -20,6 +20,6 @@ func Process(DBAbstract *model.DBAbstract) {
 		presto.Handle(DBAbstract)
 	} else if endpoint == "postgresxl"{
 
-		postgresxl.Handle(DBAbstract)
+		postgresxl.Handle(DBAbstract, SecondQuery, processSecond)
 	}
 }

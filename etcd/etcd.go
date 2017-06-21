@@ -11,9 +11,12 @@ import (
 )
 
 func Heartbeat() {
-	var Port = config.Get().Hector.Port
+
+
 	for {
-		time.Sleep(time.Duration(constant.EtcdMessageInterval) * time.Second)
+		time.Sleep( time.Duration(constant.EtcdMessageInterval) * time.Second )
+
+		var Port = config.Get().Hector.Port
 
 		cfg := client.Config{
 			Endpoints: constant.EtcdEndpoints,
@@ -30,7 +33,11 @@ func Heartbeat() {
 
 		kapi := client.NewKeysAPI(c)
 		logger.Write("VERBOSE", "Sending Hearbeat")
-		_, err = kapi.Set(context.Background(), constant.EtcdHeartbeatDirectory+"/"+utils.ExecuteCommand("hostname", "-i")+":"+Port, "alive", &client.SetOptions{TTL: time.Duration(constant.EtcdTTL) * time.Second})
+
+		_, err = kapi.Set(context.Background(),
+		"/damocles_cfg_type_cwf_cluster_01_" + utils.ExecuteCommand("hostname", "-i") + "_" + Port,
+			utils.ExecuteCommand("hostname", "-i") + ":" + Port, // Value
+			&client.SetOptions{ Dir: false, TTL: time.Duration(constant.EtcdTTL) * time.Second} )
 
 		if err != nil {
 			logger.Write("VERBOSE", "Could not send hearbeat : "+err.Error())
