@@ -16,7 +16,7 @@ var serverType string
 var Conf config.Config
 
 // RequestAbstract acts as a wrapper for the mapping the incoming request
-var RequestAbstract model.RequestAbstract
+// var RequestAbstract model.RequestAbstract
 
 // Server is used to start a TCP server
 func Server(serverTypePassed string) {

@@ -463,7 +463,7 @@ func (p *Pr) MoveBack() {
 
 func (p *Pr) GetCurr() string {
 
-	return string( p.ParsedString[ p.CurPos ] )
+	return string( []rune(p.ParsedString)[ p.CurPos ] )
 }
 
 func (p *Pr) GetPrev() string {
@@ -471,7 +471,7 @@ func (p *Pr) GetPrev() string {
 	retStr := ""
 
 	if p.CurPos > 0 {
-		retStr = string(p.ParsedString[ p.CurPos - 1 ])
+		retStr = string( []rune(p.ParsedString)[ p.CurPos - 1 ])
 	}
 
 	return retStr
@@ -481,9 +481,9 @@ func (p *Pr) GetNext() string {
 
 	retStr := ""
 
-	if (p.CurPos + 1) < len(p.ParsedString) {
+	if (p.CurPos + 1) < len([]rune(p.ParsedString)) {
 
-		retStr = string(p.ParsedString[ p.CurPos + 1 ])
+		retStr = string([]rune(p.ParsedString)[ p.CurPos + 1 ])
 	}
 
 	return  string(retStr)
@@ -570,7 +570,7 @@ func (p *Pr) matchesAndInsideText() bool {
 
 func (p *Pr) Size() int {
 
-	return len( p.ParsedString)
+	return len( []rune(p.ParsedString))
 }
 
 func (p *Pr) Validate() bool {
