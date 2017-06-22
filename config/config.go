@@ -18,29 +18,28 @@ type cassandra struct {
 
 // hector struct represents the configuration parameters for the hector server
 type hector struct {
-	ConnectionType string
-	Version string
-	Host string
-	Port string
-	Log string
-	LogDirectory string
-	StartServersOfType []string
-	RequestMetrics bool
-	QueryMetrics bool
-	PortHTTP string
-	DefaultRecordsLimit string
+	ConnectionType       string
+	Version              string
+	Host                 string
+	Port                 string
+	Log                  string
+	LogDirectory         string
+	StartServersOfType   []string
+	RequestMetrics       bool
+	QueryMetrics         bool
+	PortHTTP             string
+	DefaultRecordsLimit  string
 	MaxLimitAllowedByAPI string
 	AsyncProcessRequests bool
-	ManipulateData	bool
+	ManipulateData       bool
 }
 
 type postgresxl struct {
-
 	Username string
 	Password string
 	Database string
-	Port string
-	Host string
+	Port     string
+	Host     string
 }
 
 // presto struct represents the configuration parameters for the Presto endpoint
@@ -50,11 +49,11 @@ type presto struct {
 
 // Config struct represents the overall configuration comprising of nested cassandra, presto and hector information
 type Config struct {
-	Cassandra cassandra
-	Presto    presto
-	Hector    hector
-	Postgresxl  postgresxl
-	loaded    bool
+	Cassandra  cassandra
+	Presto     presto
+	Hector     hector
+	Postgresxl postgresxl
+	loaded     bool
 }
 
 // Conf contains all the configuration information
@@ -81,18 +80,28 @@ func Init() {
 	Alltrade_get = readFile(constant.HectorConf + "/alltrade_unified.json")
 	Alltrade_insert = readFile(constant.HectorConf + "/alltrade_unified.json")
 
+	for _, err := range ValidateJSON(Alltrade_get) {
+
+		if err != "" {
+
+			fmt.Println(err)
+
+			 os.Exit(1)
+		}
+	}
+
 	metadata_get = decodeJSON(Alltrade_get)
 	metadata_insert = decodeJSON(Alltrade_insert)
 
 	fmt.Println("Size of Alltrade_get : ", len(Alltrade_get), "Size of Alltrade_insert : ", len(Alltrade_insert))
 
-	if(len(Alltrade_get) == 0 || len(Alltrade_insert) == 0 ){
+	if (len(Alltrade_get) == 0 || len(Alltrade_insert) == 0 ) {
 
 		fmt.Println("Could not read JSON files, exiting.")
 		os.Exit(1)
 	}
 
-	if(metadata_get == nil || metadata_insert == nil) {
+	if (metadata_get == nil || metadata_insert == nil) {
 
 		if metadata_get == nil {
 			fmt.Println("Something is broken with the JSON API GET File, please fix, can't parse it.")
@@ -102,7 +111,7 @@ func Init() {
 			fmt.Println("Something is broken with the JSON Insert File, please fix, can't parse it.")
 		}
 
-			os.Exit(1)
+		os.Exit(1)
 	}
 
 }
@@ -181,15 +190,12 @@ func localInit() {
 
 	useFolder := "/etc/hector"
 
-
-
 	if _, err := os.Stat(configuredFileLocation); err == nil {
 
 		// path/to/whatever exists
 		useFolder = constant.HectorConf
 
 	} else if _, err := os.Stat("/etc/hector/config.toml"); err == nil {
-
 
 		useFolder = "/etc/hector"
 	} else if _, err := os.Stat("conf-example/config.toml"); err == nil {
