@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 )
 
-
 func ValidateJSON(jsonFile string) []string {
 
 	var listOfError []string
@@ -99,6 +98,33 @@ func checkJsonFieldsAndTag(jsonMapData map[string]interface{}) []string {
 func checkMandatoryFields(metaData map[string]interface{}, Errors *[]string, wg *sync.WaitGroup) {
 
 	var ListOfError string
+
+	for k, _ := range metaData {
+
+		if k == "tags" && len(metaData["tags"].([]interface{})) > 0 {
+
+			if _, ok := metaData["tags"].([]interface{}); ok {
+
+				if metaData["tags"].([]interface{})[0] == "supports_delete" {
+
+					if _, ok := metaData["primary_keys"].(string); ok {
+
+						if metaData["primary_keys"].(string) == "" {
+
+							ListOfError = "The Primarykey field value not found in json file  the table name is " + metaData["table"].(string)
+
+						}
+
+					} else {
+
+						ListOfError = "The Primarykey field not found in json file the table name is " + metaData["table"].(string)
+					}
+				}
+			}
+
+		}
+
+	}
 
 	for fieldKey, fieldColumn := range metaData["fields"].(map[string]interface{}) {
 
