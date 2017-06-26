@@ -129,6 +129,7 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 
 	record_uuid := ""
 
+	// Loop over all the fields from JSON
 	for _, v := range input["fields"].(map[string]interface{}) {
 		f := v.(map[string]interface{})
 
@@ -262,11 +263,6 @@ func addData(outputKeyValues *map[string]interface{}, outputKeyMeta *map[string]
 		(*outputKeyMeta)[key] = dataType
 	}
 }
-
-
-
-
-
 
 
 // InterpretSelect is used to cross-reference application metadata with the request metadata

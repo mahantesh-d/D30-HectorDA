@@ -16,6 +16,7 @@ import (
 	"reflect"
 	"sync"
 	"github.com/dminGod/D30-HectorDA/endpoint/postgresql_helper"
+	"fmt"
 )
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
@@ -125,9 +126,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 				metaResult["databaseType"] = "cassandra_stratio"
 			}
 		}
-
-
-
 
 		query, isOk = queryhelper.PrepareSelectQuery(metaResult, req)
 		dbAbs.DBType = metaResult["databaseType"].(string)
@@ -344,11 +342,18 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		// Get the filters from the request
 		metaResult, ok := metadata.InterpretUpdateFilters(metaInputPost, req.Payload, req.Filters)
 
+		if ok == false {
+
+			dbAbs.Message = "There was an error processing your request"
+			dbAbs.Count = 0
+			dbAbs.Status = "fail"
+
+			return dbAbs
+		}
+
+
 		metaResult["ComplexQuery"] = req.ComplexFilters
 		metaResult["is_post_update"] = false
-
-		// Remove this later
-		logger.Write("INFO", "Allow from filter", ok, " Filter fields :", metaResult)
 
 		if _, ok := metaResult["updateCondition"].(map[string][]string); !ok {
 
@@ -366,9 +371,10 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 //			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
 
+				var query []string
 
 				dbAbs.QueryType = "UPDATE"
-				var query []string
+
 				query, isOk = queryhelper.PrepareUpdateQuery( metaResult )
 
 				if (len(query) > 0) {
@@ -380,7 +386,48 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 					isOk = false
 				}
 
-				if !isOk {
+
+			// Some increase value is sent here...
+			if _, ok := req.Payload["increase"].(map[string]interface{}); ok {
+
+				// For tracking failures on payload increase
+				isOk := true
+
+				// Increase functionality
+				for column_name, value := range req.Payload["increase"].(map[string]interface{}) {
+
+					// k string  -- v string
+					v := value.(string)
+					fmt.Println("Column Name : ", column_name, "Value : ", v)
+
+					// Check if increase can be run on this?
+					// Check if the column type is valid, it is of the type int and
+					// If any of the condition fails then drop the request.
+
+					// If all is okay for this particular field
+					// Create functionality in the postgres_xl helper file to generate the query for
+					// increasing or decreasing numbers
+					// Add these queries to the []queries
+
+				}
+
+				if isOk == false {
+
+					dbAbs.Message = "Request Failed: There was an error with the increase parameters."
+					dbAbs.Count = 0
+					dbAbs.Status = "fail"
+
+					return dbAbs
+				}
+
+
+			}
+
+
+
+
+
+			if !isOk {
 
 					dbAbs.Message = "Error: There was an error in the condition passed in the query"
 					dbAbs.Count = 0
@@ -454,6 +501,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		}
 
 	}
+
 
 
 	logger.Write("INFO", "dbAbs object before processing query", dbAbs)
