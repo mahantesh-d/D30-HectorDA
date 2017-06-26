@@ -7,6 +7,16 @@ import (
 	"github.com/dminGod/D30-HectorDA/config"
 	)
 
+
+var AllAPIs APIs
+
+func init() {
+
+	//AllAPIs.Populate()
+}
+
+
+
 // Interpret is used to cross-reference application metadata with the request metadata
 // and returns metadata specific to the request for further processing
 func Interpret(metadata map[string]interface{}, payload map[string]interface{}, filters string) map[string]interface{} {
@@ -243,8 +253,8 @@ func InterpretUpdateFilters( input map[string]interface{}, payload map[string]in
 }
 
 
-
-
+// KeyMeta is a map[string]sting hash Name to type
+// OutputKeyValues is a map[string]interface{} for Key Value of the records
 func addData(outputKeyValues *map[string]interface{}, outputKeyMeta *map[string]interface{}, key string, payload map[string]interface{}, value interface{}, dataType string) {
 
 	if utils.KeyInMap(value.(string), payload) {

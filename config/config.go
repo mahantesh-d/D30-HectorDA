@@ -116,6 +116,7 @@ func Init() {
 			os.Exit(1)
 	}
 
+
 }
 
 func Metadata_get() map[string]interface{} {
@@ -212,7 +213,9 @@ func etcdInit() error {
 	if err != nil {
 
 		fmt.Println("Error in parsing the toml file", err.Error())
+		return err
 	}
+
 
 	fmt.Println("The parsed config is", Conf)
 
@@ -241,6 +244,7 @@ func etcdInit() error {
 		}
 	}(etcd_conf_data)
 
+
 	Conf.loaded = true
 	return nil
 }
@@ -263,6 +267,7 @@ func localInit() {
 	}
 
 	viper.Unmarshal(&Conf)
+
 	Conf.loaded = true
 }
 

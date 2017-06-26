@@ -5,7 +5,6 @@ import (
 	"github.com/dminGod/D30-HectorDA/constant"
 	"github.com/dminGod/D30-HectorDA/etcd"
 	"github.com/dminGod/D30-HectorDA/logger"
-	"github.com/dminGod/D30-HectorDA/model"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"os"
 )

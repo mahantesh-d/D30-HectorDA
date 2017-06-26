@@ -8,7 +8,6 @@ import (
 	"github.com/gocql/gocql"
 	"strings"
 	"time"
-	"fmt"
 )
 
 var cassandraChan chan *gocql.Session
@@ -74,8 +73,6 @@ func getSession() (*gocql.Session, error) {
 		cluster.Keyspace = "system"
 		cluster.ProtoVersion = 3
 		cluster.Timeout = 30 * time.Second
-
-		fmt.Println("The username is ", cassandraUID, " cassandra password", cassandraPass)
 
 		cluster.Authenticator = gocql.PasswordAuthenticator{
 			Username: cassandraUID,

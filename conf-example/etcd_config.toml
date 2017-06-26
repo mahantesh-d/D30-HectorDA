@@ -1,0 +1,22 @@
+
+
+etcd_servers = ["http://10.138.32.279:2379"]
+
+# etcd_connection_url = "http://10.138.32.217:2379"
+
+etcd_connection_url = "http://10.138.32.279:2379/"
+
+etcd_key = "/damocles_cfg_type_sdf_cluster_01_node_DS4SCASA002G_config"
+
+etcd_heartbeat_key = "/damocles_cfg_type_sdf_cluster_01_active-servers"
+
+# In How many seconds should hector poll for configuration from ETCD
+etcd_fetch_config_interval = 10
+
+
+# If a heartbeat is not sent in these many seconds then this hector node on ETCD will be
+# considered dead and the requests will not go to this node.
+etcd_heartbeat_ttl = 10
+
+# This is the frequency of sending heartbeats in seconds to ETCD it should always be less than the etcd_heartbeat_ttl
+etcd_heartbeat_message_interval = 3

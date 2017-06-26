@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"encoding/json"
 	"time"
+	"strings"
 )
 
 // GRPCServer registers
@@ -42,7 +43,7 @@ func (g *GRPCServer) Do(ctx context.Context, req *pb.Request) (*pb.Response, err
 		// map the result to abstract response
 		resp = mapAbstractResponse(respAbs, req)
 	}
-	
+
 	return resp, nil
 }
 
@@ -149,11 +150,13 @@ func mapGRPCAbstractRequest(req *pb.Request) model.RequestAbstract {
 
 		logger.Write("INFO", "GRPC, got filters " + req.GetFilter() )
 
-	} else if reqAbs.HTTPRequestType == "GET" {
+	} else if reqAbs.HTTPRequestType == "GET"  || reqAbs.HTTPRequestType == "DELETE" {
 
 		reqAbs.Filters, reqAbs.IsOrCondition = utils.ParseFilter(req.GetFilter())
 		reqAbs.ComplexFilters = req.GetFilter()
 		reqAbs.TableFields = utils.ParseSelectFields(req.GetSelectField())
+		reqAbs.OrderBy = strings.Split(req.GetOrderBy(), ",")
+
 
 		if req.GetRowLimit() > 0 {
 

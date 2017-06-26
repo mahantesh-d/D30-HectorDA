@@ -7,6 +7,7 @@ import (
 
 	//"google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/model"
 )
 
 // PrepareInsertQuery is used to parse Application metadata
@@ -35,7 +36,8 @@ func PrepareInsertQuery(metaInput map[string]interface{}) ([]string, bool) {
 
 // PrepareSelectQuery is used to parse Application metadata
 // and return the corresponding SELECT query
-func PrepareSelectQuery(metaInput map[string]interface{}) ([]string, bool) {
+func PrepareSelectQuery(metaInput map[string]interface{}, req model.RequestAbstract) ([]string, bool) {
+
 	// get the endpoint
 	databaseType := metaInput["databaseType"].(string)
 
@@ -54,7 +56,7 @@ func PrepareSelectQuery(metaInput map[string]interface{}) ([]string, bool) {
 	} else if databaseType == "postgresxl"{
 
 		var tmpQry string
-		tmpQry, isOk = postgresql_helper.SelectQueryBuild(metaInput)
+		tmpQry, isOk = postgresql_helper.SelectQueryBuild(metaInput, req)
 
 		query = []string{tmpQry}
 	}
@@ -89,20 +91,3 @@ func PrepareUpdateQuery(metaInput map[string]interface{}) ([]string, bool)  {
 	return query, isOk
 }
 
-func PrepareDeleteQuery(metaInput map[string]interface{}) []string {
-	//databaseType := metaInput["databaseType"].(string)
-      databaseType:="postgresxl"
-	var query []string
-	if databaseType == "cassandra" {
-
-	} else if databaseType == "presto" {
-
-	} else if databaseType == "cassandra_stratio" {
-
-	} else if databaseType == "postgresxl" {
-
-		query = []string{postgresql_helper.DeleteQueryBuilder(metaInput)}
-	}
-
-	return query
-}

@@ -9,22 +9,8 @@ import (
 	"reflect"
 	"github.com/dminGod/D30-HectorDA/logger"
 	"github.com/dminGod/D30-HectorDA/metadata"
+	"github.com/dminGod/D30-HectorDA/model"
 )
-/**
-
-Schema:
-CREATE TABLE userinfo
-(
-    uid serial NOT NULL,
-    username character varying(100) NOT NULL,
-    departname character varying(500) NOT NULL,
-    Created date,
-    CONSTRAINT userinfo_pkey PRIMARY KEY (uid)
-)
-WITH (OIDS=FALSE);
-
-
- */
 
 func ReturnWhereComplex(query string, table_name string, dbType string) (string, bool) {
 
@@ -36,13 +22,17 @@ func ReturnWhereComplex(query string, table_name string, dbType string) (string,
 
 	retStr, isOk := Parser.MakeString(table_name, dbType)
 
+
+	retStr = strings.Replace(retStr, `~~`, `%`, -1)
+
 	logger.Write("INFO", "Parser: Query is:" + query + "Parser response is : " + retStr)
+
 
 	return retStr, isOk
 }
 
 
-func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
+func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool) {
 
 	var query string
 	query = ""
@@ -93,8 +83,9 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 				if passVal == "" { passVal = "null" }
 				name += " " + k + " = " + passVal + ","
 				// value1 = ((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
-			} else {
+			} else if (metaInput["field_keyvalue"].(map[string]interface{}))[k].(string) == "" {
 
+				name += " " + k + " = null,"
 
 			}
 
@@ -133,9 +124,7 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 
 	} else {
 
-
 		tmpWhere, isOk := ReturnWhereComplex(metaInput["ComplexQuery"].(string), table, "postgresxl")
-
 
 		countStr := len(strings.Replace(strings.Replace(tmpWhere, "(", "", -1), ")", "", -1))
 
@@ -144,6 +133,11 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 		if isOk {
 
 			where += " WHERE " + tmpWhere
+
+			if metadata.AllAPIs.APIHasDeleteMethod(table) {
+
+				where += " AND (int_is_deleted <> 'Y' OR int_is_deleted is null) "
+			}
 		} else {
 
 			return []string{}, false
@@ -158,28 +152,117 @@ func UpdateQueryBuilder(metaInput map[string]interface{}) ([]string, bool){
 	return []string{ query }, isOk
 }
 
-func DeleteQueryBuilder(metaInput map[string]interface{})  string {
-     var query string
-	   name:=""
-           value:=""
-	   database:=metaInput["database"].(string)
-	   table:=metaInput["table"].(string)
-	   query+="DELETE FROM"+" "+database+"."+table
-         for k,v:=range metaInput["field_keymeta"].(map[string]interface{}){
-		 name+=k
-		 query+=" "
-		 query+="WHERE"
-		 query+=" "
-		 switch datatype:=v.(string); datatype {
-		 case "int":
-			value+=((endpoint_common.ReturnString((metaInput["field_keyvalue"].(map[string]interface{}))[k].(string))))
-		 }
-                 query+=" "
-		 query+=name+"="+value
-		 query+=";"
-	   }
-         query=strings.Trim(query," ")
-	return query
+
+
+func makeComplexStringFromFields(fields []metadata.Field) (string) {
+
+	retStr := "(&"
+
+
+	for _, v := range fields {
+
+		retStr += "(" + v.FieldName + "=" + v.Value.(string) + ")"
+	}
+
+	retStr += ")"
+
+	return retStr
+}
+
+
+func CountRecordsExist(table string, pkFields []metadata.Field)  ([]string, bool) {
+
+	var query string
+	query = ""
+	where := ""
+	isOk := true
+	complexString := makeComplexStringFromFields(pkFields)
+
+	tmpWhere, isOk := ReturnWhereComplex(complexString, table, "postgresxl")
+
+	countStr := len(strings.Replace(strings.Replace(tmpWhere, "(", "", -1), ")", "", -1))
+
+	if countStr == 0 { isOk = false }
+
+
+	if isOk {
+
+		where += " WHERE " + tmpWhere + " AND (int_is_deleted <> 'Y' OR int_is_deleted is null)"
+	} else {
+
+		return []string{}, false
+	}
+
+	query="SELECT count(*) cnt FROM " + table + where
+
+	query+=";"
+
+	logger.Write("INFO", "Query is " + query)
+	return []string{ query }, isOk
+}
+
+
+func CountDeletedRecords(table string, pkFields []metadata.Field)  ([]string, bool) {
+
+	var query string
+	query = ""
+	where := ""
+	isOk := true
+	complexString := makeComplexStringFromFields(pkFields)
+
+	tmpWhere, isOk := ReturnWhereComplex(complexString, table, "postgresxl")
+
+	countStr := len(strings.Replace(strings.Replace(tmpWhere, "(", "", -1), ")", "", -1))
+
+	if countStr == 0 { isOk = false }
+
+	if isOk {
+
+		where += " WHERE " + tmpWhere + " AND int_is_deleted = 'Y' LIMIT 1"
+	} else {
+
+		return []string{}, false
+	}
+
+	query="SELECT count(*) cnt FROM " + table + where
+
+	query+=";"
+
+	logger.Write("INFO", "Query is " + query)
+	return []string{ query }, isOk
+}
+
+
+
+
+func CleanDeletedRecord(table string, pkFields []metadata.Field)  ([]string, bool) {
+
+	var query string
+	query = ""
+	where := ""
+	isOk := true
+	complexString := makeComplexStringFromFields(pkFields)
+
+	tmpWhere, isOk := ReturnWhereComplex(complexString, table, "postgresxl")
+
+	countStr := len(strings.Replace(strings.Replace(tmpWhere, "(", "", -1), ")", "", -1))
+
+	if countStr == 0 { isOk = false }
+
+	if isOk {
+
+		where += " WHERE " + tmpWhere + " AND int_is_deleted = 'Y'"
+	} else {
+
+		return []string{}, false
+	}
+
+	query="DELETE FROM " + table + where
+
+	query+=";"
+
+	logger.Write("INFO", "Query is " + query)
+	return []string{ query }, isOk
 }
 
 func InsertQueryBuild(metaInput map[string]interface{})  ([]string, bool) {
@@ -269,11 +352,13 @@ func InsertQueryBuild(metaInput map[string]interface{})  ([]string, bool) {
 
 }
 
-func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
+func SelectQueryBuild(metaInput map[string]interface{}, req model.RequestAbstract)  (string, bool) {
 
 	table := metaInput["table"].(string)
 	isOrCondition := metaInput["isOrCondition"].(bool)
 	isOk := true
+	order_by := ""
+
 
 	myFields := utils.FindMapSelect("table", table, config.Metadata_insert(), metaInput["SelectFields"].([]string))
 
@@ -315,6 +400,14 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 
 			  query +=" WHERE "
 			  query += tmpWhere
+
+			  if metadata.AllAPIs.APIHasDeleteMethod(table) {
+
+				  query += " AND (int_is_deleted <> 'Y' OR int_is_deleted is null) "
+			  }
+		  } else {
+
+			  query += " WHERE (int_is_deleted <> 'Y' OR int_is_deleted is null) "
 		  }
 		  /*
 
@@ -330,8 +423,29 @@ func SelectQueryBuild(metaInput map[string]interface{})  (string, bool) {
 		  query += ""
 //	  }
 
+	if len(req.OrderBy) > 0 {
+
+		if len(req.OrderBy[0]) > 0 {
+
+			order_by += " ORDER BY "
+		}
+
+		for _, v := range req.OrderBy {
+
+			if len(v) > 0 {
+
+				order_by += v + ","
+			}
+		}
+
+		order_by = strings.Trim(order_by, ",")
+		order_by += " "
+	}
+
+
 
 	query = strings.Trim(query, whereCondition)
+	query += order_by
 	query += " OFFSET " + metaInput["offset"].(string) + " LIMIT " + metaInput["limit"].(string) + ";"
 
 

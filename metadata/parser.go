@@ -1,52 +1,47 @@
 package metadata
 
-import
-(
-"strings"
-"math/rand"
-"strconv"
-	"os"
-"regexp"
+import (
+	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/endpoint/endpoint_common"
 	"github.com/dminGod/D30-HectorDA/utils"
-	"github.com/dminGod/D30-HectorDA/config"
+	"math/rand"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/dminGod/D30-HectorDA/logger"
 )
 
 type Pr struct {
 
-						   // Parser
-	CurPos           int              // Parser current postion
-	CurLevel         int              // Present level that we are on
-	CurrentId        string           // ID of the element being worked on
-	CurrentCondition string
-	CurrentElementType  string
-	IncNumber        int              // Incremental number that tracks the element number
+	// Parser
+	CurPos             int    // Parser current postion
+	CurLevel           int    // Present level that we are on
+	CurrentId          string // ID of the element being worked on
+	CurrentCondition   string
+	CurrentElementType string
+	IncNumber          int // Incremental number that tracks the element number
 
-	ParsedString     string           // Parsed string
+	ParsedString string // Parsed string
 
+	// All the Level# stuff is transient stuff except for LevelDict
 
-						   // All the Level# stuff is transient stuff except for LevelDict
+	LevelCounter map[int]int // Level Counter, Keeps record of what the numbers were in the previous
+	// levels so when you come out of the level into a lower level the
+	// numbers are correct
 
-	LevelCounter     map[int]int      // Level Counter, Keeps record of what the numbers were in the previous
-						   // levels so when you come out of the level into a lower level the
-						   // numbers are correct
-
-	LevelIdTracker   map[int]string   // This is the same as before but instead of storing a running counter
-						   // it saves a string with the ID of the that record.
+	LevelIdTracker map[int]string // This is the same as before but instead of storing a running counter
+	// it saves a string with the ID of the that record.
 
 	PrevParentHash  map[int]string    // This is the Level # to ID hash, same as LevelIdTracker (??)
-	LevelCondition  map[string]string 	  // Condition tracked by Level#
+	LevelCondition  map[string]string // Condition tracked by Level#
 	LevelDict       map[int][]string  // Level# to all the strings that are on that level
 	LastLevel       int               // Last level that was worked on
 	MaxLevels       int               // Maximum levels
 	LastToLastLevel int
 
-						   // Where all the elements will go
-	Elements        []Element
-
-
+	// Where all the elements will go
+	Elements []Element
 }
 
 // Sort Methods
@@ -56,42 +51,50 @@ func (p Pr) Len() int {
 }
 func (p Pr) Less(i, j int) bool {
 
-	return p.Elements[i].IncNumber < p.Elements[i].IncNumber;
+	return p.Elements[i].IncNumber < p.Elements[i].IncNumber
 }
 func (p Pr) Swap(i, j int) {
 	p.Elements[i].IncNumber, p.Elements[j].IncNumber = p.Elements[j].IncNumber, p.Elements[i].IncNumber
 }
 
 type Element struct {
-
-	UniqueId		string		// Unique Id for this
-	IncNumber 		int		// This is the incremental number of the element
-	ElementType		string  	// Is this parent (container element) or leaf element
-	Level 			int		// Numeric level of the element
-	SubLevel		int		// Sublevel of the element
-	ParentId 		string		// UniqueId of the parent, 0 if this is root
-	ParentCondition 	string		// Will be and, or
-
+	UniqueId        string // Unique Id for this
+	IncNumber       int    // This is the incremental number of the element
+	ElementType     string // Is this parent (container element) or leaf element
+	Level           int    // Numeric level of the element
+	SubLevel        int    // Sublevel of the element
+	ParentId        string // UniqueId of the parent, 0 if this is root
+	ParentCondition string // Will be and, or
 
 	// Will be used for Leaf elements
-	Key			string		// Key of the element sent
-	Value  			string		// Value of the element sent
-	Operator		string		// will be =, <, >, like etc
-	DatabaseFieldType       string		// What is the field type in the database for this (maybe used later)
+	Key               string // Key of the element sent
+	Value             string // Value of the element sent
+	Operator          string // will be =, <, >, like etc
+	DatabaseFieldType string // What is the field type in the database for this (maybe used later)
 
 	// Will be used for container elements
-	HasChildren		bool
-	Condition 		string
+	HasChildren bool
+	Condition   string
+}
+
+type FilterKeyVals struct {
+	Key      string
+	Value    string
+	Operator string
 }
 
 // Add Ids to Levels
 func (p *Pr) LevelDictAdd(level int, str string) {
 
 	// Check if it already exists, exit, dont want duplicates
-	for _, v := range p.LevelDict[ level ] {   if v == str {   return  }    }
+	for _, v := range p.LevelDict[level] {
+		if v == str {
+			return
+		}
+	}
 
 	// Add to Dictionary
-	p.LevelDict[ level ] = append( p.LevelDict[ level ],  str )
+	p.LevelDict[level] = append(p.LevelDict[level], str)
 }
 
 // This is init for now
@@ -107,7 +110,7 @@ func (p *Pr) SetString(s string) {
 
 	//p.ParsedString, _ =  url.QueryUnescape(s)
 
-	p.ParsedString =  s
+	p.ParsedString = s
 
 }
 
@@ -122,41 +125,48 @@ func (p *Pr) IncreaseLevel() {
 	p.CurrentId = CurrentId
 
 	// For the present level set the ID and set it as per level so it can be used by its future children
-	p.PrevParentHash[ p.CurLevel  ] = CurrentId
+	p.PrevParentHash[p.CurLevel] = CurrentId
 
 	// Set the parent HashId if present -- This is going to change as we keep moving forward but because we came from a lower level
 	// to this, that's why we can take the previous level just by the integer.
-	if _, ok := p.PrevParentHash[ p.CurLevel - 1  ]; ok {
+	if _, ok := p.PrevParentHash[p.CurLevel-1]; ok {
 
 		// If Prev parent hash is available, then use that as the makeId for LevelIdTracker
-		prevParentId = p.PrevParentHash[ p.CurLevel - 1  ]
+		prevParentId = p.PrevParentHash[p.CurLevel-1]
 	}
 
 	// Add to Level tracker and to the Level Dict
-	p.LevelIdTracker[ p.CurLevel ] = CurrentId
-	p.LevelDictAdd( p.CurLevel, CurrentId )
+	p.LevelIdTracker[p.CurLevel] = CurrentId
+	p.LevelDictAdd(p.CurLevel, CurrentId)
 
 	// Means we are moving into a new level, the sublevels will start from 1
 	if p.LastLevel < p.CurLevel {
 
-		p.LevelCounter[ p.CurLevel ]  = 1
+		p.LevelCounter[p.CurLevel] = 1
 	} else {
 
-		p.LevelCounter[ p.CurLevel ]  += 1
+		p.LevelCounter[p.CurLevel] += 1
 	}
 
-	l1 := p.PrevParentHash[ p.CurLevel - 1 ]
-	l2 := p.PrevParentHash[ p.CurLevel - 2 ]
-	l3 := p.PrevParentHash[ p.CurLevel - 3 ]
-	l4 := p.PrevParentHash[ p.CurLevel - 4 ]
+	l1 := p.PrevParentHash[p.CurLevel-1]
+	l2 := p.PrevParentHash[p.CurLevel-2]
+	l3 := p.PrevParentHash[p.CurLevel-3]
+	l4 := p.PrevParentHash[p.CurLevel-4]
 
 	VOldParentId := ""
 
-	if len(l4) > 0 { VOldParentId = l4 }
-	if len(l3) > 0 { VOldParentId = l3 }
-	if len(l2) > 0 { VOldParentId = l2 }
-	if len(l1) > 0 { VOldParentId = l1 }
-
+	if len(l4) > 0 {
+		VOldParentId = l4
+	}
+	if len(l3) > 0 {
+		VOldParentId = l3
+	}
+	if len(l2) > 0 {
+		VOldParentId = l2
+	}
+	if len(l1) > 0 {
+		VOldParentId = l1
+	}
 
 	// We can add Elements from here for now...
 	e := Element{
@@ -164,12 +174,12 @@ func (p *Pr) IncreaseLevel() {
 		ElementType: "node", // Dont know as of now cause we havent seen the inside of this thing as yet..
 
 		// Correct
-		UniqueId: CurrentId,
-		IncNumber: p.IncNumber,
-		ParentId: prevParentId,
-		Level: p.CurLevel,
-		SubLevel: p.LevelCounter[ p.CurLevel ],
-		ParentCondition: p.LevelCondition[ VOldParentId ],
+		UniqueId:        CurrentId,
+		IncNumber:       p.IncNumber,
+		ParentId:        prevParentId,
+		Level:           p.CurLevel,
+		SubLevel:        p.LevelCounter[p.CurLevel],
+		ParentCondition: p.LevelCondition[VOldParentId],
 	}
 
 	p.Elements = append(p.Elements, e)
@@ -177,16 +187,15 @@ func (p *Pr) IncreaseLevel() {
 	p.LastToLastLevel = p.LastLevel
 	p.LastLevel = p.CurLevel
 
-
 	if p.MaxLevels < p.CurLevel {
 
-		p.MaxLevels  = p.CurLevel
+		p.MaxLevels = p.CurLevel
 	}
 }
 
 func (p *Pr) DecreaseLevel() {
 
-	p.LevelCondition[ p.CurrentId ] = ""
+	p.LevelCondition[p.CurrentId] = ""
 
 	p.LastLevel = p.CurLevel
 	p.CurLevel -= 1
@@ -194,16 +203,15 @@ func (p *Pr) DecreaseLevel() {
 
 func (p *Pr) SetCondition(condition string) {
 
-	curLevel := p.PrevParentHash[ p.CurLevel ]
+	curLevel := p.PrevParentHash[p.CurLevel]
 
-	p.LevelCondition[ curLevel ] = condition
+	p.LevelCondition[curLevel] = condition
 
 	p.CurrentCondition = condition
 
 }
 
-func (p *Pr) updateValueByUID( key string, value string ) {
-
+func (p *Pr) updateValueByUID(key string, value string) {
 
 	for i, e := range p.Elements {
 
@@ -224,25 +232,42 @@ func (p *Pr) updateValueByUID( key string, value string ) {
 	}
 }
 
-func (p *Pr) CheckKeyExists(key string) (bool) {
+func (p *Pr) CheckKeyExists(key string) bool {
 
 	retCond := false
-//	retVal := ""
+	//	retVal := ""
 
 	for _, v := range p.Elements {
 
-		logger.Write("INFO", "Parser, CheckKeyExists for Update using POST. parsed Key " + v.Key + " checking key is " + key)
+		logger.Write("INFO", "Parser, CheckKeyExists for Update using POST. parsed Key "+v.Key+" checking key is "+key)
 
 		if v.ElementType == "leaf" && v.Key == key {
 
 			retCond = true
-//			retVal = v.Value
+			//			retVal = v.Value
 		}
 	}
 
 	return retCond
 }
 
+func (p *Pr) GetKeyVals() (FilterKeyVals) {
+
+	var retKV FilterKeyVals
+
+	for _, v := range p.Elements {
+
+		if v.ElementType == "leaf" {
+
+			retKV.Key = v.Key
+			retKV.Value = v.Value
+
+			retKV.Operator = v.Operator
+		}
+	}
+
+	return retKV
+}
 
 func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
@@ -252,12 +277,11 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 	LoopPrevCondition := ""
 
-//	output := make(map[string]interface{})
+	//	output := make(map[string]interface{})
 	input := utils.FindMap("table", table_name, config.Metadata_get())
 	fields := input["fields"].(map[string]interface{})
 
 	for _, v := range p.Elements {
-
 
 		Condition := ""
 
@@ -267,16 +291,20 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 			break
 		}
 
-		if len(LoopPrevCondition) > 0 {  Condition = LoopPrevCondition }
-		if len(v.Condition) > 0 {  Condition = v.Condition }
-		if len(v.ParentCondition) > 0 {  Condition = v.ParentCondition }
-
+		if len(LoopPrevCondition) > 0 {
+			Condition = LoopPrevCondition
+		}
+		if len(v.Condition) > 0 {
+			Condition = v.Condition
+		}
+		if len(v.ParentCondition) > 0 {
+			Condition = v.ParentCondition
+		}
 
 		if v.ElementType == "node" {
 			if curLevel < v.Level {
 
 				//				cond := ""
-
 
 				// Should have a condition and should not be in the start..
 				//if len(Condition) > 0 && len(MyString) > 0 && string(MyString[len(MyString)-1:]) != "("{
@@ -287,45 +315,50 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 				LoopPrevCondition = Condition
 
-
-				MyString +=   "("
+				MyString += "("
 
 			} else if curLevel > v.Level {
 
-				for i := 0; i < (curLevel - v.Level) - 1; i++ {
-
+				for i := 0; i < (curLevel-v.Level)-1; i++ {
 
 					MyString += ")"
 				}
 
 				cond := ""
 
-				if Condition == "&" { cond = "AND" }
-				if Condition == "|" { cond = "OR" }
+				if Condition == "&" {
+					cond = "AND"
+				}
+				if Condition == "|" {
+					cond = "OR"
+				}
 
 				MyString += ")" + cond
 
-
 			} else if curLevel == v.Level {
-
 
 				cond := ""
 
-				if Condition == "&" { cond = "AND" }
-				if Condition == "|" { cond = "OR" }
+				if Condition == "&" {
+					cond = "AND"
+				}
+				if Condition == "|" {
+					cond = "OR"
+				}
 
-
-				MyString +=  "" + cond
+				MyString += "" + cond
 
 			}
 
-
 		} else {
 
-
 			cond := ""
-			if Condition == "&" { cond = "AND" }
-			if Condition == "|" { cond = "OR" }
+			if Condition == "&" {
+				cond = "AND"
+			}
+			if Condition == "|" {
+				cond = "OR"
+			}
 
 			if utils.ValueInMapSelect(v.Key, fields) {
 
@@ -335,12 +368,10 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value, dbType, v.Operator) + ")"
 
-
-
 					//MyString += "( " + v.Key + " = " +v.Value + ")"
 				} else {
 
-					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value,dbType, v.Operator) + ")" + cond
+					MyString += "( " + endpoint_common.ReturnConditionKVComplex(fieldData, v.Value, dbType, v.Operator) + ")" + cond
 					//MyString += "( " + v.Key + " = " +v.Value + ")" + cond
 
 				}
@@ -363,7 +394,6 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 		}
 	}
 
-
 	logger.Write("INFO", "Parser, MakeString return statement", MyString)
 
 	return MyString, isOk
@@ -371,31 +401,34 @@ func (p *Pr) MakeString(table_name string, dbType string) (string, bool) {
 
 func AddElement(p *Pr, kv string) {
 
-//	keyVal := strings.Split(kv, "=")
-
+	//	keyVal := strings.Split(kv, "=")
 
 	keyVal := []string{}
-	listOfOperators := []string{"<=", ">=", "=>", "=<", "<" , ">", "="}
+	listOfOperators := []string{"<=", ">=", "=>", "=<", "<", ">", "="}
 
 	op := ""
 
-	for  _, operator  :=  range  listOfOperators {
+	for _, operator := range listOfOperators {
 
 		if strings.Contains(kv, operator) {
 
-			if operator == "=" && strings.Contains(kv , "*") {
+			if operator == "=" && strings.Contains(kv, "*") {
 
-				vvv  := strings.Replace(kv, "*", "%", -1)
+				vvv := strings.Replace(kv, "*", "%", -1)
 				keyVal = strings.Split(vvv, operator)
 				op = "like"
 				break
 
-			} else  {
+			} else {
 
 				keyVal = strings.Split(kv, operator)
 
-				if operator == "=>" {  operator = ">=" }
-				if operator == "=<" {  operator = "<=" }
+				if operator == "=>" {
+					operator = ">="
+				}
+				if operator == "=<" {
+					operator = "<="
+				}
 
 				op = operator
 				break
@@ -409,29 +442,28 @@ func AddElement(p *Pr, kv string) {
 		CurrentId := makeAnID()
 		p.CurrentId = CurrentId
 
-		parentId := p.PrevParentHash[ p.CurLevel  ]
+		parentId := p.PrevParentHash[p.CurLevel]
 
 		// Add to Level tracker and to the Level Dict
-		p.LevelIdTracker[ p.CurLevel ] = CurrentId
-		p.LevelDictAdd( p.CurLevel, CurrentId )
+		p.LevelIdTracker[p.CurLevel] = CurrentId
+		p.LevelDictAdd(p.CurLevel, CurrentId)
 
 		key := keyVal[0]
 		val := keyVal[1]
 
 		p.Elements = append(p.Elements, Element{
-			Key: key,
-			Value: val,
-			Condition: p.CurrentCondition,
-			UniqueId: CurrentId,
-			IncNumber: p.IncNumber,
-			Level: p.CurLevel,
+			Key:         key,
+			Value:       val,
+			Condition:   p.CurrentCondition,
+			UniqueId:    CurrentId,
+			IncNumber:   p.IncNumber,
+			Level:       p.CurLevel,
 			HasChildren: false,
-			ParentId: parentId,
-			Operator: op,
+			ParentId:    parentId,
+			Operator:    op,
 			ElementType: "leaf",
 		})
 	} else {
-
 
 		if len(keyVal) > 0 {
 
@@ -451,7 +483,7 @@ func AddElement(p *Pr, kv string) {
 	}
 }
 
-func (p *Pr) MoveForward(){
+func (p *Pr) MoveForward() {
 
 	p.CurPos += 1
 }
@@ -463,7 +495,7 @@ func (p *Pr) MoveBack() {
 
 func (p *Pr) GetCurr() string {
 
-	return string( []rune(p.ParsedString)[ p.CurPos ] )
+	return string([]rune(p.ParsedString)[p.CurPos])
 }
 
 func (p *Pr) GetPrev() string {
@@ -471,7 +503,7 @@ func (p *Pr) GetPrev() string {
 	retStr := ""
 
 	if p.CurPos > 0 {
-		retStr = string( []rune(p.ParsedString)[ p.CurPos - 1 ])
+		retStr = string([]rune(p.ParsedString)[p.CurPos-1])
 	}
 
 	return retStr
@@ -483,20 +515,19 @@ func (p *Pr) GetNext() string {
 
 	if (p.CurPos + 1) < len([]rune(p.ParsedString)) {
 
-		retStr = string([]rune(p.ParsedString)[ p.CurPos + 1 ])
+		retStr = string([]rune(p.ParsedString)[p.CurPos+1])
 	}
 
-	return  string(retStr)
+	return string(retStr)
 }
-
 
 func (p *Pr) MoveGet() string {
 
-	if p.CurPos != 0 && p.CurPos != (p.Size() - 1) {
+	if p.CurPos != 0 && p.CurPos != (p.Size()-1) {
 		p.MoveForward()
 	}
 
-	retStr := string( p.ParsedString[ p.CurPos ] )
+	retStr := string(p.ParsedString[p.CurPos])
 
 	if p.CurPos == 0 {
 
@@ -529,7 +560,7 @@ func (p *Pr) Parse() {
 
 			p.updateValueByUID("condition", p.GetCurr())
 
-			printWordByLevel( *p, p.GetCurr() )
+			printWordByLevel(*p, p.GetCurr())
 
 		}
 
@@ -547,15 +578,17 @@ func (p *Pr) Parse() {
 				}
 			}
 
-			AddElement(p, tmpStr )
-			printWordByLevel( *p, tmpStr)
+			AddElement(p, tmpStr)
+			printWordByLevel(*p, tmpStr)
 
 			//		p.updateValueByUID("key_value", tmpStr)
 		}
 
 		p.MoveForward()
 
-		if p.CurPos == p.Size() {  break;  }
+		if p.CurPos == p.Size() {
+			break
+		}
 	}
 }
 
@@ -566,11 +599,9 @@ func (p *Pr) matchesAndInsideText() bool {
 	return mat
 }
 
-
-
 func (p *Pr) Size() int {
 
-	return len( []rune(p.ParsedString))
+	return len(p.ParsedString)
 }
 
 func (p *Pr) Validate() bool {
@@ -581,7 +612,7 @@ func (p *Pr) Validate() bool {
 	if countOpen != countClose {
 
 		logger.Write("ERROR", "Parser, Validate open and close counts do not match")
-		os.Exit(1)
+
 	}
 
 	return true
@@ -590,7 +621,7 @@ func (p *Pr) Validate() bool {
 func makeAnID() string {
 
 	a := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	return string(a[ rand.Intn(52) ]) + string(a[ rand.Intn(52) ]) + string(a[ rand.Intn(52) ]) + strconv.Itoa(rand.Intn(100000) + 1) + strconv.Itoa(rand.Intn(100000) + 1)
+	return string(a[rand.Intn(52)]) + string(a[rand.Intn(52)]) + string(a[rand.Intn(52)]) + strconv.Itoa(rand.Intn(100000)+1) + strconv.Itoa(rand.Intn(100000)+1)
 }
 
 func printByLevel(k Pr) {
@@ -616,7 +647,3 @@ func printWordByLevel(k Pr, word string) {
 	}
 
 }
-
-
-
-

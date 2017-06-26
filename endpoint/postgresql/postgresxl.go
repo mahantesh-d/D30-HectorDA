@@ -13,28 +13,38 @@ import (
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/config"
 	"github.com/dminGod/D30-HectorDA/endpoint/cassandra"
+	"github.com/dminGod/test/D30-HectorDA/endpoint/postgresql"
 )
 
 //var prestgresqlChan chan *sql.DB
 
 
-func Handle(dbAbstract *model.DBAbstract, secondQuery *model.DBAbstract, processSecond bool) {
+func Handle(dbAbstract *model.DBAbstract, secondQuery *model.DBAbstract, processSecond bool) (int) {
+
+	rowsAffected := 0
 
 	if dbAbstract.QueryType == "INSERT" {
 
 		Insert(dbAbstract, secondQuery, processSecond)
 
+	} else if dbAbstract.QueryType == "DELETE_INSERT" {
+
+		DeleteInsert(dbAbstract, secondQuery, processSecond)
+
 	} else if dbAbstract.QueryType == "SELECT" {
 
 		Select(dbAbstract)
+
 	} else if dbAbstract.QueryType == "UPDATE" {
 
-		Update(dbAbstract, secondQuery, processSecond)
+		rowsAffected = Update(dbAbstract, secondQuery, processSecond)
+
 	} else if dbAbstract.QueryType == "DELETE" {
 
 		Delete(dbAbstract)
 	}
 
+	return rowsAffected
 }
 
 var dbpool *sql.DB
@@ -77,6 +87,7 @@ func closeConnection(sql *sql.DB) {
 	//   sql.Close()
 
 }
+
 func Insert(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSecond bool) {
 
 	connection, err := getConnection()
@@ -176,6 +187,101 @@ func Insert(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSe
 
 }
 
+func DeleteInsert(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSecond bool) {
+
+	connection, err := getConnection()
+
+	if err != nil {
+
+		logger.Write("ERROR", err.Error())
+
+		if err != nil {
+
+			logger.Write("ERROR", err.Error())
+
+			dbAbstract.Status = "fail"
+			dbAbstract.Message = err.Error()
+			dbAbstract.Data = "{}"
+			return
+		}
+	}
+
+	var error_messages []string
+
+	if len(secondAbs.Query) > 0 {
+
+		postgresxl.Handle(secondAbs)
+
+		logger.Write("INFO", "Ran the Postgres delete for insert of overwite record :", secondAbs)
+		logger.Write("INFO", "secondAbs is", secondAbs)
+
+
+//		if secondAbs.Status == "success" {
+
+			_, err = connection.Exec(dbAbstract.Query[0])
+
+			if err != nil {
+
+				logger.Write("ERROR", "Postgres Query failed with error, " + err.Error())
+				dbAbstract.Status = "fail"
+				dbAbstract.Message = "The insert request failed"
+				dbAbstract.Data = "{}"
+			} else {
+
+				logger.Write("INFO", "Insert successful")
+			}
+
+//		} else {
+
+			//logger.Write("ERROR", "Insert did not go through")
+			//dbAbstract.Status = "fail"
+			//dbAbstract.Message = "The insert request failed."
+			//dbAbstract.Data = "{}"
+			//return
+//		}
+
+	} else {
+
+		_, err = connection.Exec(dbAbstract.Query[0])
+
+	}
+
+	var success_count uint64
+	logger.Write("DEBUG", "Running Queries for insert start : num of queries to run " + string(len(dbAbstract.Query)))
+	logger.Write("DEBUG", "Insert Record successfully")
+
+	if err != nil {
+		logger.Write("ERROR", "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : " + err.Error())
+		error_messages = append(error_messages, "Query from set failed - Query : '" + dbAbstract.Query[0] + "' - Error : " + err.Error())
+		// logger.Write("INFO","Execution Query"+","+ single_query)
+	} else {
+		success_count += 1
+	}
+
+	if len(error_messages) > 0 {
+
+		// Error response text
+		response_text := string(len(error_messages)) + " Out of " + string(len(dbAbstract.Query)) + " Had the following errors \n"
+		response_text += strings.Join(error_messages, " \n")
+
+		logger.Write("ERROR", response_text)
+		dbAbstract.Status = "fail"
+		dbAbstract.Message = response_text
+		dbAbstract.Data = "{}"
+
+	} else {
+		logger.Write("INFO", "Inserted successfully")
+		dbAbstract.Status = "success"
+		dbAbstract.Message = "Inserted successfully"
+		dbAbstract.Data = "{}"
+		dbAbstract.Count = success_count
+
+	}
+
+	closeConnection(connection)
+
+}
+
 func Select(dbAbstract *model.DBAbstract) {
 	var prestoResult []map[string]interface{}
 
@@ -194,6 +300,7 @@ func Select(dbAbstract *model.DBAbstract) {
 	}
 
 	logger.Write("INFO", "Running Postgres Query" + dbAbstract.Query[0])
+
 	rows, err := db.Query(dbAbstract.Query[0])
 
 	if err != nil {
@@ -265,9 +372,14 @@ func Select(dbAbstract *model.DBAbstract) {
 
 }
 
-func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSecond bool) {
+func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSecond bool) (int) {
 
 	db, err := getConnection()
+
+	rowsAffected := 0
+
+
+
 
 	if err != nil {
 
@@ -276,7 +388,7 @@ func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSe
 		dbAbstract.Message = err.Error()
 		dbAbstract.Data = "{}"
 
-		return
+		return 0
 	}
 
 	if processSecond {
@@ -312,13 +424,26 @@ func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSe
 			dbAbstract.Status = "fail"
 			dbAbstract.Message = "Insert Transaction failed"
 			dbAbstract.Data = "{}"
-			return
+			return 0
 		}
 
 	} else {
 
-		_, err = db.Exec(dbAbstract.Query[0])
+		res, err := db.Exec(dbAbstract.Query[0])
 
+		if err != nil {
+
+			logger.Write("ERROR", err.Error())
+			dbAbstract.Status = "fail"
+			dbAbstract.Message = err.Error()
+			dbAbstract.Data = "{}"
+
+			return 0
+		}
+
+
+		rowsAffected64, _ := res.RowsAffected()
+		rowsAffected = int(rowsAffected64)
 	}
 
 	var success_count uint64
@@ -331,7 +456,7 @@ func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSe
 		dbAbstract.Message = err.Error()
 		dbAbstract.Data = "{}"
 
-		return
+		return 0
 
 	} else {
 		success_count += 1
@@ -358,6 +483,7 @@ func Update(dbAbstract *model.DBAbstract, secondAbs *model.DBAbstract, processSe
 
 	closeConnection(db)
 
+	return rowsAffected
 }
 
 func Delete(dbAbstract *model.DBAbstract) {
@@ -386,6 +512,13 @@ func Delete(dbAbstract *model.DBAbstract) {
 		dbAbstract.Data = "{}"
 		return
 
+	} else {
+
+
+		dbAbstract.Status = "success"
+		dbAbstract.Message = "Delete executed successfully"
+		dbAbstract.Data = "{}"
+		return
 	}
 
 	closeConnection(db)

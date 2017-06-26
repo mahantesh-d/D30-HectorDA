@@ -5,6 +5,7 @@ import (
 	"github.com/dminGod/D30-HectorDA/servers"
 	"github.com/dminGod/D30-HectorDA/utils"
 	"github.com/dminGod/D30-HectorDA/logger"
+	"github.com/dminGod/D30-HectorDA/metadata"
 )
 
 // This is the first function that gets called. It initializes configuration and starts all the types of servers
@@ -18,9 +19,12 @@ func main() {
 
 	logger.Write("INFO", "Hector initialize called, Version : "+ config.Conf.Hector.Version)
 
-
 	// Start the servers based on the configuration
 	conf := config.Get()
+
+
+
+	metadata.AllAPIs.Populate()
 
 	for i, server := range conf.Hector.StartServersOfType {
 
@@ -28,5 +32,6 @@ func main() {
 
 		logger.Write("INFO", "Calling server start for", server)
 		servers.Server(server)
+
 	}
 }

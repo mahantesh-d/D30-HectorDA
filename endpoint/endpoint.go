@@ -8,9 +8,12 @@ import (
 )
 
 // Process acts as an entry point to mapping the different data operations to different database endpoints
-func Process(DBAbstract *model.DBAbstract, SecondQuery *model.DBAbstract, processSecond bool) {
+func Process(DBAbstract *model.DBAbstract, SecondQuery *model.DBAbstract, processSecond bool) (int) {
 
 	endpoint := DBAbstract.DBType
+
+	rowsAffected := 0
+
 
 	if endpoint == "cassandra" || endpoint == "cassandra_stratio" {
 
@@ -20,6 +23,8 @@ func Process(DBAbstract *model.DBAbstract, SecondQuery *model.DBAbstract, proces
 		presto.Handle(DBAbstract)
 	} else if endpoint == "postgresxl"{
 
-		postgresxl.Handle(DBAbstract, SecondQuery, processSecond)
+		rowsAffected = postgresxl.Handle(DBAbstract, SecondQuery, processSecond)
 	}
+
+	return rowsAffected
 }

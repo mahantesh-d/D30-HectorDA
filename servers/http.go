@@ -54,7 +54,7 @@ func handleHTTPRoutes() {
 	HttpServer.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		var response string
 		if validHTTPRequest(r, &response) {
-			RequestAbstract = mapHTTPAbstractRequest(r)
+			RequestAbstract := mapHTTPAbstractRequest(r)
 			resp, _ := HandleRoutes(RequestAbstract)
 
 			json.Unmarshal([]byte(resp.Data), &resp.DataHTTP)
@@ -139,7 +139,7 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		utils.HandleError(err)
 		reqAbs.Payload = utils.DecodeJSON(string(body))
 
-	} else if reqAbs.HTTPRequestType == "GET" {
+	} else if reqAbs.HTTPRequestType == "GET" || reqAbs.HTTPRequestType == "DELETE"  {
 
 //		var params map[string]interface{}
 
@@ -160,6 +160,8 @@ func mapHTTPAbstractRequest(r *http.Request) model.RequestAbstract {
 		limitVal, _ := strconv.Atoi(Conf.Hector.DefaultRecordsLimit)
 
 		reqAbs.Limit = uint32(limitVal)
+		reqAbs.OrderBy = []string{ "transactionId" }		// utils.ParseSelectFields()
+
 
 		/*
 		if len(params["limit"]) > 0 {

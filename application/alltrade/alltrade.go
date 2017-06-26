@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"reflect"
 	"sync"
+	"github.com/dminGod/D30-HectorDA/endpoint/postgresql_helper"
 )
 
 func ReturnRoutes() map[string]func(model.RequestAbstract) model.ResponseAbstract {
@@ -74,7 +75,7 @@ func HandleUnlistedRequest(req model.RequestAbstract, table_name string) model.R
 
 //	cassandra_helper.TestSelectQuery()
 
-	if req.HTTPRequestType == "GET" || req.HTTPRequestType == "POST" || req.HTTPRequestType == "PUT" {
+	if req.HTTPRequestType == "GET" || req.HTTPRequestType == "POST" || req.HTTPRequestType == "PUT" ||  req.HTTPRequestType == "DELETE"{
 
 		dbAbs = commonRequestProcess(req, table_name)
 		EnrichDataResponse(&dbAbs)
@@ -128,7 +129,7 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 
 
-		query, isOk = queryhelper.PrepareSelectQuery(metaResult)
+		query, isOk = queryhelper.PrepareSelectQuery(metaResult, req)
 		dbAbs.DBType = metaResult["databaseType"].(string)
 		dbAbs.Query = query
 
@@ -151,12 +152,22 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 		dbAbs.DBType = metaInputPost["databaseType"].(string)
 
+
+		if  metadata.AllAPIs.APIHasInsertMethod(table_name) == false {
+
+			dbAbs.Message = "Error: This API does not support the insert method"
+			dbAbs.Count = 0
+			dbAbs.Status = "fail"
+
+			return dbAbs
+		}
+
+
 		// Does it have tag Cassandra?
 		if _, ok := metaInputPost["tags"].([]interface{}); ok && len(metaInputPost["tags"].([]interface{})) > 0 {
 
 			isCassInsert = utils.MatchFieldTag(metaInputPost["tags"].([]interface{}), "D30_API")
 		}
-
 
 		var query []string
 
@@ -204,8 +215,86 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 			// This is a regular POST request
 
-			dbAbs.QueryType = "INSERT"
-			query, isOk = queryhelper.PrepareInsertQuery( metaResult )
+			 dbAbs.QueryType = "INSERT"
+			 query, isOk = queryhelper.PrepareInsertQuery( metaResult )
+
+
+			 // API Supports Delete?
+			 if metadata.AllAPIs.APIHasDeleteMethod(table_name) {
+
+			 // Remove this later
+			 logger.Write("INFO", "API DOES SUPPORT DELETE")
+
+				 // Get the primary keys and values
+				 // Generate a PK select query
+				PrimaryKeysWithValue, isOk := metadata.AllAPIs.GetAllPrimaryKeysWithValue(table_name, req.Payload)
+
+				recExist, recExistOk := doRecordsExistAlready(table_name, PrimaryKeysWithValue)
+
+
+				 if recExistOk == false {
+
+					 dbAbs.Message = "Error: There was an error processing your request"
+					 dbAbs.Count = 0
+					 dbAbs.Status = "fail"
+
+					 return dbAbs
+				 }
+
+				 if recExist {
+
+					 dbAbs.Message = "Error: Entry already exists, duplicate entry not permitted"
+					 dbAbs.Count = 0
+					 dbAbs.Status = "fail"
+
+					 return dbAbs
+				 }
+
+
+				 logger.Write("INFO", "PrimaryKeysWithValue", PrimaryKeysWithValue, "Table name", table_name, "Request payload", req.Payload)
+
+				 if isOk {
+
+					 delExists, delOk := doDeletedRecordsExist(table_name, PrimaryKeysWithValue)
+
+					 if delOk == false {
+
+						 dbAbs.Message = "Error: There was an error processing your request"
+						 dbAbs.Count = 0
+						 dbAbs.Status = "fail"
+
+						 return dbAbs
+					 }
+
+
+					 if delExists {
+
+						logger.Write("INFO", "Records do exist for this db need to clean.")
+						cleanQuery, isOk := postgresql_helper.CleanDeletedRecord(table_name, PrimaryKeysWithValue)
+
+						if isOk {
+							cassDbAbs = model.DBAbstract{
+								 DBType: "postgresxl",
+								 Query: cleanQuery,
+								 QueryType: "DELETE",
+								 TableName: table_name,
+							}
+
+							dbAbs.QueryType = "DELETE_INSERT"
+							logger.Write("INFO", "Changed the method to DELETE_INSERT")
+						}
+					 } else {
+
+						 logger.Write("INFO", "No records dont need to clean.")
+					 }
+				 }
+			 } else {
+
+				 // Remove this later
+				 logger.Write("INFO", "------->>> API DOES NOT SUPPORT DELETE")
+
+			 }
+
 
 			 if !isOk {
 
@@ -221,7 +310,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 		}
 
 		if isCassInsert {
-
 
 			var cassQuery []string
 
@@ -274,8 +362,6 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 
 		dbAbs.DBType = metaInputPost["databaseType"].(string)
 
-
-
 		if metaResult["put_supported"] == true {
 
 //			if _, ok := metaResult["updateCondition"].(map[string][]string); ok && len(metaResult["updateCondition"].(map[string][]string)) > 0 {
@@ -311,15 +397,183 @@ func commonRequestProcess(req model.RequestAbstract, table_name string) model.DB
 				return dbAbs
 			}
 //		}
+	} else if req.HTTPRequestType == "DELETE" {
+
+		metaInputPost := utils.FindMap("table", table_name, config.Metadata_insert())
+
+		metaResult := make(map[string]interface{})
+
+		// Get the details of the object
+		metaResult["databaseType"] = metaInputPost["databaseType"]
+		metaResult["version"] = metaInputPost["version"]
+		metaResult["database"] = metaInputPost["database"]
+		metaResult["table"] = metaInputPost["table"]
+
+		metaResult["field_keyvalue"] = map[string]interface{}{ "int_is_deleted" : "Y" }
+		metaResult["field_keymeta"] = map[string]interface{}{ "int_is_deleted" : "text" }
+
+		metaResult["updateCondition"] = map[string][]string{}
+		metaResult["fields"] = make(map[string]interface{})
+		metaResult["ComplexQuery"] = req.ComplexFilters
+		metaResult["is_post_update"] = false
+
+		supportsDelete := metadata.AllAPIs.APIHasDeleteMethod(metaInputPost["table"].(string))
+
+		dbAbs.DBType = metaInputPost["databaseType"].(string)
+
+		if supportsDelete {
+
+			dbAbs.QueryType = "UPDATE"
+			var query []string
+			query, isOk = queryhelper.PrepareUpdateQuery( metaResult )
+
+			if (len(query) > 0) && (isOk == true) {
+
+				logger.Write("INFO", string(query[0]))
+				dbAbs.Query = query
+			} else {
+
+				isOk = false
+			}
+
+			if !isOk {
+
+				dbAbs.Message = "Error: There was an error in the condition passed in the query"
+				dbAbs.Count = 0
+				dbAbs.Status = "fail"
+
+				return dbAbs
+			}
+		} else {
+
+			dbAbs.Message = "Error: Delete not supported on this API"
+			dbAbs.Count = 0
+			dbAbs.Status = "fail"
+
+			return dbAbs
+		}
+
 	}
 
 
 	logger.Write("INFO", "dbAbs object before processing query", dbAbs)
 
-	endpoint.Process(&dbAbs, &cassDbAbs, isCassInsert)
+	rowsAffected := endpoint.Process(&dbAbs, &cassDbAbs, isCassInsert)
+
+	if req.HTTPRequestType == "DELETE" && dbAbs.Status == "success" {
+
+		if rowsAffected == 0 {
+
+			dbAbs.Message = "No rows found to delete, rows affected " + strconv.Itoa(rowsAffected)
+		} else {
+
+			dbAbs.Message = "Delete successful, rows affected " + strconv.Itoa(rowsAffected)
+		}
+	}
+
+
+	if req.HTTPRequestType == "PUT" && isCassInsert == false {
+
+		if rowsAffected == 0 {
+
+			dbAbs.Message = "No rows found to update, rows affected " + strconv.Itoa(rowsAffected)
+		} else {
+
+			dbAbs.Message = "Update successful, rows affected " + strconv.Itoa(rowsAffected)
+		}
+	}
 
 	return dbAbs
 }
+
+
+func doRecordsExistAlready(table_name string, PrimaryKeysWithValue []metadata.Field) (bool, bool) {
+
+	retBool := false
+
+	query, isOk := postgresql_helper.CountRecordsExist(table_name, PrimaryKeysWithValue)
+
+	logger.Write("INFO", "This is the query to check for doRecordsExistAlready ", query)
+
+	if !isOk {
+
+		return false, false
+	}
+
+	dbAbs := model.DBAbstract{
+		Query: query ,
+		DBType: "postgresxl",
+		QueryType: "SELECT",
+	}
+
+	endpoint.Process(&dbAbs, &model.DBAbstract{}, false)
+
+	logger.Write("INFO", "dbAbs after query process : ", dbAbs)
+
+	if len(dbAbs.RichData) > 0 {
+
+		if _, ok := dbAbs.RichData[0]["cnt"]; ok {
+
+			if int(dbAbs.RichData[0]["cnt"].(int64)) > 0 {
+
+				logger.Write("INFO", "Count fromt he database > 0 for INSERT", dbAbs.RichData[0]["cnt"].(int64))
+				retBool = true
+			} else {
+
+				logger.Write("INFO", "Count fromt he database NOT > 0 for INSERT", dbAbs.RichData[0]["cnt"].(int64))
+			}
+		}
+	}
+
+	return retBool, true
+}
+
+
+
+
+
+func doDeletedRecordsExist(table_name string, PrimaryKeysWithValue []metadata.Field) (bool, bool) {
+
+	retBool := false
+
+	query, isOk := postgresql_helper.CountDeletedRecords(table_name, PrimaryKeysWithValue)
+
+	logger.Write("INFO", "This is the query to check for doDeletedRecordsExist ", query)
+
+	if !isOk {
+
+		return false, false
+	}
+
+	dbAbs := model.DBAbstract{
+		Query: query ,
+		DBType: "postgresxl",
+		QueryType: "SELECT",
+	}
+
+	endpoint.Process(&dbAbs, &model.DBAbstract{}, false)
+
+	logger.Write("INFO", "dbAbs after query process : ", dbAbs)
+
+	if len(dbAbs.RichData) > 0 {
+
+		if _, ok := dbAbs.RichData[0]["cnt"]; ok {
+
+			if int(dbAbs.RichData[0]["cnt"].(int64)) > 0 {
+
+				logger.Write("INFO", "Count fromt he database > 0 for INSERT", dbAbs.RichData[0]["cnt"].(int64))
+				retBool = true
+			} else {
+
+				logger.Write("INFO", "Count fromt he database not > 0 for INSERT", dbAbs.RichData[0]["cnt"].(int64))
+			}
+		}
+	}
+
+	return retBool, true
+}
+
+
 
 func prepareResponse(dbAbs model.DBAbstract) model.ResponseAbstract {
 
@@ -342,6 +596,11 @@ func handleCustomDateManipulation(queryStr *string, table_name string, column_ty
 		*queryStr += " " + key + " > '" + onlyDate + " 00:00:00'  AND " + key + " < '" + onlyDate + " 23:59:59' AND"
 	}
 }
+
+
+
+
+
 
 
 func getUpdateQueryConditions(metaInputPost map[string]interface{}, updateCondition map[string][]string) (bool, map[string][]string) {

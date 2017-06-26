@@ -231,8 +231,9 @@ func ReturnCondition(input map[string]interface{}, whereCondition string, dbType
 	return condition
 }
 
+// Returns Where and Join conditions
 
-func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType string, op string) string {
+func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType string, op string) (string) {
 
 	condition := ""
 	relationalOperator := ""
@@ -274,8 +275,11 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 
 			if dbType == "postgresxl" {
 
-				relationalOperator = " = (ARRAY["
-				endRelationalOperator = "]) "
+
+				// product_type_key  = (ARRAY[ '%!D(MISSING)E' ]) <-- Wrong
+				// 'DEVICE1' = ANY (product_type_key);   <-- Correct
+				relationalOperator = " = ANY ("
+				endRelationalOperator = ") "
 
 			} else {
 
@@ -309,15 +313,48 @@ func ReturnConditionKVComplex(input map[string]interface{}, value string, dbType
 		}
 
 
-	case "text",  "set<text>":
+	// Currently this handles only
+	case "set<text>" :
 
-			if len(value) > 0 {
+		if len(value) > 0 && dbType == "postgresxl" {
 
-				buildCondition :="  " + input["column"].(string) + " " + relationalOperator + " " + "|1" + " " + endRelationalOperator
+			hasLike := strings.Contains(value, "%")
 
+			if hasLike == false{
+			// Is = condition
+
+				buildCondition :="  |1 " + relationalOperator + input["column"].(string) + endRelationalOperator
 				buildConditionValue := ReturnString(value)
 
 				condition  +=  replaceString(buildCondition,buildConditionValue)
+			} else {
+			// Is like condition
+
+
+
+			}
+
+
+
+
+
+			//condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator
+		} else {
+
+			buildCondition :="  " + input["column"].(string) + " " + relationalOperator + " " + "|1" + " " + endRelationalOperator
+			buildConditionValue := ReturnString(value)
+
+			condition  +=  replaceString(buildCondition,buildConditionValue)
+		}
+
+
+	case "text":
+			if len(value) > 0 {
+
+				buildCondition :="  " + input["column"].(string) + " " + relationalOperator + " " + "|1" + " " + endRelationalOperator
+				buildConditionValue := ReturnString(value)
+
+				condition  +=  replaceString(buildCondition, buildConditionValue)
 
 				//condition += "  " + input["column"].(string) + " " + relationalOperator + " " + ReturnString(value) + " " + endRelationalOperator
 			}

@@ -33,6 +33,7 @@ type RequestAbstract struct {
 	SearchFilter	[]Field
 	SelectFields	[]Field
 	BodyFields	[]Field
+	OrderBy		[]string
 }
 
 

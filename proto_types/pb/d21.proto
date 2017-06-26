@@ -123,6 +123,7 @@ message Request {
     string SelectField                 = 55;
     uint32 RowLimit                    = 56;
     uint32 Offset                      = 57;
+    string OrderBy                     = 58;
 }
 
 message TxRequest {
