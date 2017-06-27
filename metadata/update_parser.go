@@ -105,7 +105,7 @@ func CheckCondition(metadata map[string]interface{}, payload map[string]interfac
 }
 
 // Check if the splits of conditions match with the passed payload.. this is the decider
-
+//
 func checkConditionsPayload(splits map[string]interface{}, payload map[string]interface{}, filters string) bool {
 
 	var shouldTryUpdate bool
@@ -128,6 +128,7 @@ func checkConditionsPayload(splits map[string]interface{}, payload map[string]in
 	return shouldTryUpdate
 }
 
+// Check Or Condition --
 
 func checkOrCondition(conditionPairs []map[string]interface{}, values map[string]interface{}) bool {
 
@@ -169,13 +170,14 @@ func checkAndCondition(conditionPairs []map[string]interface{}, values map[strin
 
 	andPasses := true
 
-	var Parser Pr
-
-	if len(filters) > 0 {
-
-		Parser.SetString(filters)
-		Parser.Parse()
-	}
+	// Used for URL check
+	//var Parser Pr
+	//
+	//if len(filters) > 0 {
+	//
+	//	Parser.SetString(filters)
+	//	Parser.Parse()
+	//}
 
 
 	for _, curField := range conditionPairs {
@@ -190,6 +192,7 @@ func checkAndCondition(conditionPairs []map[string]interface{}, values map[strin
 		tmpPass2 := true
 
 
+		// We only have either string or array or interface coming to us, anything else is a problem
 		if _, ok := values[ curField["key"].(string) ].(string); !ok { tmpPass = false }
 		if _, ok := values[ curField["key"].(string) ].([]interface{}); !ok { tmpPass2 = false }
 
@@ -223,13 +226,15 @@ func checkAndCondition(conditionPairs []map[string]interface{}, values map[strin
 				logger.Write("INFO", "update_parser, checkAndCondition, Checking the URL for contains ", curField["key"].(string))
 
 				// If key does not exit make this false
-				if doesKeyExist := Parser.CheckKeyExists( curField["key"].(string) ); doesKeyExist == false {
+				// Used for URL check
+				// if doesKeyExist := Parser.CheckKeyExists( curField["key"].(string) ); doesKeyExist == false {
+				if len(values[ curField["key"].(string) ].(string)) == 0 {
 
-					logger.Write("INFO", "update_parser, checkAndCondition, The key does not exist in the URL : ", curField["key"].(string))
+					logger.Write("INFO", "update_parser, checkAndCondition, The key does not exist in the body : ", curField["key"].(string))
 					andPasses = false
 				} else {
 
-					logger.Write("INFO", "update_parser, checkAndCondition, The key exists in the URL : ", curField["key"].(string), " Good..")
+					logger.Write("INFO", "update_parser, checkAndCondition, The key exists in the body : ", curField["key"].(string), " Good..")
 				}
 			}
 		}
@@ -298,6 +303,11 @@ func checkGetUpdateKeys(updateKeys string, payload map[string]interface{}) (map[
 }
 
 
+// Make sure the the string for condition is correct, has ~
+// Atleast should have = or ^ sign
+// Get the condition type &, | by split ~
+// Split the conditions by , to get an array of key=|^ strings
+// Split the conditions into key value paris and retrun them in 'fields' {'isEqualCheck', 'key', 'value'}
 func checkConditionsAndMassage(condition string) (map[string]interface{}, bool) {
 
 	retVals := make(map[string]interface{})
@@ -338,7 +348,9 @@ func checkConditionsAndMassage(condition string) (map[string]interface{}, bool) 
 	return retVals, true
 }
 
-
+// Check for field level validation : has either ^ or =
+// Split the key and value on = or ^
+// Return {'isEqualCheck', 'key', 'value'}
 func checkMassageFields(conditions string) (map[string]interface{}, bool) {
 
 	hasCaret := strings.Contains(conditions, "^")
@@ -375,6 +387,7 @@ func checkMassageFields(conditions string) (map[string]interface{}, bool) {
 }
 
 
+// Check if the condition for this API is & or |
 func isOrConditionCheck(condition string) bool {
 
 	condition = strings.Trim(condition, " ")

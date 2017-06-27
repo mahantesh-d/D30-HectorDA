@@ -452,7 +452,6 @@ func SelectQueryBuild(metaInput map[string]interface{}, req model.RequestAbstrac
 	return query, isOk
 }
 
-
 func makeSelect(fields map[string]interface{}) string {
 
 	if reflect.TypeOf(fields).String() == "map[string]interface {}" {
@@ -536,5 +535,23 @@ func makeSelectPG(fields map[string]interface{}) string {
 
 }
 
+func MakeIncrementQuery(table_name string, column string, increment_by string, where_url_filters string) (string, bool) {
+
+	where_condition, ok := ReturnWhereComplex(where_url_filters, table_name, "postgresxl")
+	retStr := ""
+	var success bool
+
+	if ok {
+
+		retStr = "UPDATE " + table_name + " SET " + column + " = " + column + " " + increment_by + " " + where_condition;
+		success = true
+	} else {
+
+		retStr = ""
+		success = false
+	}
+
+	return retStr, success
+}
 
 
